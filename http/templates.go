@@ -18,27 +18,31 @@ var (
 )
 
 func renderTemplate(rw http.ResponseWriter, name string, object interface{}) {
-	err := getTemplates().ExecuteTemplate(rw, name, nil)
+	err := getTemplates().ExecuteTemplate(rw, name, object)
 	if err != nil {
-		error(rw, err.Error())
+		respondError(rw, err.Error())
 	}
 }
 
-func getTemplates() *template.Template {
-	f, err := os.Open(templateDir)
-	if err != nil {
-		log.Printf("could not find template directory %s", err.Error())
+func dirLastModified(dir string) time.Time {
+	var t int64 = 0
+	filepath.Walk(dir, func(path string, io os.FileInfo, err error) error {
+		this := io.ModTime().Unix()
+		if this > t {
+			t = this
+		}
 		return nil
-	}
+	})
 
-	fi, err := f.Stat()
-	if err != nil {
-		log.Printf("could not stat template directory %s", err.Error())
-	}
+	return time.Unix(t, 0)
+}
 
-	if fi.ModTime().Unix() > lastUpdated.Unix() {
-		log.Printf("building templates")
-		lastUpdated = fi.ModTime()
+func getTemplates() *template.Template {
+	lastModified := dirLastModified(templateDir)
+
+	if lastModified.Unix() > lastUpdated.Unix() {
+		lastUpdated = lastModified
+		log.Printf("building templates from %s", lastUpdated.Format(time.Kitchen))
 		cachedTemplates = buildTemplates("templates")
 	} else {
 		// use cached

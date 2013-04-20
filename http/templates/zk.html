@@ -2,7 +2,26 @@
 
 <div class='row'>
 	<div class='twelve columns'>
-		<h3>ZK</h3>
+		<h3>ZK: <span class='subheader'>{{.Node}} (rev. {{.Rev}})</span></h3>
+	</div>
+	<div class='row'>
+		<div class='12 columns'>
+			<table>
+				<tr><th>node</th><th></th></tr>
+				{{range .Dirs}}
+					<tr>
+						<td><a href="{{.}}">{{.}}/</a></td>
+						<td></td>
+					</tr>
+				{{end}}
+				{{range .Files}}
+					<tr>
+						<td>{{.}}</td>
+						<td></td>
+					</tr>
+				{{end}}
+			</table>
+		</div>
 	</div>
 </div>
 

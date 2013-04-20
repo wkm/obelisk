@@ -17,7 +17,7 @@ func main() {
 	}
 }
 
-func error(rw http.ResponseWriter, msg string) {
+func respondError(rw http.ResponseWriter, msg string) {
 	rw.Header().Set("Status-Code", "502")
 	log.Printf("err: %s", msg)
 	err := getTemplates().ExecuteTemplate(rw, "error.html", msg)
@@ -36,6 +36,6 @@ func indexHandler(rw http.ResponseWriter, req *http.Request) {
 	err := getTemplates().ExecuteTemplate(rw, path, nil)
 	if err != nil {
 		log.Printf("err: %s", err.Error())
-		error(rw, err.Error())
+		respondError(rw, err.Error())
 	}
 }
