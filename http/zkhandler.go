@@ -26,6 +26,8 @@ func writeJson(rw http.ResponseWriter, obj interface{}) {
 }
 
 func zkHandler(rw http.ResponseWriter, req *http.Request) {
+	rw.Header().Add("Content-Type", "text/json")
+
 	root := req.URL.Path[3:]
 	log.Printf("zk handler: %s", root)
 
@@ -53,10 +55,6 @@ func zkHandler(rw http.ResponseWriter, req *http.Request) {
 		nodes[i] = id.String()
 		i++
 	}
-
-	log.Printf("rev: %d", rev)
-	log.Printf("nodes: %s", nodes)
-	log.Printf("dirs: %s", dirs)
 
 	writeJson(rw, zkResponse{root, rev, dirs, nodes, files})
 }
