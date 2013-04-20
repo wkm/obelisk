@@ -2,21 +2,22 @@
 
 <div class='row'>
 	<div class='twelve columns'>
-		<h3>ZK: <span class='subheader'>{{.Node}} (rev. {{.Rev}})</span></h3>
+		<h3>ZK: <span class='subheader'>{{.Node}} (rev. {{.Stat.CVersion}}.{{.Stat.AVersion}})</span></h3>
 	</div>
 	<div class='row'>
 		<div class='12 columns'>
 			<table>
 				<tr><th>node</th><th></th></tr>
-				{{range .Dirs}}
+				{{if .Parent}}
 					<tr>
-						<td><a href="{{.}}">{{.}}/</a></td>
+						<td><a href="{{.Parent}}">{{.Parent}}/</a></td>
 						<td></td>
 					</tr>
 				{{end}}
-				{{range .Files}}
+
+				{{range .Dirs}}
 					<tr>
-						<td>{{.}}</td>
+						<td class='zk-node'><a href="./{{.}}/">{{.}}/</a></td>
 						<td></td>
 					</tr>
 				{{end}}

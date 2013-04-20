@@ -3,41 +3,40 @@ package main
 import (
 	"net/http"
 	// "text/template"
-	anchorfs "circuit/use/anchorfs"
-	"circuit/use/circuit"
+	"circuit/kit/zookeeper"
+	"circuit/kit/zookeeper/zutil"
 	"log"
+	"strings"
 )
 
 type zkResponse struct {
-	Node  string
-	Rev   int64
-	Dirs  []string
-	Files map[circuit.WorkerID]anchorfs.File
+	Parent string
+	Node   string
+	Stat   *zookeeper.Stat
+	Dirs   []string
 }
 
+var (
+	zk, err = zutil.DialUntilReady("127.0.0.1:2181")
+)
+
 func zkHandler(rw http.ResponseWriter, req *http.Request) {
-	root := req.URL.Path[3:]
+	root := req.URL.Path[4:]
+	root = strings.TrimSuffix(root, "/")
+
+	if !strings.HasPrefix(root, "/") {
+		root = "/" + root
+	}
+
 	log.Printf("zk handler: %s", root)
+	children, stat, _ := zk.Children(root)
 
-	dir, err := anchorfs.OpenDir(root)
-	if err != nil {
-		respondError(rw, err.Error())
-		return
+	var parent string
+	if root != "/" {
+		parent = ".."
 	}
 
-	dirs, err := dir.Dirs()
-	if err != nil {
-		respondError(rw, err.Error())
-		return
-	}
-
-	rev, files, err := dir.Files()
-	if err != nil {
-		respondError(rw, err.Error())
-		return
-	}
-
-	zk := zkResponse{root, rev, dirs, files}
+	zk := zkResponse{parent, root, stat, children}
 	log.Printf("ZK: %s", zk)
 	renderTemplate(rw, "/zk.html", &zk)
 }
