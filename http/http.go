@@ -33,9 +33,5 @@ func indexHandler(rw http.ResponseWriter, req *http.Request) {
 		path = "/index.html"
 	}
 	// try to find a template with the given name
-	err := getTemplates().ExecuteTemplate(rw, path, nil)
-	if err != nil {
-		log.Printf("err: %s", err.Error())
-		respondError(rw, err.Error())
-	}
+	renderTemplate(rw, path, nil)
 }
