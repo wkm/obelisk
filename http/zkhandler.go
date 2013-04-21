@@ -41,7 +41,6 @@ func zkHandler(rw http.ResponseWriter, req *http.Request) {
 		root = "/" + root
 	}
 
-	log.Printf("root: " + root)
 	stat, err := zk.Exists(root)
 	if err != nil {
 		respondError(rw, err.Error())
