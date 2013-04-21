@@ -14,6 +14,7 @@ import (
 type zkResponse struct {
 	Parent string
 	Node   string
+	Data   string
 	Stat   *zookeeper.Stat
 	Nodes  map[string]*NodeInfo
 }
@@ -41,7 +42,32 @@ func zkHandler(rw http.ResponseWriter, req *http.Request) {
 	}
 
 	log.Printf("root: " + root)
-	children, stat, _ := zk.Children(root)
+	stat, err := zk.Exists(root)
+	if err != nil {
+		respondError(rw, err.Error())
+	}
+
+	var data string
+	if stat.DataLength() > 0 {
+		data, _, err = zk.Get(root)
+		if err != nil {
+			respondError(rw, err.Error())
+		}
+	}
+
+	var parent string
+	if root != "/" {
+		parent = ".."
+	}
+
+	// get data on children nodes
+
+	log.Printf("children ...")
+	children, stat, err := zk.Children(root)
+	if err != nil {
+		respondError(rw, err.Error())
+	}
+
 	nodes := make(map[string]*NodeInfo)
 	for _, child := range children {
 		childNode := path.Join(root, child)
@@ -50,8 +76,6 @@ func zkHandler(rw http.ResponseWriter, req *http.Request) {
 		stat, err := zk.Exists(childNode)
 		ni := new(NodeInfo)
 		nodes[child] = ni
-
-		log.Printf(" -- info: %s", ni)
 
 		ni.Name = child
 		ni.Stat = stat
@@ -68,7 +92,6 @@ func zkHandler(rw http.ResponseWriter, req *http.Request) {
 		}
 
 		datalen := stat.DataLength()
-		log.Printf(" -- datalen: %d", datalen)
 		if datalen > 0 && datalen < dataMax {
 			data, _, err := zk.Get(childNode)
 			if err != nil {
@@ -80,12 +103,6 @@ func zkHandler(rw http.ResponseWriter, req *http.Request) {
 		}
 	}
 
-	var parent string
-	if root != "/" {
-		parent = ".."
-	}
-
-	zk := zkResponse{parent, root, stat, nodes}
-	log.Printf("ZK: %s", zk)
+	zk := zkResponse{parent, root, data, stat, nodes}
 	renderTemplate(rw, "/zk.html", &zk)
 }

@@ -13,13 +13,20 @@
 					</tr>
 				{{end}}
 
+				{{if .Data}}
+					<div class='panel'>
+					<code><pre>{{.Data}}</code></pre>
+					</div>
+				{{end}}
+
+				<h6>Tree</h6>
 				{{range .Nodes}}
 					<tr>
 						{{if .IsDir}}
 							<td class='zk-node zk-dir'><a href="./{{.Name}}/">{{.Name}}/</a></td>
 						{{else}}
 							<td class='zk-node'>
-								{{.Name}}
+								<a href="./{{.Name}}">{{.Name}}</a>
 							</td>
 						{{end}}
 						<td>
