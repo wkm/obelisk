@@ -1,7 +1,11 @@
-.zk-node {
+.zk-node,tt {
 	font-family: consolas,menlo,courier,monospace;
 }
 
 .zk-dir {
 	font-weight: bold;
+}
+
+table th {
+	text-align: left;
 }

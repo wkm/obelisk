@@ -5,7 +5,7 @@
 	</div>
 	<div class='row'>
 		<div class='12 columns'>
-			<table>
+			<table class='12 columns'>
 				<tr><th>node</th><th></th><th>meta</th></tr>
 				{{if .Parent}}
 					<tr>
@@ -27,14 +27,15 @@
 								Error: {{.Error}}
 							{{end}}
 
+							{{if .Data}}
+								<tt>{{.Data}}</tt><br/>
+							{{end}}
 							{{if .Stat.DataLength}}
 								<small>({{.Stat.DataLength}} bytes)</small>
 							{{end}}
-							{{if .Data}}
-								<br/><tt>{{.Data}}</tt>
-							{{end}}
 						</td>
-						<td>
+						<td width=200>
+							{{.MTimeStr}}
 							{{if .Stat.EphemeralOwner}}
 								<small>(ephemeral: {{.Stat.EphemeralOwner}})</small>
 							{{end}}

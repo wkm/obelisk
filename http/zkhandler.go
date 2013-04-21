@@ -8,6 +8,7 @@ import (
 	"log"
 	"path"
 	"strings"
+	"time"
 )
 
 type zkResponse struct {
@@ -18,15 +19,16 @@ type zkResponse struct {
 }
 
 type NodeInfo struct {
-	Name  string
-	IsDir bool
-	Stat  *zookeeper.Stat
-	Data  string
-	Error string
+	Name     string
+	IsDir    bool
+	Stat     *zookeeper.Stat
+	Data     string
+	Error    string
+	MTimeStr string
 }
 
 var (
-	zk, err = zutil.DialUntilReady("127.0.0.1:2181")
+	zk, err = zutil.DialUntilReady("zk1.datacenter.net:2181")
 	dataMax = 2048
 )
 
@@ -43,11 +45,13 @@ func zkHandler(rw http.ResponseWriter, req *http.Request) {
 	nodes := make(map[string]*NodeInfo)
 	for _, child := range children {
 		childNode := path.Join(root, child)
-		log.Printf("childnode: " + childNode)
+		log.Printf("childnode: %s", childNode)
 
 		stat, err := zk.Exists(childNode)
 		ni := new(NodeInfo)
 		nodes[child] = ni
+
+		log.Printf(" -- info: %s", ni)
 
 		ni.Name = child
 		ni.Stat = stat
@@ -57,11 +61,15 @@ func zkHandler(rw http.ResponseWriter, req *http.Request) {
 			continue
 		}
 
+		ni.MTimeStr = stat.MTime().Format(time.RFC822)
+
 		if stat.NumChildren() > 0 {
 			ni.IsDir = true
 		}
 
-		if stat.DataLength() < dataMax {
+		datalen := stat.DataLength()
+		log.Printf(" -- datalen: %d", datalen)
+		if datalen > 0 && datalen < dataMax {
 			data, _, err := zk.Get(childNode)
 			if err != nil {
 				log.Printf("error: " + err.Error())
