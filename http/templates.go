@@ -18,6 +18,15 @@ var (
 )
 
 func renderTemplate(rw http.ResponseWriter, name string, object interface{}) {
+	ext := filepath.Ext(name)
+	switch ext {
+	case ".html":
+		rw.Header().Set("Content-Type", "text/html")
+
+	case ".css":
+		rw.Header().Set("Content-Type", "text/css")
+	}
+
 	err := getTemplates().ExecuteTemplate(rw, name, object)
 	if err != nil {
 		respondError(rw, err.Error())
@@ -58,8 +67,6 @@ func buildTemplates(directory string) *template.Template {
 	}
 
 	t := template.New("")
-
-	log.Printf("Files: %s", files)
 	for _, file := range files {
 		// skip partials
 		// if strings.HasPrefix(filepath.Base(file), "_") {

@@ -1,24 +1,44 @@
 {{template "_header.html" .}}
-
 <div class='row'>
 	<div class='twelve columns'>
-		<h3>ZK: <span class='subheader'>{{.Node}} (rev. {{.Stat.CVersion}}.{{.Stat.AVersion}})</span></h3>
+		<h3>ZK: <span class='subheader'>{{.Node}} (rev. {{.Stat.Version}}.{{.Stat.CVersion}}.{{.Stat.AVersion}})</span></h3>
 	</div>
 	<div class='row'>
 		<div class='12 columns'>
 			<table>
-				<tr><th>node</th><th></th></tr>
+				<tr><th>node</th><th></th><th>meta</th></tr>
 				{{if .Parent}}
 					<tr>
-						<td><a href="{{.Parent}}">{{.Parent}}/</a></td>
-						<td></td>
+						<td colspan=3 class='zk-node zk-dir'><a href="{{.Parent}}">{{.Parent}}/</a></td>
 					</tr>
 				{{end}}
 
-				{{range .Dirs}}
+				{{range .Nodes}}
 					<tr>
-						<td class='zk-node'><a href="./{{.}}/">{{.}}/</a></td>
-						<td></td>
+						{{if .IsDir}}
+							<td class='zk-node zk-dir'><a href="./{{.Name}}/">{{.Name}}/</a></td>
+						{{else}}
+							<td class='zk-node'>
+								{{.Name}}
+							</td>
+						{{end}}
+						<td>
+							{{if .Error}}
+								Error: {{.Error}}
+							{{end}}
+
+							{{if .Stat.DataLength}}
+								<small>({{.Stat.DataLength}} bytes)</small>
+							{{end}}
+							{{if .Data}}
+								<br/><tt>{{.Data}}</tt>
+							{{end}}
+						</td>
+						<td>
+							{{if .Stat.EphemeralOwner}}
+								<small>(ephemeral: {{.Stat.EphemeralOwner}})</small>
+							{{end}}
+						</td>
 					</tr>
 				{{end}}
 			</table>
