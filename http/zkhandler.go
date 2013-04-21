@@ -29,7 +29,7 @@ type NodeInfo struct {
 }
 
 var (
-	zk, err = zutil.DialUntilReady("zk1.datacenter.net:2181")
+	zk, err = zutil.DialUntilReady("127.0.0.1:2181")
 	dataMax = 2048
 )
 
@@ -45,6 +45,12 @@ func zkHandler(rw http.ResponseWriter, req *http.Request) {
 	stat, err := zk.Exists(root)
 	if err != nil {
 		respondError(rw, err.Error())
+		return
+	}
+
+	if stat == nil {
+		respondError(rw, "Unknown node")
+		return
 	}
 
 	var data string
@@ -61,8 +67,6 @@ func zkHandler(rw http.ResponseWriter, req *http.Request) {
 	}
 
 	// get data on children nodes
-
-	log.Printf("children ...")
 	children, stat, err := zk.Children(root)
 	if err != nil {
 		respondError(rw, err.Error())
@@ -71,7 +75,6 @@ func zkHandler(rw http.ResponseWriter, req *http.Request) {
 	nodes := make(map[string]*NodeInfo)
 	for _, child := range children {
 		childNode := path.Join(root, child)
-		log.Printf("childnode: %s", childNode)
 
 		stat, err := zk.Exists(childNode)
 		ni := new(NodeInfo)

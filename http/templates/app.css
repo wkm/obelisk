@@ -2,6 +2,10 @@
 	font-family: consolas,menlo,courier,monospace;
 }
 
+.zk-node {
+	min-width: 250px;
+}
+
 .zk-dir {
 	font-weight: bold;
 }

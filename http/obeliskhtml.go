@@ -7,8 +7,8 @@ import (
 var (
 	header = func() map[string]string {
 		return map[string]string{
-			"Hosts":   "/host.html",
-			"Workers": "/workers.html",
+			"Hosts":   "/host",
+			"Workers": "/worker",
 			"ZK":      "/zk",
 		}
 	}

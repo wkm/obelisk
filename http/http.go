@@ -10,6 +10,7 @@ import (
 func main() {
 	log.Printf("obelisk/")
 	http.HandleFunc("/zk/", zkHandler)
+	http.HandleFunc("/host/", hostHandler)
 	http.HandleFunc("/worker/", workerHandler)
 	http.HandleFunc("/", indexHandler)
 	err := http.ListenAndServe(":8080", nil)
@@ -25,6 +26,10 @@ func respondError(rw http.ResponseWriter, msg string) {
 	if err != nil {
 		fmt.Fprintf(rw, "Could not render error template: %s", err.Error())
 	}
+}
+
+func hostHandler(rw http.ResponseWriter, req *http.Request) {
+	renderTemplate(rw, "/host.html", nil)
 }
 
 func indexHandler(rw http.ResponseWriter, req *http.Request) {
