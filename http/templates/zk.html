@@ -13,6 +13,15 @@
 					</tr>
 				{{end}}
 
+				{{if .Anchor}}
+					<a href="/worker/{{.Anchor.Addr}}">
+						<div class='panel callout radius'>
+							Worker: <strong>{{.Anchor.Addr}}</strong>
+							<i class='icon-angle-right'></i>
+						</div>
+					</a>
+				{{end}}
+
 				{{if .Data}}
 					<div class='panel'>
 					<code><pre>{{.Data}}</code></pre>

@@ -5,6 +5,7 @@ import (
 	// "text/template"
 	"circuit/kit/zookeeper"
 	"circuit/kit/zookeeper/zutil"
+	"circuit/sys/zanchorfs"
 	"log"
 	"path"
 	"strings"
@@ -16,6 +17,7 @@ type zkResponse struct {
 	Node   string
 	Data   string
 	Stat   *zookeeper.Stat
+	Anchor *zanchorfs.ZFile
 	Nodes  map[string]*NodeInfo
 }
 
@@ -37,36 +39,45 @@ func zkHandler(rw http.ResponseWriter, req *http.Request) {
 	root := req.URL.Path[4:]
 	root = strings.TrimSuffix(root, "/")
 
+	zkr := new(zkResponse)
+
 	if !strings.HasPrefix(root, "/") {
 		root = "/" + root
 	}
 
-	stat, err := zk.Exists(root)
+	zkr.Node = root
+	zkr.Stat, err = zk.Exists(root)
 	if err != nil {
 		respondError(rw, err.Error())
 		return
 	}
 
-	if stat == nil {
+	if zkr.Stat == nil {
 		respondError(rw, "Unknown node")
 		return
 	}
 
-	var data string
-	if stat.DataLength() > 0 {
-		data, _, err = zk.Get(root)
+	if zkr.Stat.DataLength() > 0 {
+		zkr.Data, _, err = zk.Get(root)
 		if err != nil {
 			respondError(rw, err.Error())
 		}
 	}
 
-	var parent string
+	afile, err := getAnchorFile(zkr.Data)
+	if err != nil {
+		log.Printf("not an anchor file")
+	} else {
+		log.Printf("yes, an anchor file: %s", afile)
+		zkr.Anchor = afile
+	}
+
 	if root != "/" {
-		parent = ".."
+		zkr.Parent = ".."
 	}
 
 	// get data on children nodes
-	children, stat, err := zk.Children(root)
+	children, _, err := zk.Children(root)
 	if err != nil {
 		respondError(rw, err.Error())
 	}
@@ -105,6 +116,6 @@ func zkHandler(rw http.ResponseWriter, req *http.Request) {
 		}
 	}
 
-	zk := zkResponse{parent, root, data, stat, nodes}
-	renderTemplate(rw, "/zk.html", &zk)
+	zkr.Nodes = nodes
+	renderTemplate(rw, "/zk.html", zkr)
 }

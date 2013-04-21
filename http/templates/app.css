@@ -13,3 +13,7 @@
 table th {
 	text-align: left;
 }
+
+a .callout {
+	color: #eee;
+}
