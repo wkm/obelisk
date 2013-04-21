@@ -6,6 +6,7 @@ import (
 	"circuit/kit/zookeeper"
 	"circuit/kit/zookeeper/zutil"
 	"log"
+	"path"
 	"strings"
 )
 
@@ -37,16 +38,21 @@ func zkHandler(rw http.ResponseWriter, req *http.Request) {
 		root = "/" + root
 	}
 
+	log.Printf("root: " + root)
 	children, stat, _ := zk.Children(root)
 	nodes := make(map[string]*NodeInfo)
 	for _, child := range children {
-		stat, err := zk.Exists(root + "/" + child)
+		childNode := path.Join(root, child)
+		log.Printf("childnode: " + childNode)
+
+		stat, err := zk.Exists(childNode)
 		ni := new(NodeInfo)
 		nodes[child] = ni
 
 		ni.Name = child
 		ni.Stat = stat
 		if err != nil {
+			log.Printf("error: " + err.Error())
 			ni.Error = err.Error()
 			continue
 		}
@@ -56,8 +62,9 @@ func zkHandler(rw http.ResponseWriter, req *http.Request) {
 		}
 
 		if stat.DataLength() < dataMax {
-			data, _, err := zk.Get(root + "/" + child)
+			data, _, err := zk.Get(childNode)
 			if err != nil {
+				log.Printf("error: " + err.Error())
 				ni.Error = err.Error()
 				continue
 			}

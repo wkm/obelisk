@@ -10,6 +10,7 @@ import (
 func main() {
 	log.Printf("obelisk/")
 	http.HandleFunc("/zk/", zkHandler)
+	http.HandleFunc("/worker/", workerHandler)
 	http.HandleFunc("/", indexHandler)
 	err := http.ListenAndServe(":8080", nil)
 	if err != nil {
