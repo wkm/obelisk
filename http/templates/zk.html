@@ -23,10 +23,18 @@
 				{{range .Nodes}}
 					<tr>
 						{{if .IsDir}}
-							<td class='zk-node zk-dir'><a href="./{{.Name}}/">{{.Name}}/</a></td>
+							<td class='zk-node zk-dir'>
+								<a href="./{{.Name}}/">
+									<i class='icon-folder-close-alt'></i>
+									{{.Name}}/
+								</a>
+							</td>
 						{{else}}
 							<td class='zk-node'>
-								<a href="./{{.Name}}">{{.Name}}</a>
+								<a href="./{{.Name}}">
+									<i class='icon-file'></i>
+									{{.Name}}
+								</a>
 							</td>
 						{{end}}
 						<td>
