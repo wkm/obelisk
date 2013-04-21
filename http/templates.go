@@ -75,6 +75,7 @@ func buildTemplates(directory string) *template.Template {
 
 		name := strings.Replace(file, directory, "", 1)
 		t = t.New(name)
+		t.Funcs(htmlHelpers)
 		art, err := ioutil.ReadFile(file)
 		if err != nil {
 			log.Printf("err: %s", err.Error())
