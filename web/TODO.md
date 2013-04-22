@@ -5,3 +5,4 @@ code:
 interface:
 * add tooltips everywhere
 * use units when displaying statistics
+* have sensible titles on pages
