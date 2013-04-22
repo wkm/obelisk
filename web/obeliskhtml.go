@@ -49,10 +49,12 @@ func HeaderBar(names map[string]string, active string) string {
 
 func commaSeparated(items []uint64) string {
 	itemStrs := make([]string, len(items))
+	lastPositive := 0
 	for i, obj := range items {
-		if obj < 1 {
+		if obj > 0 {
 			itemStrs[i] = fmt.Sprintf("%d", obj)
+			lastPositive = i
 		}
 	}
-	return strings.Join(itemStrs, ",")
+	return strings.Join(itemStrs[:lastPositive], ",")
 }
