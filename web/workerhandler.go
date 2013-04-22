@@ -10,10 +10,15 @@ import (
 )
 
 type WorkerInfo struct {
-	Path          string
-	ID            string
+	Path string
+	ID   string
+
+	// metrics components
 	AcidStats     *acid.Stat
 	PauseNsString string
+
+	// stacktrace components
+	RuntimeProfile string
 }
 
 type WorkerAddr string
@@ -62,13 +67,23 @@ func workerHandler(rw http.ResponseWriter, req *http.Request) {
 	log.Printf("cross: %s", x)
 	workerInfo.Path = root
 	workerInfo.ID = afile.Addr.WorkerID().String()
-	workerInfo.AcidStats = x.Call("Stat")[0].(*acid.Stat)
-
-	workerInfo.PauseNsString = commaSeparated(workerInfo.AcidStats.PauseNs[:])
 
 	switch query {
 	case "metrics":
+		workerInfo.AcidStats = x.Call("Stat")[0].(*acid.Stat)
+		workerInfo.PauseNsString = commaSeparated(workerInfo.AcidStats.PauseNs[:])
 		renderTemplate(rw, "/worker/worker_stats.html", workerInfo)
+
+	case "stacktrace":
+		retrn := x.Call("RuntimeProfile", "goroutine", 1)
+		workerInfo.RuntimeProfile = string(retrn[0].([]byte))
+		renderTemplate(rw, "/worker/worker_stacktrace.html", workerInfo)
+
+	case "profiling":
+		renderTemplate(rw, "/worker/worker_profiling.html", workerInfo)
+
+	case "logging":
+		renderTemplate(rw, "/worker/worker_logging.html", workerInfo)
 
 	default:
 		renderTemplate(rw, "/worker.html", workerInfo)

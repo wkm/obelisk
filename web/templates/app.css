@@ -14,6 +14,18 @@ table th {
 	text-align: left;
 }
 
+.stacktrace {
+	font-family: consolas,menlo,courier,monospace;
+	font-size: 10pt;
+}
+.stacktrace code {
+	font-weight: normal;
+}
+
 a .callout {
 	color: #eee;
+}
+
+body {
+	margin-bottom: 15em;
 }
