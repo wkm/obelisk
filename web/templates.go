@@ -17,8 +17,12 @@ var (
 	cachedTemplates *template.Template
 )
 
+// render a template into an HTTP response, with the right Content-Type
 func renderTemplate(rw http.ResponseWriter, name string, object interface{}) {
+	name = strings.TrimPrefix(name, "/")
 	ext := filepath.Ext(name)
+
+	// FIXME use mime.GetTypeByExtension
 	switch ext {
 	case ".html":
 		rw.Header().Set("Content-Type", "text/html")
@@ -33,6 +37,7 @@ func renderTemplate(rw http.ResponseWriter, name string, object interface{}) {
 	}
 }
 
+// get the newest last modified inode within all levels of a directory
 func dirLastModified(dir string) time.Time {
 	var t int64 = 0
 	filepath.Walk(dir, func(path string, io os.FileInfo, err error) error {
@@ -40,12 +45,15 @@ func dirLastModified(dir string) time.Time {
 		if this > t {
 			t = this
 		}
+
+		// keep going
 		return nil
 	})
 
 	return time.Unix(t, 0)
 }
 
+// get the templates, rebuilding them if the directory has changed
 func getTemplates() *template.Template {
 	lastModified := dirLastModified(templateDir)
 
@@ -60,26 +68,20 @@ func getTemplates() *template.Template {
 	return cachedTemplates
 }
 
+// recursively build all templates in a directory
 func buildTemplates(directory string) *template.Template {
-	files, err := filepath.Glob(directory + "/*")
-	if err != nil {
-		log.Printf("err: %s", err.Error())
-	}
-
+	log.Printf("building templates")
 	t := template.New("")
-	for _, file := range files {
-		// skip partials
-		// if strings.HasPrefix(filepath.Base(file), "_") {
-		// 	continue
-		// }
-
-		name := strings.Replace(file, directory, "", 1)
+	var templateWalkFn func(path string, io os.FileInfo, err error) error
+	templateWalkFn = func(path string, io os.FileInfo, err error) error {
+		// process template file
+		name := strings.TrimPrefix(strings.Replace(path, directory, "", 1), "/")
 		t = t.New(name)
 		t.Funcs(htmlHelpers)
-		art, err := ioutil.ReadFile(file)
+		art, err := ioutil.ReadFile(path)
 		if err != nil {
 			log.Printf("err: %s", err.Error())
-			continue
+			return nil
 		}
 
 		t, err = t.Parse(string(art))
@@ -87,9 +89,14 @@ func buildTemplates(directory string) *template.Template {
 			log.Printf("err: %s", err.Error())
 		}
 
-		t.ParseFiles(file)
-
 		log.Printf("created template `%s`", name)
+		return nil
+	}
+
+	err := filepath.Walk(directory, templateWalkFn)
+
+	if err != nil {
+		log.Printf("err: %s", err.Error())
 	}
 
 	return t

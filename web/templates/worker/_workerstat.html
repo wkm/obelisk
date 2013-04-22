@@ -1,0 +1,117 @@
+
+<div class='row'>
+	<table class='8 columns'>
+		<tr><th colspan=2>General</th></tr>
+		<tr>
+			<td>bytes allocated and still in use</td>
+			<td>{{.AcidStats.Alloc}}</td>
+		</tr>
+		<tr>
+			<td>bytes allocated (even if freed)</td>
+			<td>{{.AcidStats.TotalAlloc}}</td>
+		</tr>
+		<tr>
+			<td>bytes obtained from system</td>
+			<td>{{.AcidStats.Sys}}</td>
+		</tr>
+		<tr>
+			<td>number of pointer lookups</td>
+			<td>{{.AcidStats.Lookups}}</td>
+		</tr>
+		<tr>
+			<td>number of mallocs</td>
+			<td>{{.AcidStats.Mallocs}}</td>
+		</tr>
+		<tr>
+			<td>number of frees</td>
+			<td>{{.AcidStats.Frees}}</td>
+		</tr>
+
+		<tr><th colspan=2>Main allocation heap</th></tr>
+		<tr>
+			<td>bytes allocated and still in use</td>
+			<td>{{.AcidStats.HeapAlloc}}</td>
+		</tr>
+		<tr>
+			<td>bytes obtained from system</td>
+			<td>{{.AcidStats.HeapSys}}</td>
+		</tr>
+		<tr>
+			<td>bytes in idle spans</td>
+			<td>{{.AcidStats.HeapIdle}}</td>
+		</tr>
+		<tr>
+			<td>bytes in non-idle span</td>
+			<td>{{.AcidStats.HeapInuse}}</td>
+		</tr>
+		<tr>
+			<td>bytes released to the OS</td>
+			<td>{{.AcidStats.HeapReleased}}</td>
+		</tr>
+		<tr>
+			<td>total number of allocated objects</td>
+			<td>{{.AcidStats.HeapObjects}}</td>
+		</tr>
+
+
+		<tr><th colspan=2>Low-level fixed-size structure allocator</th></tr>
+		<tr>
+			<td>bootstrap stack structures bytes in use</td>
+			<td>{{.AcidStats.StackInuse}}</td>
+		</tr>
+		<tr>
+			<td>bootstrap stack structures bytes obtained from system</td>
+			<td>{{.AcidStats.StackSys}}</td>
+		</tr>
+		<tr>
+			<td>mspan structures bytes in use</td>
+			<td>{{.AcidStats.MSpanInuse}}</td>
+		</tr>
+		<tr>
+			<td>mspan structures bytes obtained from system</td>
+			<td>{{.AcidStats.MSpanSys}}</td>
+		</tr>
+		<tr>
+			<td>mcache structures bytes in use</td>
+			<td>{{.AcidStats.MCacheInuse}}</td>
+		</tr>
+		<tr>
+			<td>mcache structures bytes obtained from system</td>
+			<td>{{.AcidStats.MCacheSys}}</td>
+		</tr>
+		<tr>
+			<td>profiling bucket hash table</td>
+			<td>{{.AcidStats.BuckHashSys}}</td>
+		</tr>
+
+		<tr><th colspan=2>Garbage collector statistics</th></tr>
+		<tr>
+			<td>next run in HeapAlloc time (bytes)</td>
+			<td>{{.AcidStats.NextGC}}</td>
+		</tr>
+		<tr>
+			<td>last run in absolute time (ns)</td>
+			<td>{{.AcidStats.LastGC}}</td>
+		</tr>
+		<tr>
+			<td>total absolute run time (ns)</td>
+			<td>{{.AcidStats.PauseTotalNs}}</td>
+		</tr>
+		<tr>
+			<td>number of garbage collections</td>
+			<td>{{.AcidStats.NumGC}}</td>
+		</tr>
+		<tr>
+			<td>is garbage collection enabled</td>
+			<td>{{.AcidStats.EnableGC}}</td>
+		</tr>
+		<tr>
+			<td>pause time</td>
+			<td><span class='sparkline'>{{.PauseNsString}}</span></td>
+		</tr>
+		<tr>
+			<td>is debug garbage collection enabled</td>
+			<td>{{.AcidStats.DebugGC}}</td>
+		</tr>
+	</table>
+</div>

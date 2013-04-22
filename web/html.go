@@ -92,10 +92,12 @@ func (n *HtmlNode) Write(r io.Writer) (int, error) {
 	return count, nil
 }
 
+// a node containing raw html
 func (n *RawHtmlNode) Write(w io.Writer) (int, error) {
 	return fmt.Fprint(w, string(*n))
 }
 
+// a node containing escaped html
 func NewTextNode(s string) *TextNode {
 	node := TextNode(s)
 	return &node

@@ -2,6 +2,9 @@ package main
 
 import (
 	"bytes"
+	"fmt"
+	// "reflect"
+	"strings"
 )
 
 var (
@@ -14,8 +17,9 @@ var (
 	}
 
 	htmlHelpers = map[string]interface{}{
-		"headerBar": HeaderBar,
-		"header":    header,
+		"headerBar":      HeaderBar,
+		"header":         header,
+		"CommaSeparated": commaSeparated,
 	}
 )
 
@@ -41,4 +45,14 @@ func HeaderBar(names map[string]string, active string) string {
 	var doc bytes.Buffer
 	node.Write(&doc)
 	return doc.String()
+}
+
+func commaSeparated(items []uint64) string {
+	itemStrs := make([]string, len(items))
+	for i, obj := range items {
+		if obj < 1 {
+			itemStrs[i] = fmt.Sprintf("%d", obj)
+		}
+	}
+	return strings.Join(itemStrs, ",")
 }

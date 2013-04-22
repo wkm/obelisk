@@ -36,7 +36,8 @@ var (
 )
 
 func zkHandler(rw http.ResponseWriter, req *http.Request) {
-	root := req.URL.Path[4:]
+	root := req.URL.Path
+	root = strings.TrimPrefix(root, "/zk/")
 	root = strings.TrimSuffix(root, "/")
 
 	zkr := new(zkResponse)
