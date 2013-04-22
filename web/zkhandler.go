@@ -5,6 +5,7 @@ import (
 	// "text/template"
 	"circuit/kit/zookeeper"
 	"circuit/kit/zookeeper/zutil"
+	"circuit/load/config"
 	"circuit/sys/zanchorfs"
 	"log"
 	"path"
@@ -31,7 +32,7 @@ type NodeInfo struct {
 }
 
 var (
-	zk, err = zutil.DialUntilReady("127.0.0.1:2181")
+	zk, err = zutil.DialUntilReady(config.Config.Zookeeper.Zookeepers())
 	dataMax = 2048
 )
 
