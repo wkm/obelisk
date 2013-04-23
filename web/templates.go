@@ -1,6 +1,7 @@
 package main
 
 import (
+	"bytes"
 	"io/ioutil"
 	"log"
 	"net/http"
@@ -17,8 +18,19 @@ var (
 	cachedTemplates *template.Template
 )
 
+// a template response is the top-level object fed templates containing information
+// about the request
+type TemplateResponse struct {
+	Req    *http.Request
+	Flash  string
+	Object interface{}
+}
+
 // render a template into an HTTP response, with the right Content-Type
-func renderTemplate(rw http.ResponseWriter, name string, object interface{}) {
+func renderTemplate(req *http.Request, rw http.ResponseWriter, name string, object interface{}) {
+	flash := getFlash(req)
+	deleteFlash(rw)
+
 	name = strings.TrimPrefix(name, "/")
 	ext := filepath.Ext(name)
 
@@ -31,9 +43,14 @@ func renderTemplate(rw http.ResponseWriter, name string, object interface{}) {
 		rw.Header().Set("Content-Type", "text/css")
 	}
 
-	err := getTemplates().ExecuteTemplate(rw, name, object)
+	// we have to buffer response writes so we have an opportunity to modify the headers
+	// (eg, set flashes, etc.)
+	var buff bytes.Buffer
+	err := getTemplates().ExecuteTemplate(&buff, name, &TemplateResponse{req, flash, object})
 	if err != nil {
 		respondError(rw, err.Error())
+	} else {
+		buff.WriteTo(rw)
 	}
 }
 

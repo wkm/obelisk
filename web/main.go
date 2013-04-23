@@ -20,6 +20,7 @@ func main() {
 }
 
 func respondError(rw http.ResponseWriter, msg string) {
+	// FIXME doubt this works
 	rw.Header().Set("Status-Code", "502")
 	log.Printf("err: %s", msg)
 	err := getTemplates().ExecuteTemplate(rw, "error.html", msg)
@@ -28,8 +29,13 @@ func respondError(rw http.ResponseWriter, msg string) {
 	}
 }
 
+func redirectTo(rw http.ResponseWriter, req *http.Request, path string) {
+	log.Printf("Redirect -> %s", path)
+	http.Redirect(rw, req, path, http.StatusFound)
+}
+
 func hostHandler(rw http.ResponseWriter, req *http.Request) {
-	renderTemplate(rw, "/host.html", nil)
+	renderTemplate(req, rw, "/host.html", nil)
 }
 
 func indexHandler(rw http.ResponseWriter, req *http.Request) {
@@ -39,5 +45,5 @@ func indexHandler(rw http.ResponseWriter, req *http.Request) {
 		path = "/index.html"
 	}
 	// try to find a template with the given name
-	renderTemplate(rw, path, nil)
+	renderTemplate(req, rw, path, nil)
 }

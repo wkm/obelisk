@@ -17,6 +17,16 @@
 		</ul>
 
 		<section class="top-bar-section">
-			{{headerBar header .}}
+			{{headerBar header ""}}
 		</section>
 	</nav>
+
+	{{if .Flash}}
+		<div class='row'>
+			<div class='ten columns centered'>
+				<div class='alert-box'>
+					{{.Flash}}
+				</div>
+			</div>
+		</div>
+	{{end}}

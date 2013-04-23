@@ -72,20 +72,20 @@ func workerHandler(rw http.ResponseWriter, req *http.Request) {
 	case "metrics":
 		workerInfo.AcidStats = x.Call("Stat")[0].(*acid.Stat)
 		workerInfo.PauseNsString = commaSeparated(workerInfo.AcidStats.PauseNs[:])
-		renderTemplate(rw, "/worker/worker_stats.html", workerInfo)
+		renderTemplate(req, rw, "/worker/worker_stats.html", workerInfo)
 
 	case "stacktrace":
 		retrn := x.Call("RuntimeProfile", "goroutine", 1)
 		workerInfo.RuntimeProfile = string(retrn[0].([]byte))
-		renderTemplate(rw, "/worker/worker_stacktrace.html", workerInfo)
+		renderTemplate(req, rw, "/worker/worker_stacktrace.html", workerInfo)
 
 	case "profiling":
-		renderTemplate(rw, "/worker/worker_profiling.html", workerInfo)
+		renderTemplate(req, rw, "/worker/worker_profiling.html", workerInfo)
 
 	case "logging":
-		renderTemplate(rw, "/worker/worker_logging.html", workerInfo)
+		renderTemplate(req, rw, "/worker/worker_logging.html", workerInfo)
 
 	default:
-		renderTemplate(rw, "/worker.html", workerInfo)
+		renderTemplate(req, rw, "/worker.html", workerInfo)
 	}
 }
