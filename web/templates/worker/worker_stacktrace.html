@@ -1,6 +1,6 @@
-{{template "_header.html" ""}}
+{{template "_header.html" .}}
 {{template "worker/_workerbar.html" .}}
-
+{{with .Object}}
 <div class='row'>
 	<div class='twelve columns'>
 		<h3 class='subheader'>Stacktrace</h3>
@@ -9,4 +9,5 @@
 <div class='row'>
 	<pre class='twelve columns stacktrace'><code>{{.RuntimeProfile}}</code></pre>
 </div>
+{{end}}
 {{template "_footer.html" .}}

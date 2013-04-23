@@ -1,10 +1,12 @@
-{{template "_header.html" ""}}
+{{template "_header.html" .}}
 {{template "worker/_workerbar.html" .}}
+{{with .Object}}
 
-<div class='row'>
-	<div class='twelve columns'>
-		<h3><span class='subheader'>Acid</span> Statistics</h3>
+	<div class='row'>
+		<div class='twelve columns'>
+			<h3><span class='subheader'>Acid</span> Statistics</h3>
+		</div>
 	</div>
-</div>
-{{template "worker/_workerstat.html" .}}
+	{{template "worker/_workerstat.html" .}}
+{{end}}
 {{template "_footer.html" .}}
