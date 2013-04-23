@@ -23,7 +23,11 @@ func respondError(rw http.ResponseWriter, msg string) {
 	// FIXME doubt this works
 	rw.Header().Set("Status-Code", "502")
 	log.Printf("err: %s", msg)
-	err := getTemplates().ExecuteTemplate(rw, "error.html", msg)
+
+	var resp TemplateResponse
+	resp.Object = msg
+
+	err := getTemplates().ExecuteTemplate(rw, "error.html", &resp)
 	if err != nil {
 		fmt.Fprintf(rw, "Could not render error template: %s", err.Error())
 	}
