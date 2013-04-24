@@ -30,3 +30,5 @@ func (r *RLog) FlushLog() []byte {
 	r.Buffer.Reset()
 	return content
 }
+
+// circuit.Listen(ServiceName, Log)
