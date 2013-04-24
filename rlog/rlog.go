@@ -19,10 +19,6 @@ func init() {
 	circuit.RegisterValue(&RLog{})
 }
 
-func Receiver() RLog {
-	return *Log
-}
-
 // print a message into the remote log
 func (r *RLog) Printf(format string, obj ...interface{}) {
 	fmt.Fprintf(&r.Buffer, format, obj...)
