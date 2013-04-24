@@ -1,9 +1,14 @@
 {{template "_header.html" .}}
 {{template "worker/_workerbar.html" .}}
 
+{{with .Object}}
 <div class='row'>
 	<div class='twelve columns'>
-		<h3>FIXME: have to implement</h3>
+		<h3 class='subheader'>CPU Profile <small>(10 seconds)</small></h3>
 	</div>
 </div>
+<div class='row'>
+	<pre class='twelve columns stacktrace'><code>{{.CPUProfile}}</code></pre>
+</div>
+{{end}}
 {{template "_footer.html" .}}

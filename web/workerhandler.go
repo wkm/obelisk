@@ -1,12 +1,12 @@
 package main
 
 import (
-	// "circuit/sys/transport"
 	"circuit/sys/acid"
 	"circuit/use/circuit"
-	"log"
 	"net/http"
+	"obelisk/rlog"
 	"strings"
+	"time"
 )
 
 type WorkerInfo struct {
@@ -19,6 +19,12 @@ type WorkerInfo struct {
 
 	// stacktrace components
 	RuntimeProfile string
+
+	// profiling components
+	CPUProfile string
+
+	// logging bits
+	Log string
 }
 
 type WorkerAddr string
@@ -57,32 +63,48 @@ func workerHandler(rw http.ResponseWriter, req *http.Request) {
 	}
 
 	// get worker information
-	x, err := circuit.TryDial(afile.Addr, "acid")
+	xAcid, err := circuit.TryDial(afile.Addr, "acid")
 	if err != nil {
 		respondError(rw, err.Error())
 		return
 	}
 
 	workerInfo := new(WorkerInfo)
-	log.Printf("cross: %s", x)
 	workerInfo.Path = root
 	workerInfo.ID = afile.Addr.WorkerID().String()
 
 	switch query {
 	case "metrics":
-		workerInfo.AcidStats = x.Call("Stat")[0].(*acid.Stat)
+		workerInfo.AcidStats = xAcid.Call("Stat")[0].(*acid.Stat)
 		workerInfo.PauseNsString = commaSeparated(workerInfo.AcidStats.PauseNs[:])
 		renderTemplate(req, rw, "/worker/worker_stats.html", workerInfo)
 
 	case "stacktrace":
-		retrn := x.Call("RuntimeProfile", "goroutine", 1)
+		retrn := xAcid.Call("RuntimeProfile", "goroutine", 1)
 		workerInfo.RuntimeProfile = string(retrn[0].([]byte))
 		renderTemplate(req, rw, "/worker/worker_stacktrace.html", workerInfo)
 
 	case "profiling":
+		retrn := xAcid.Call("CPUProfile", 10*time.Second)
+		workerInfo.CPUProfile = string(retrn[0].([]byte))
 		renderTemplate(req, rw, "/worker/worker_profiling.html", workerInfo)
 
 	case "logging":
+		xRlog, err := circuit.TryDial(afile.Addr, rlog.ServiceName)
+		if err != nil {
+			respondError(rw, err.Error())
+			return
+		}
+
+		if xRlog == nil {
+			respondError(rw, "No RLog service responded")
+			return
+		}
+
+		println("log: " + xRlog.String())
+
+		retrn := xRlog.Call("FlushLog")
+		workerInfo.Log = string(retrn[0].([]byte))
 		renderTemplate(req, rw, "/worker/worker_logging.html", workerInfo)
 
 	default:
