@@ -1,3 +1,4 @@
+// remote logging facility for workers
 package rlog
 
 import (
