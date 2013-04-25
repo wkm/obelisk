@@ -1,20 +1,31 @@
 package main
 
 import (
+	_ "circuit/kit/debug/ctrlc"
+	_ "circuit/kit/debug/kill"
 	_ "circuit/load"
 	"circuit/use/circuit"
 	"log"
-	agent "obelisk/agent/lib"
+	_ "net/http/pprof"
+	"obelisk/agent"
 )
 
-// utility command which spawns an obelisk agent worker on the local machine
+func init() {
+	println("hi")
+}
+
+// spawn an obelisk agent worker on the local machine
 func main() {
 	log.Printf("Starting obelisk-agent")
 
-	ret, addr, err := circuit.Spawn("localhost", []string{"/obelisk-agent"}, agent.App{})
+	_, addr, err := circuit.Spawn(
+		"localhost",
+		[]string{"/obelisk-agent"},
+		agent.WorkerApp{},
+	)
 	if err != nil {
 		log.Fatalf(err.Error())
 	}
 
-	log.Printf("Agent Started")
+	log.Printf("obelisk-agent started %s", addr.String())
 }

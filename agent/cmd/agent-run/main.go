@@ -3,10 +3,10 @@ package main
 import (
 	"fmt"
 	"log"
-	agent "obelisk/agent/lib"
+	"obelisk/agent"
 )
 
-// run the agent once on the localhost
+// run the agent, once, on localhost
 func main() {
 	sys, err := agent.CurrentSystemStatus()
 	if err != nil {
@@ -18,11 +18,15 @@ func main() {
 		log.Fatal(err.Error())
 	}
 
+	// system information
 	fmt.Printf("%s", sys)
 	println("\n")
+
+	// process information
 	for _, pid := range pids {
 		if pid.Ppid != 0 {
 			println(pid.String())
 		}
 	}
+
 }

@@ -1,11 +1,8 @@
-package worker
+package main
 
 import (
-	"circuit/use/circuit"
+	_ "circuit/load/worker"
+	_ "obelisk/agent"
 )
 
-type App struct{}
-
-func (App) Main() {
-	circuit.
-}
+func main() {}
