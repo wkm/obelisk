@@ -101,8 +101,6 @@ func workerHandler(rw http.ResponseWriter, req *http.Request) {
 			return
 		}
 
-		println("log: " + xRlog.String())
-
 		retrn := xRlog.Call("FlushLog")
 		workerInfo.Log = string(retrn[0].([]byte))
 		renderTemplate(req, rw, "/worker/worker_logging.html", workerInfo)

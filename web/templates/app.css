@@ -14,12 +14,11 @@ table th {
 	text-align: left;
 }
 
-.stacktrace {
-	font-family: consolas,menlo,courier,monospace;
-	font-size: 10pt;
-}
-.stacktrace code {
+code {
 	font-weight: normal;
+	font-family: consolas,menlo,courier,monospace;
+	font-size: 9pt;
+	color: rgb(46,52,54);
 }
 
 a .callout {
