@@ -2,6 +2,7 @@ package agent
 
 import (
 	"circuit/use/circuit"
+	"time"
 )
 
 const ServiceName = "obelisk-worker"
@@ -9,8 +10,12 @@ const ServiceName = "obelisk-worker"
 type WorkerApp struct{}
 type WorkerInterface struct{}
 
-func (WorkerApp) Main() WorkerInterface {
-	return WorkerInterface{}
+func (WorkerApp) Main() {
+	circuit.Daemonize(func() {
+		time.Sleep(30 * time.Minute)
+		// this is a passive worker
+		<-(chan struct{})(nil)
+	})
 }
 
 func init() {
