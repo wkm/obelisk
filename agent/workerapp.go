@@ -2,6 +2,8 @@ package agent
 
 import (
 	"circuit/use/circuit"
+	"obelisk/rconfig"
+	"obelisk/rlog"
 	"time"
 )
 
@@ -11,10 +13,15 @@ type WorkerApp struct{}
 type WorkerInterface struct{}
 
 func (WorkerApp) Main() {
+	circuit.Listen(rlog.ServiceName, rlog.Log)
+	circuit.Listen(rconfig.ServiceName, rconfig.Config)
 	circuit.Daemonize(func() {
-		time.Sleep(30 * time.Minute)
 		// this is a passive worker
-		<-(chan struct{})(nil)
+		// <-(chan struct{})(nil) XXXX doesn't work
+		for {
+			time.Sleep(5 * time.Second)
+			rlog.Log.Printf("it is now %s\n", time.Now().Format(time.Kitchen))
+		}
 	})
 }
 

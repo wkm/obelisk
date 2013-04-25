@@ -35,3 +35,11 @@ func (r *RConfig) Get(key string) string {
 
 	return r.Settings[key]
 }
+
+// get a copy of all values set (threadsafe)
+func (r *RConfig) GetAll(key string) map[string]string {
+	r.Lock()
+	defer r.Unlock()
+
+	return r.Settings
+}
