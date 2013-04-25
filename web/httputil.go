@@ -7,10 +7,14 @@ import (
 )
 
 var (
-	flashName     = "flash"
+	// the name of the flash cookie
+	flashName = "flash"
+
+	// how long for the flash to last
 	flashDuration = 12 * time.Hour
 )
 
+// prepare a cookie with the content of the flash
 func makeFlashCookie(note string) *http.Cookie {
 	cookie := new(http.Cookie)
 	cookie.Name = flashName
@@ -20,6 +24,7 @@ func makeFlashCookie(note string) *http.Cookie {
 	return cookie
 }
 
+// prepare a cookie which has no content and has already expired
 func makeDeleteFlash() *http.Cookie {
 	cookie := new(http.Cookie)
 	cookie.Name = flashName
@@ -34,6 +39,7 @@ func setFlash(rw http.ResponseWriter, note string) {
 	http.SetCookie(rw, makeFlashCookie(note))
 }
 
+// delete a flash from a cookie
 func deleteFlash(rw http.ResponseWriter) {
 	http.SetCookie(rw, makeDeleteFlash())
 }

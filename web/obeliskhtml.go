@@ -23,6 +23,7 @@ var (
 	}
 )
 
+// print the header bar, optionally with an item highlighted
 func HeaderBar(names map[string]string, active string) string {
 	node := NewHtmlNode("ul").AddClass("left")
 	divider := NewHtmlNode("li").AddClass("divider")
@@ -47,6 +48,7 @@ func HeaderBar(names map[string]string, active string) string {
 	return doc.String()
 }
 
+// string print a bunch of numbers comma separated
 func commaSeparated(items []uint64) string {
 	itemStrs := make([]string, len(items))
 	lastPositive := 0

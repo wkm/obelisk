@@ -18,10 +18,17 @@
 				</a>
 			{{end}}
 
-			{{if .Data}}
+			{{if .GobData}}
 				<div class='panel'>
-				<code><pre>{{.Data}}</code></pre>
+					<span class='radius secondary label'>GOB</span>
+					<tt>{{html .GobData}}</tt><br/>
 				</div>
+			{{else}}
+				{{if .Data}}
+					<div class='panel'>
+						<code><pre>{{html .Data}}</code></pre>
+					</div>
+				{{end}}
 			{{end}}
 		</div>
 	</div>
@@ -57,8 +64,13 @@
 								Error: {{.Error}}
 							{{end}}
 
-							{{if .Data}}
-								<tt>{{.Data}}</tt><br/>
+							{{if .GobData}}
+								<span class='radius secondary label'>GOB</span>
+								<tt>{{html .GobData}}</tt><br/>
+							{{else}}
+								{{if .Data}}
+									<tt>{{html .Data}}</tt><br/>
+								{{end}}
 							{{end}}
 							{{if .Stat.DataLength}}
 								<small>({{.Stat.DataLength}} bytes)</small>

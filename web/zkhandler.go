@@ -14,12 +14,13 @@ import (
 )
 
 type zkResponse struct {
-	Parent string
-	Node   string
-	Data   string
-	Stat   *zookeeper.Stat
-	Anchor *zanchorfs.ZFile
-	Nodes  map[string]*NodeInfo
+	Parent  string
+	Node    string
+	Data    string
+	GobData string
+	Stat    *zookeeper.Stat
+	Anchor  *zanchorfs.ZFile
+	Nodes   map[string]*NodeInfo
 }
 
 type NodeInfo struct {
@@ -27,6 +28,7 @@ type NodeInfo struct {
 	IsDir    bool
 	Stat     *zookeeper.Stat
 	Data     string
+	GobData  string
 	Error    string
 	MTimeStr string
 }
@@ -119,6 +121,14 @@ func zkHandler(rw http.ResponseWriter, req *http.Request) {
 			zkr.Anchor = afile
 		}
 
+		str, err := getAsGob(zkr.Data)
+		if err == nil {
+			log.Printf("yes, gob: %s", str)
+			zkr.GobData = str
+		} else {
+			log.Printf("not gob because %s", err.Error())
+		}
+
 		// get data on children nodes
 		children, _, err := zk.Children(root)
 		if err != nil {
@@ -156,6 +166,11 @@ func zkHandler(rw http.ResponseWriter, req *http.Request) {
 					continue
 				}
 				ni.Data = data
+
+				str, err := getAsGob(ni.Data)
+				if err == nil {
+					ni.GobData = str
+				}
 			}
 		}
 
