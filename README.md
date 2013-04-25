@@ -10,6 +10,7 @@ Obelisk is a management interface for Gocircuit deployments.
   service
 
 Future:
+
 * `/lib` -- the core implementation of obelisk functions
 * `/cmd` -- a command line interface that exposes obelisk functionality in a
   programmatic environment
