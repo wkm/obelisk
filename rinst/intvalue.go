@@ -24,14 +24,12 @@ func (v *IntValue) Get() int64 {
 }
 
 // atomically get the number of changes for this value
-func (v *IntValue) NumChanges() uint32 {
+func (v *IntValue) NumSets() uint32 {
 	return atomic.LoadUint32(&v.changes)
 }
 
 // get a readable value for a counter
-func (c *IntValue) Measure() []string {
-	return []string{
-		fmt.Sprintf("%d", c.Get()),
-		fmt.Sprintf("%d", c.NumChanges()),
-	}
+func (c *IntValue) Measure(n string, b MeasurementBuffer) {
+	b <- Measurement{n, fmt.Sprintf("%d", c.Get())}
+	b <- Measurement{n + ".sets", fmt.Sprintf("%d", c.NumSets())}
 }

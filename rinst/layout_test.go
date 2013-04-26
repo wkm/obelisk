@@ -14,14 +14,15 @@ func TestLayout(t *testing.T) {
 		t.Errorf("layout counter bad value %d", c.Value())
 	}
 
-	snap := l.Snapshot()
-	t.Logf("snaphost: %d", snap)
-	if len(snap) != 1 {
-		t.Errorf("layout snapshot bad length %d", len(snap))
+	b := make(MeasurementBuffer, 10)
+	l.Snapshot(b)
+
+	if len(b) != 1 {
+		t.Errorf("layout snapshot bad length %d", len(b))
 	}
 
-	expected := InstrumentMeasurement{"foo", "2"}
-	if snap[0] != expected {
+	expect := Measurement{"foo", "2"}
+	if expect != <-b {
 		t.Error("layout snapshot bad value")
 	}
 }

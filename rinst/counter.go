@@ -26,8 +26,6 @@ func (c *Counter) Value() int64 {
 }
 
 // get a readable value for a counter
-func (c *Counter) Measure() []string {
-	return []string{
-		fmt.Sprintf("%d", c.Value()),
-	}
+func (c *Counter) Measure(name string, b MeasurementBuffer) {
+	b <- Measurement{name, fmt.Sprintf("%d", c.Value())}
 }

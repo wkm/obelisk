@@ -14,10 +14,15 @@ func TestCounter(t *testing.T) {
 		t.Error("counter bad value")
 	}
 
-	if len(c.Measure()) != 1 {
+	b := make(MeasurementBuffer, 10)
+	c.Measure("fig", b)
+
+	if len(b) != 1 {
 		t.Error("counter bad measure length")
 	}
-	if c.Measure()[0] != "2" {
+
+	expec := Measurement{"fig", "2"}
+	if expec != <-b {
 		t.Error("counter bad measure")
 	}
 }

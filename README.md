@@ -14,3 +14,22 @@ Future:
 * `/lib` -- the core implementation of obelisk functions
 * `/cmd` -- a command line interface that exposes obelisk functionality in a
   programmatic environment
+
+
+## Consuming Measurements
+
+```go
+ch := make(chan Vars, 1000)
+
+for {
+	time.Sleep(time.Second)
+	for r := fetchVars() {
+		r.write(ch)
+	}
+}
+
+for {
+	w <- ch
+	vena.Write(w)
+}
+```

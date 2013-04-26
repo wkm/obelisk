@@ -14,19 +14,23 @@ func TestIntValue(t *testing.T) {
 		t.Error("intvalue bad value")
 	}
 
-	if i.NumChanges() != 3 {
+	if i.NumSets() != 3 {
 		t.Error("intvalue bad numchanges")
 	}
 
-	if len(i.Measure()) != 2 {
+	b := make(MeasurementBuffer, 10)
+	i.Measure("fig", b)
+	if len(b) != 2 {
 		t.Error("intvalue bad measure length")
 	}
 
-	if i.Measure()[0] != "15" {
+	expec := Measurement{"fig", "15"}
+	if expec != <-b {
 		t.Error("intvalue bad measure value")
 	}
 
-	if i.Measure()[1] != "3" {
-		t.Error("intvalue bad measure numchanges")
+	expec = Measurement{"fig.sets", "3"}
+	if expec != <-b {
+		t.Error("intvalue bad measure numsets")
 	}
 }

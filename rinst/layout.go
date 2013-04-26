@@ -36,20 +36,9 @@ func (l *Layout) Counter(name string) *Counter {
 	return counter
 }
 
-type InstrumentMeasurement struct {
-	Name  string
-	Value string
-}
-
-// get the current values of all instruments in a layout
-func (l *Layout) Snapshot() []InstrumentMeasurement {
-	lines := make([]InstrumentMeasurement, 0, len(l.Instruments))
-	for key, i := range l.Instruments {
-		for _, val := range i.Measure() {
-			if val != "" {
-				lines = append(lines, InstrumentMeasurement{key, val})
-			}
-		}
+// send the current values of all instruments in a layout to a buffer
+func (l *Layout) Snapshot(b MeasurementBuffer) {
+	for name, i := range l.Instruments {
+		i.Measure(name, b)
 	}
-	return lines
 }
