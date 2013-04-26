@@ -2,22 +2,13 @@
 package rconfig
 
 import (
-	"circuit/use/circuit"
 	"sync"
 )
-
-const ServiceName = "remote-config"
 
 // a simple configuration object
 type RConfig struct {
 	sync.Mutex
 	Settings map[string]string
-}
-
-var Config = new(RConfig)
-
-func init() {
-	circuit.RegisterValue(&RConfig{})
 }
 
 // change the value of a setting (threadsafe)

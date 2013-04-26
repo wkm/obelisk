@@ -97,7 +97,7 @@ func workerHandler(rw http.ResponseWriter, req *http.Request) {
 		}
 
 		if xRlog == nil {
-			respondError(rw, "No RLog service responded")
+			respondError(rw, "No Log service responded")
 			return
 		}
 

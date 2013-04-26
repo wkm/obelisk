@@ -15,7 +15,7 @@ func getAsGob(blob string) (string, error) {
 	}
 
 	var thing struct{}
-	err := gob.NewDecoder(bytes.NewBufferString(blob)).Decode(&thing)
+	// err := gob.NewDecoder(bytes.NewBufferString(blob)).Decode(&thing)
 	if err != nil {
 		return "", err
 	}
