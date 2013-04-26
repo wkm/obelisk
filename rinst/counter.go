@@ -26,6 +26,8 @@ func (c *Counter) Value() int64 {
 }
 
 // get a readable value for a counter
-func (c *Counter) Measure() string {
-	return fmt.Sprintf("%d", c.Value())
+func (c *Counter) Measure() []string {
+	return []string{
+		fmt.Sprintf("%d", c.Value()),
+	}
 }

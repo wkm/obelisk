@@ -14,7 +14,10 @@ func TestCounter(t *testing.T) {
 		t.Error("counter bad value")
 	}
 
-	if c.Measure() != "2" {
+	if len(c.Measure()) != 1 {
+		t.Error("counter bad measure length")
+	}
+	if c.Measure()[0] != "2" {
 		t.Error("counter bad measure")
 	}
 }

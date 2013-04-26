@@ -45,9 +45,10 @@ type InstrumentMeasurement struct {
 func (l *Layout) Snapshot() []InstrumentMeasurement {
 	lines := make([]InstrumentMeasurement, 0, len(l.Instruments))
 	for key, i := range l.Instruments {
-		val := i.Measure()
-		if val != "" {
-			lines = append(lines, InstrumentMeasurement{key, val})
+		for _, val := range i.Measure() {
+			if val != "" {
+				lines = append(lines, InstrumentMeasurement{key, val})
+			}
 		}
 	}
 	return lines
