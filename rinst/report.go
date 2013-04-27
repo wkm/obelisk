@@ -13,8 +13,14 @@ func TextReport(w io.Writer, coll *Collection) {
 		close(b)
 	}()
 
-	select {
-	case m := <-b:
-		fmt.Fprintf(w, "%25s: %s\n", m.Name, m.Value)
+	for {
+		select {
+		case m, ok := <-b:
+			if !ok {
+				return
+			}
+
+			fmt.Fprintf(w, "%25s: %s\n", m.Name, m.Value)
+		}
 	}
 }
