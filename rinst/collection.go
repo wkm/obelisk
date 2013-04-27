@@ -2,7 +2,7 @@
 	implement a selection of instruments for measuring program and
 	worker behavior and performance
 
-	const Inst = NewLayout()
+	const Stats = make(Collection)
 */
 package rinst
 

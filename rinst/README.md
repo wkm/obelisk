@@ -3,14 +3,14 @@ A package for instrumenting your application.
 
 
 ## Instruments
-### Dimension
-A `Dimension` is a named set of instruments which share a common property (including other dimensions)
-
 ### Counter
 A `Counter` tracks how many times something has occured. It can only increase. Generally counters become interesting when their change is measured over time. (eg. how many requests have been served)
 
 ### Value
 A `Value` is a container that exposes how many times a value has changed as well as its current state. (eg. the hostname or number of active workers)
+
+### XXXX Dimension
+A `Dimension` is a named set of instruments which share a common property (including other dimensions)
 
 ### XXXX Gauge
 A `Gauge` is a function which can be executed to get the instantaneous state of the system. (eg. the number of open files)
