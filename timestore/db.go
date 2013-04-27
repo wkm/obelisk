@@ -2,6 +2,7 @@ package timestore
 
 import (
 	"circuit/kit/lockfile"
+	"errors"
 	"log"
 	"os"
 	"path/filepath"
@@ -23,6 +24,12 @@ func NewDB(config Config) (*DB, error) {
 	err := ValidateConfig(config)
 	if err != nil {
 		return nil, err
+	}
+
+	// create lockfile
+	_, err := lockfile.Create(filepath.Join(config.DiskStore, "lock"))
+	if err != nil {
+		return nil, errors.New("could not create lock ")
 	}
 
 	db := new(DB)
@@ -69,7 +76,7 @@ func (db *DB) backgroundWork() {
 // flush this db to disk
 // FIXME need to include a hash+
 func (db *DB) Flush() {
-	ts := time.Now().Format(time.ANSIC)
+	ts := time.Now().Format(time.RFC3339)
 	fname := filepath.Join(db.config.DiskStore, ts)
 	log.Printf("creating flush %s", fname)
 
