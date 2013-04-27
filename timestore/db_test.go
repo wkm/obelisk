@@ -1,12 +1,15 @@
 package timestore
 
 import (
+	"os"
+	"path/filepath"
 	"testing"
 )
 
 func TestDB(t *testing.T) {
 	c := NewConfig()
-	c.DiskStore = "/tmp/db_test"
+	c.DiskStore = filepath.Join(os.TempDir(), "obelisk-timestore")
+	defer os.RemoveAll(c.DiskStore)
 
 	db, err := NewDB(c)
 	if err != nil {
@@ -17,6 +20,25 @@ func TestDB(t *testing.T) {
 	for i := uint64(0); i < 100; i++ {
 		for j := uint64(0); j < 50; j++ {
 			db.Store.Insert(100+i, 10+j, float64(j))
+		}
+	}
+
+	// validate data
+	for i := uint64(0); i < 100; i++ {
+		points, err := db.Store.FlatQuery(100+i, 10, 10+50)
+		if err != nil {
+			t.Fatalf("unexpected error %s", err.Error())
+		}
+
+		if len(points) != 50 {
+			t.Fatalf("expected 50 points, had %d", len(points))
+		}
+
+		for j := 0; j < 50; j++ {
+			expec := float64(j)
+			if points[j] != expec {
+				t.Errorf("invalid point value %v, expected %v", points[j], expec)
+			}
 		}
 	}
 
@@ -32,7 +54,7 @@ func TestDB(t *testing.T) {
 	// close the original database
 	db.Shutdown()
 
-	// now open it
+	// now reopen it
 	db2, err = NewDB(c)
 	if err != nil {
 		t.Fatal(err.Error())
@@ -50,9 +72,9 @@ func TestDB(t *testing.T) {
 		}
 
 		for j := 0; j < 50; j++ {
-			expec := float64(1 + j)
+			expec := float64(j)
 			if points[j] != expec {
-				t.Errorf("invalid point value %d, expected %d", points[j], expec)
+				t.Fatalf("invalid point value %v, expected %v", points[j], expec)
 			}
 		}
 	}

@@ -2,6 +2,7 @@ package timestore
 
 import (
 	"bytes"
+	"fmt"
 	"testing"
 )
 
@@ -23,16 +24,14 @@ func TestStore(t *testing.T) {
 	var b bytes.Buffer
 	db.Dump(&b)
 
-	if b.String() != "123:10=1.100000,11=1.200000,12=1.300000,\n" {
-		t.Errorf("invalid dump %s", b.String())
-	}
-
 	db2 := NewStore()
 	db2.Load(&b)
 
 	var b2 bytes.Buffer
 	db2.Dump(&b2)
-	if b2.String() != b.String() {
-		t.Errorf("dump and load did not match original")
+	expec, _ := db.FlatQuery(123, 10, 12)
+	actual, _ := db2.FlatQuery(123, 10, 12)
+	if fmt.Sprintf("%v", expec) != fmt.Sprintf("%v", actual) {
+		t.Errorf("queries are different")
 	}
 }
