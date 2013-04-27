@@ -24,6 +24,8 @@ func errorRollup(errs ...error) error {
 
 // get the status of all running processes
 func CurrentProcessStatus() ([]ProcessStatus, error) {
+	statMeasurements.Incr()
+
 	pids := sigar.ProcList{}
 	err := pids.Get()
 	if err != nil {

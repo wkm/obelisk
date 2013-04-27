@@ -12,6 +12,8 @@ type SystemStatus struct {
 
 // get the current system status
 func CurrentSystemStatus() (SystemStatus, error) {
+	statMeasurements.Incr()
+
 	uptime := sigar.Uptime{}
 	avg := sigar.LoadAverage{}
 	mem := sigar.Mem{}
