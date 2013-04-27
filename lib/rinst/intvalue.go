@@ -29,7 +29,7 @@ func (v *IntValue) NumSets() uint32 {
 }
 
 // get a readable value for a counter
-func (c *IntValue) Measure(n string, b MeasurementBuffer) {
-	b <- Measurement{n, fmt.Sprintf("%d", c.Get())}
-	b <- Measurement{n + ".sets", fmt.Sprintf("%d", c.NumSets())}
+func (v *IntValue) Measure(n string, b MeasurementBuffer) {
+	b <- Measurement{n, fmt.Sprintf("%d", v.Get())}
+	b <- Measurement{n + ".sets", fmt.Sprintf("%d", v.NumSets())}
 }
