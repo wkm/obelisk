@@ -8,16 +8,12 @@ package timestore
 import (
 	"github.com/petar/GoLLRB/llrb"
 	"sync"
-	"time"
 )
 
 // a store of named timeseries
 type Store struct {
 	sync.Mutex
-	config    Config
-	values    map[uint64]*llrb.Tree
-	shutdown  chan bool
-	flushTick <-chan time.Time
+	values map[uint64]*llrb.Tree
 }
 
 // a <time,value> pair
@@ -26,22 +22,11 @@ type Point struct {
 	Value float64
 }
 
-// create a new timeseries store
-func NewStore(config Config) *Store {
+// create a new in-memory timeseries store
+func NewStore() *Store {
 	s := new(Store)
-	s.config = config
-	s.values = make(map[uint64]*llrb.Tree, config.InitialSize)
-
-	// load from disk if applicable
-
-	s.flushTick = time.Tick(config.FlushPeriod)
-	go s.startPeriodicFlush()
+	s.values = make(map[uint64]*llrb.Tree)
 	return s
-}
-
-// shutdown this store
-func (s *Store) Shutdown() {
-	s.shutdown <- true
 }
 
 // inserts the given time and value under the key

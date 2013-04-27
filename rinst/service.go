@@ -7,5 +7,5 @@ import (
 const ServiceName = "remote-instrumentation"
 
 func init() {
-	circuit.RegisterValue(&Layout{})
+	circuit.RegisterValue(&Collection{})
 }

@@ -15,4 +15,5 @@ var (
 	statDumpBytes = Stats.Counter("dump.bytes") // number of bytes dumped
 	statError     = Stats.Counter("error")      // number of errors encountered
 	statFlush     = Stats.Counter("flush")      // number of flushes
+	statCleanup   = Stats.Counter("cleanup")    // number of cleanups
 )

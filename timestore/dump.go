@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"github.com/petar/GoLLRB/llrb"
 	"io"
-	"time"
 )
 
 // write out all values into a writer, this blocks the entire time
@@ -57,21 +56,4 @@ func (s *Store) Dump(w io.Writer) error {
 	}
 
 	return nil
-}
-
-// execute a flush periodically
-func (s *Store) startPeriodicFlush() {
-	switch {
-	case <-s.shutdown:
-		return
-
-	case time <-s.flushTick; time != nil:
-		statFlush.Incr()
-		time.Sleep(s.config.FlushPeriod)
-		s.Flush()
-	}
-}
-
-func (s *Store) Flush() {
-
 }
