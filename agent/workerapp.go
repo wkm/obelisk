@@ -2,8 +2,8 @@ package agent
 
 import (
 	"circuit/use/circuit"
-	"obelisk/rconfig"
-	"obelisk/rlog"
+	"obelisk/lib/rconfig"
+	"obelisk/lib/rlog"
 	"time"
 )
 

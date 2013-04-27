@@ -1,7 +1,7 @@
 package timestore
 
 import (
-	"obelisk/rinst"
+	"obelisk/lib/rinst"
 )
 
 var Stats = make(rinst.Collection)

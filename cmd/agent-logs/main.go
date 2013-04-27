@@ -5,7 +5,7 @@ import (
 	"circuit/use/anchorfs"
 	"circuit/use/circuit"
 	"fmt"
-	"obelisk/rlog"
+	"obelisk/lib/rlog"
 	"os"
 )
 

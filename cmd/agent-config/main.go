@@ -6,7 +6,7 @@ import (
 	"circuit/use/circuit"
 	"flag"
 	"fmt"
-	"obelisk/rconfig"
+	"obelisk/lib/rconfig"
 	"os"
 )
 

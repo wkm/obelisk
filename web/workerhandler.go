@@ -4,7 +4,7 @@ import (
 	"circuit/sys/acid"
 	"circuit/use/circuit"
 	"net/http"
-	"obelisk/rlog"
+	"obelisk/lib/rlog"
 	"strings"
 	"time"
 )
