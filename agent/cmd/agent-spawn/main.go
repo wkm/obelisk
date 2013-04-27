@@ -1,18 +1,11 @@
 package main
 
 import (
-	_ "circuit/kit/debug/ctrlc"
-	_ "circuit/kit/debug/kill"
 	_ "circuit/load"
 	"circuit/use/circuit"
 	"log"
-	_ "net/http/pprof"
 	"obelisk/agent"
 )
-
-func init() {
-	println("hi")
-}
 
 // spawn an obelisk agent worker on the local machine
 func main() {
