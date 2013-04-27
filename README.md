@@ -2,18 +2,26 @@
 Obelisk is a management interface for Gocircuit deployments.
 
 ## Components
-* `/web` -- a web interface 
+* `/web` -- a web interface to obelisk
 * `/agent` -- a small worker which is intended to run on every host; provides
   system level monitoring (memory usage, network traffic, disk space, etc.)
 
-* `/rlog` -- a logging utility library for workers that exposes a `remote-log`
-  service
+* `/server` -- the obelisk server
 
-Future:
+* `/cmd` -- obelisk utilities
+    * `logs`: utility for remotely reading logs from workers
 
-* `/lib` -- the core implementation of obelisk functions
-* `/cmd` -- a command line interface that exposes obelisk functionality in a
-  programmatic environment
+* `/lib` -- backbone libraries for obelisk
+    * **`rinst`**: a library for instrumenting code with metrics
+    * **`rlog`**: a logging utility library for workers that exposes a `remote-log` service
+
+    * **`storekv`**: a simple key-value database
+    * **`storetag`**: a simple tags database
+    * **`storetime`**: a simple timestore database
+    * **`persist`**: a utility library for creating simple persisted databases
+
+    * `rconfig`: [experimental] remote configuration stuffs
+    * `rinstreporter`: [stupid] just... stupid
 
 
 ## Consuming Measurements

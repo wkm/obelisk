@@ -1,16 +1,13 @@
-package timestore
+package storetime
 
 import (
 	"circuit/kit/lockfile"
-	"errors"
 	"log"
-	"os"
-	"path/filepath"
-	"sort"
+	"obelisk/lib/persist"
 	"time"
 )
 
-// the timestore DB has persistence feature
+// the storetime DB has persistence feature
 type DB struct {
 	Store         *Store
 	config        Config
@@ -27,21 +24,24 @@ func NewDB(config Config) (*DB, error) {
 		return nil, err
 	}
 
-	// create lockfile
-	lock, err := lockfile.Create(filepath.Join(config.DiskStore, "lock"))
+	store := NewStore()
+	lockfile, err := persist.Lock(config.DiskStore, "storetime")
 	if err != nil {
-		return nil, errors.New("could not create lock ")
+		return nil, err
 	}
 
 	db := new(DB)
-	db.lockFile = lock
+	db.lockFile = lockfile
 	db.config = config
-	db.Store = NewStore()
+	db.Store = store
 
 	db.quit = make(chan bool)
 
 	// restore the database
-	db.Restore()
+	err = db.Restore()
+	if err != nil {
+		log.Printf("error restoring: %s", err.Error())
+	}
 
 	db.flushTicker = time.NewTicker(config.FlushPeriod)
 	db.cleanupTicker = time.NewTicker(config.CleanupPeriod)
@@ -73,63 +73,14 @@ func (db *DB) backgroundWork() {
 
 // load all keys from youngest flush. (in addition to any keys already set)
 func (db *DB) Restore() error {
-	matches, err := filepath.Glob(filepath.Join(db.config.DiskStore, "flush-*"))
-	if err != nil {
-		return err
-	}
-
-	if len(matches) < 1 {
-		return errors.New("no flushes to restore")
-	}
-
-	sort.Strings(matches)
-
-	for i := len(matches) - 1; i >= 0; i-- {
-		restoreFile := matches[i]
-		log.Printf("attempting restore from %s", restoreFile)
-
-		f, err := os.Open(restoreFile)
-		if err != nil {
-			log.Printf("  err: %s", err)
-			continue
-		}
-		defer f.Close()
-
-		err = db.Store.Load(f)
-		if err != nil {
-			log.Printf("  err: %s", err)
-			continue
-		}
-
-		log.Printf("  restored")
-		return nil
-	}
-
-	return errors.New("could not successfully restore any flush")
+	return persist.RestoreSnapshot(db.Store, db.config.DiskStore, "time")
 }
 
 // flush this db to disk
 // FIXME need to include a hash+
-func (db *DB) Flush() {
+func (db *DB) Flush() error {
 	statFlush.Incr()
-
-	ts := time.Now().Format(time.RFC3339)
-	fname := filepath.Join(db.config.DiskStore, "flush-"+ts)
-	log.Printf("creating flush %s", fname)
-
-	f, err := os.Create(fname)
-	if err != nil {
-		log.Printf("could not flush %s", err.Error())
-		return
-	}
-	defer f.Close()
-
-	err = db.Store.Dump(f)
-	if err != nil {
-		log.Printf("error flushing %s", err.Error())
-	}
-
-	log.Printf("flush finished")
+	return persist.FlushSnapshot(db.Store, db.config.DiskStore, "time")
 }
 
 // FIXME implement

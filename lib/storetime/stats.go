@@ -1,4 +1,4 @@
-package timestore
+package storetime
 
 import (
 	"obelisk/lib/rinst"

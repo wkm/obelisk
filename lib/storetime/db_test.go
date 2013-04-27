@@ -1,4 +1,4 @@
-package timestore
+package storetime
 
 import (
 	"os"
@@ -8,7 +8,7 @@ import (
 
 func TestDB(t *testing.T) {
 	c := NewConfig()
-	c.DiskStore = filepath.Join(os.TempDir(), "obelisk-timestore")
+	c.DiskStore = filepath.Join(os.TempDir(), "obelisk-storetime")
 	defer os.RemoveAll(c.DiskStore)
 
 	db, err := NewDB(c)

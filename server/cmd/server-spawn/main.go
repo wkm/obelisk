@@ -10,7 +10,7 @@ func main() {
 	log.Printf("Starting obelisk-server")
 	_, addr, err := circuit.Spawn(
 		"localhost",
-		[]string{"/obelisk/server"},
+		[]string{"/obelisk-server"},
 		server.WorkerApp{},
 	)
 	if err != nil {

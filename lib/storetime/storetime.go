@@ -3,7 +3,7 @@
 	global lock; flushes to disk on a regular basis
 */
 
-package timestore
+package storetime
 
 import (
 	"github.com/petar/GoLLRB/llrb"

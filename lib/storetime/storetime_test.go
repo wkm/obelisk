@@ -1,4 +1,4 @@
-package timestore
+package storetime
 
 import (
 	"bytes"
@@ -6,7 +6,7 @@ import (
 	"testing"
 )
 
-// functional test of the timestore's features
+// functional test of the storetime's features
 func TestStore(t *testing.T) {
 	db := NewStore()
 	db.Insert(123, 10, 1.1)
