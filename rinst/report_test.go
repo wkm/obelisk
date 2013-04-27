@@ -15,7 +15,7 @@ func TestTextualReport(t *testing.T) {
 	var buff bytes.Buffer
 	TextReport(&buff, &coll)
 
-	if buff.String() != fmt.Sprintf("%25s: %s\n", "foo", "2") {
+	if buff.String() != fmt.Sprintf("%s: %s\n", "foo", "2") {
 		t.Errorf("invalid text export: %s", buff.String())
 	}
 }

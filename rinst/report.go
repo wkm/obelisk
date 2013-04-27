@@ -20,7 +20,7 @@ func TextReport(w io.Writer, coll *Collection) {
 				return
 			}
 
-			fmt.Fprintf(w, "%25s: %s\n", m.Name, m.Value)
+			fmt.Fprintf(w, "%s: %s\n", m.Name, m.Value)
 		}
 	}
 }
