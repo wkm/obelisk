@@ -1,7 +1,10 @@
 package server
 
 import (
+	"obelisk/lib/rinst"
+	"os"
 	"path/filepath"
+	"time"
 	// "circuit/use/circuit"
 	"log"
 	"obelisk/lib/storekv"
@@ -24,6 +27,30 @@ func (app *ServerApp) Main() {
 	app.startTimeStore()
 	app.startTagStore()
 	app.startKVStore()
+
+	go app.periodic()
+}
+
+func (app *ServerApp) periodic() {
+	ticker := time.Tick(1 * time.Minute)
+	for {
+		<-ticker
+
+		// FIXME expose magic number as config
+		buffer := make(rinst.MeasurementBuffer, 1000)
+		go func() {
+			Stats.Measure("", buffer)
+			close(buffer)
+		}()
+
+		host, err := os.Hostname()
+		if err != nil {
+			log.Printf("could not get hostname %s", err.Error())
+			continue
+		}
+
+		app.ReceiveStats(host, buffer)
+	}
 }
 
 func (app *ServerApp) startTimeStore() {
