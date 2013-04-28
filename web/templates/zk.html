@@ -39,7 +39,10 @@
 				<tr><th>node</th><th></th><th>meta</th></tr>
 				{{if .Parent}}
 					<tr>
-						<td colspan=3 class='zk-node zk-dir'><a href="{{.Parent}}">{{.Parent}}/</a></td>
+						<td colspan=3 class='zk-node zk-dir'><a href="{{.Parent}}">
+							<i class='icon-reply'></i>
+							{{.Parent}}/
+						</a></td>
 					</tr>
 				{{end}}
 				{{range .Nodes}}
