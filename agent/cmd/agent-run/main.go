@@ -6,7 +6,7 @@ import (
 	"obelisk/agent"
 )
 
-// run the agent, once, on localhost
+// run the agent on localhost
 func main() {
 	sys, err := agent.CurrentSystemStatus()
 	if err != nil {
