@@ -10,15 +10,19 @@
 <div class='row'>
 	<h3>Metrics</h3>
 </div>
-{{range .Metrics}}
-	<div class='row'>
-		<h6>{{.Name}}</h6>
-		<div id="plot-{{.Path}}" class='plot'></div>
-		<script type="text/javascript">
-			$(function() {chart("{{.Path}}")})
-		</script>
-	</div>
-{{end}}
+<div class='row'>
+	<ul class='small-block-grid-2 large-block-grid-2'>
+		{{range .Metrics}}
+			<li>
+				<h6>{{.Name}}</h6>
+				<div id="plot-{{.Path}}" class='plot'></div>
+				<script type="text/javascript">
+					$(function() {chart("{{.Path}}")})
+				</script>
+			</li>
+		{{end}}
+	</ul>
+</div>
 
 {{end}}
 {{template "_footer.html" .}}
