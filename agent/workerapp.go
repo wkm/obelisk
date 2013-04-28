@@ -16,7 +16,7 @@ func (WorkerApp) Main() {
 	circuit.Listen(rlog.ServiceName, rlog.Log)
 	circuit.Listen(rconfig.ServiceName, rconfig.Config)
 	circuit.Daemonize(func() {
-		ticker := time.Ticker(10 * time.Second)
+		ticker := time.NewTicker(10 * time.Second)
 		for {
 			select {
 			case <-ticker.C:

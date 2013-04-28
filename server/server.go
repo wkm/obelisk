@@ -1,18 +1,15 @@
 package server
 
 import (
-	"obelisk/lib/rinst"
-	"os"
-	"path/filepath"
-	"time"
-	// "circuit/use/circuit"
 	"log"
+	"obelisk/lib/rinst"
 	"obelisk/lib/storekv"
 	"obelisk/lib/storetag"
 	"obelisk/lib/storetime"
+	"os"
+	"path/filepath"
+	"time"
 )
-
-const ServiceName = "obelisk-server"
 
 type ServerApp struct {
 	timedb *storetime.DB

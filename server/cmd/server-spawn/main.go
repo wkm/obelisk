@@ -4,18 +4,16 @@ import (
 	_ "circuit/load"
 	"circuit/use/circuit"
 	"log"
+	"obelisk/server"
 )
 
 func main() {
 	log.Printf("Starting obelisk-server")
-	_, addr, err := circuit.Spawn(
-		"localhost",
-		[]string{"/obelisk-server"},
-		server.WorkerApp{},
-	)
+	addr, err := server.Spawn()
 	if err != nil {
-		log.Fatal(err.Error())
+		log.Fatalf(err.Error())
 	}
 
-	log.Printf("obelisk-server started %s", addr.String())
+	log.Printf("obelisk-server spawned %s", addr.String())
+	circuit.Hang()
 }
