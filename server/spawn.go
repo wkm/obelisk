@@ -2,6 +2,8 @@ package server
 
 import (
 	"circuit/use/circuit"
+	"log"
+	"obelisk/lib/storetime"
 )
 
 const ServiceName = "obelisk-server"
@@ -11,6 +13,7 @@ type start struct{}
 func init() {
 	circuit.RegisterFunc(start{})
 	circuit.RegisterValue(&ServerApp{})
+	circuit.RegisterValue(&storetime.Point{})
 }
 
 func (start) Start() circuit.XPerm {
@@ -29,6 +32,8 @@ func Spawn() (circuit.Addr, error) {
 		[]string{"/obelisk-server"},
 		start{},
 	)
+
+	log.Printf("spawned at %v %v", addr, err)
 
 	return addr, err
 }

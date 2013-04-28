@@ -79,3 +79,16 @@ func (app *ServerApp) startKVStore() {
 		log.Fatalf("error starting keyvalue store%s", err.Error())
 	}
 }
+
+func (app *ServerApp) ChildrenTags(node string) ([]string, error) {
+	return app.tagdb.Store.Children(node)
+}
+
+func (app *ServerApp) QueryTime(node string, start, stop uint64) ([]storetime.Point, error) {
+	id, err := app.tagdb.Store.Id(node)
+	if err != nil {
+		return nil, err
+	}
+
+	return app.timedb.Store.Query(id, start, stop)
+}
