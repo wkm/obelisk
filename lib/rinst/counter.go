@@ -7,7 +7,8 @@ import (
 )
 
 type Counter struct {
-	count int64
+	count      int64
+	desc, unit string
 }
 
 // atomically increment the given counter by one
@@ -30,4 +31,9 @@ func (c *Counter) Value() int64 {
 func (c *Counter) Measure(name string, b MeasurementBuffer) {
 	now := uint64(time.Now().Unix())
 	b <- Measurement{name, now, fmt.Sprintf("%d", c.Value())}
+}
+
+// the schema of this counter
+func (c *Counter) Schema(name string, b SchemaBuffer) {
+	b <- Schema{name, TypeCounter, c.unit, c.desc}
 }

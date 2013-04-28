@@ -6,7 +6,7 @@ import (
 
 func TestLayout(t *testing.T) {
 	coll := NewCollection()
-	c := coll.Counter("foo")
+	c := coll.Counter("foo", "bar", "foos to the bar")
 	c.Incr()
 	c.Incr()
 

@@ -25,22 +25,31 @@ func (coll Collection) AddInstrument(name string, inst Instrument) Instrument {
 }
 
 // create a new counter with the given name
-func (coll Collection) Counter(name string) *Counter {
+func (coll Collection) Counter(name, unit, desc string) *Counter {
 	counter := new(Counter)
+	counter.unit = unit
+	counter.desc = desc
+
 	coll.instruments[name] = counter
 	return counter
 }
 
 // create a new integer value with the given name
-func (coll Collection) IntValue(name string) *IntValue {
+func (coll Collection) IntValue(name, unit, desc string) *IntValue {
 	value := new(IntValue)
+	value.unit = unit
+	value.desc = desc
+
 	coll.instruments[name] = value
 	return value
 }
 
 // create a new float value with the given name
-func (coll Collection) FloatValue(name string) *FloatValue {
+func (coll Collection) FloatValue(name, unit, desc string) *FloatValue {
 	value := new(FloatValue)
+	value.unit = unit
+	value.desc = desc
+
 	coll.instruments[name] = value
 	return value
 }
@@ -58,5 +67,15 @@ func (coll Collection) Measure(name string, buff MeasurementBuffer) {
 	}
 	for key, inst := range coll.instruments {
 		inst.Measure(prefix+key, buff)
+	}
+}
+
+func (coll Collection) Schema(name string, buff SchemaBuffer) {
+	prefix := ""
+	if name != "" {
+		prefix = name + "."
+	}
+	for key, inst := range coll.instruments {
+		inst.Schema(prefix+key, buff)
 	}
 }
