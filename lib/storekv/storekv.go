@@ -36,6 +36,19 @@ func (s *Store) Get(name string) ([]byte, error) {
 	}
 }
 
+// get the values of multiple names
+func (s *Store) MultiGet(names []string) ([][]byte, error) {
+	values := make([][]byte, len(names))
+	s.Lock()
+	s.Unlock()
+
+	for i, name := range names {
+		values[i] = s.Values[name]
+	}
+
+	return values, nil
+}
+
 // gives true if the key exists
 func (s *Store) Exists(name string) bool {
 	statExists.Incr()
