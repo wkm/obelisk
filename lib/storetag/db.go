@@ -68,11 +68,9 @@ func (db *DB) backgroundWork() {
 			return
 
 		case <-db.flushTicker.C:
-			log.Printf("flushing to disk")
 			statFlush.Incr()
 			db.Flush()
 
-			log.Printf("cleaning up flush files")
 			statCleanup.Incr()
 			db.Cleanup()
 		}
@@ -92,7 +90,7 @@ func (db *DB) Flush() error {
 
 func (db *DB) Cleanup() error {
 	statCleanup.Incr()
-	return persist.CleanupSnapshot(db.Config.DiskStore, "tag")
+	return persist.CleanupSnapshot(db.Config.FlushVersions, db.Config.DiskStore, "tag")
 }
 
 // shutdown this store

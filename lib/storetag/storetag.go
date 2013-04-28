@@ -1,120 +1,117 @@
 /*
 	dead simple in-memory store for tags
 
-	tags are strings with a uniqueid and optionally a parent tag
+	tags are used to encode hierarchies, ensuring that every
+	node has a unique, persistent ID
 */
 
 package storetag
 
 import (
 	"errors"
+	"path/filepath"
+	"strings"
 	"sync"
 )
 
 type Store struct {
 	sync.Mutex
-	names map[string]*Tag
 	ids   map[uint64]*Tag
 	maxId uint64
+
+	root *Tag
 }
 
 type Tag struct {
 	id       uint64
 	name     string
 	parent   *Tag
-	children []*Tag
+	children map[string]*Tag
 }
 
 func NewStore() *Store {
 	s := new(Store)
-	s.names = make(map[string]*Tag)
 	s.ids = make(map[uint64]*Tag)
 	s.maxId = 0
+
+	// create the root node
+	s.root = s.newTag("")
+
 	return s
 }
 
-// give the largest id generated (currently this corresponds to the number of tags)
+// give the largest id generated (one less than the number of tags)
 func (s *Store) MaxId() uint64 {
 	s.Lock()
 	defer s.Unlock()
+
 	return s.maxId
 }
 
-// get the id of a tag (0 on error)
-func (s *Store) TagId(name string) (uint64, error) {
-	s.Lock()
-	defer s.Unlock()
-	tag, ok := s.names[name]
-	if !ok {
-		return 0, errors.New("unknown tag " + name)
-	}
-
-	return tag.id, nil
-}
-
-// create a new tag with no parent and return its id (0 on error)
-func (s *Store) NewTag(name string) (uint64, error) {
-	s.Lock()
-	defer s.Unlock()
-
-	_, ok := s.names[name]
-	if ok {
-		return 0, errors.New("node already exists")
-	}
-
+// not threadsafe
+func (s *Store) newTag(name string) *Tag {
 	var tag Tag
-	s.maxId++
 	tag.id = s.maxId
-	tag.name = name
-	s.names[name] = &tag
+	s.maxId++
 	s.ids[tag.id] = &tag
 
-	return tag.id, nil
+	tag.name = name
+	tag.children = make(map[string]*Tag)
+
+	return &tag
 }
 
-// create a new tag and return its id (0 on error)
-func (s *Store) NewChildTag(name string, parent string) (uint64, error) {
+func createPath(name ...string) []string {
+	return strings.Split("/"+filepath.Join(name...), "/")
+}
+
+// get the id of a tag, creating it and the hierarchy to if it doesn't exist
+func (s *Store) NewTag(name ...string) (uint64, error) {
+	components := createPath(name...)
+
 	s.Lock()
 	defer s.Unlock()
 
-	_, ok := s.names[name]
-	if ok {
-		return 0, errors.New("node already exists")
+	cursor := s.root
+	for _, part := range components[1:] {
+		child, ok := cursor.children[part]
+		if !ok {
+			tag := s.newTag(part)
+			tag.parent = cursor
+			cursor.children[part] = tag
+			s.ids[tag.id] = tag
+			child = tag
+		}
+
+		cursor = child
 	}
 
-	parentTag, ok := s.names[parent]
-	if !ok {
-		return 0, errors.New("unknown parent " + parent)
-	}
-
-	// create a new tag
-	var tag Tag
-	s.maxId++
-	tag.id = s.maxId
-	tag.name = name
-	tag.parent = parentTag
-
-	// register it with the parent
-	parentTag.children = append(parentTag.children, &tag)
-
-	// register with the lookups
-	s.names[name] = &tag
-	s.ids[tag.id] = &tag
-
-	return tag.id, nil
+	return cursor.id, nil
 }
 
 // get the children of a tag
-func (s *Store) Children(name string) ([]string, error) {
-	node, ok := s.names[name]
-	if !ok {
-		return nil, errors.New("unknown tag " + name)
+func (s *Store) Children(name ...string) ([]string, error) {
+	components := createPath(name...)
+
+	s.Lock()
+	defer s.Unlock()
+
+	cursor := s.root
+	for _, part := range components[1:] {
+		child, ok := cursor.children[part]
+		if !ok {
+			return nil, errors.New("unknown node " + part + " of " + strings.Join(components, "/"))
+		}
+
+		cursor = child
 	}
 
-	children := make([]string, len(node.children))
-	for i, child := range node.children {
-		children[i] = child.name
+	childrenNames := make([]string, len(cursor.children))
+	i := 0
+	for _, c := range cursor.children {
+		childrenNames[i] = c.name
+		i++
 	}
 
-	return children, nil
+	return childrenNames, nil
 }

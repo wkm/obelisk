@@ -6,10 +6,9 @@ import (
 )
 
 type Line struct {
-	Id   uint64
-	Name string
-
-	Parent, Child uint64
+	Id     uint64
+	Parent uint64
+	Name   string
 }
 
 func init() {
@@ -24,22 +23,15 @@ func (s *Store) Dump(w io.Writer) error {
 
 	// write out all tag names and their ids
 	enc := gob.NewEncoder(w)
-	for _, tag := range s.names {
-		val := Line{tag.id, tag.name, 0, 0}
+
+	// this skips the "" tag, intentionally
+	for i := uint64(1); i < s.maxId; i++ {
+		tag := s.ids[i]
+		val := Line{tag.id, tag.parent.id, tag.name}
+
 		err := enc.Encode(val)
 		if err != nil {
 			return err
-		}
-	}
-
-	// write out all tag parents
-	for _, tag := range s.names {
-		for _, child := range tag.children {
-			val := Line{0, "", tag.id, child.id}
-			err := enc.Encode(val)
-			if err != nil {
-				return err
-			}
 		}
 	}
 
@@ -61,22 +53,15 @@ func (s *Store) Load(r io.Reader) error {
 			break
 		}
 
-		if line.Id != 0 {
-			// new node
-			var tag Tag
-			tag.id = line.Id
-			tag.name = line.Name
+		var tag Tag
+		tag.id = line.Id
+		tag.name = line.Name
+		tag.parent = s.ids[line.Parent]
 
-			s.names[tag.name] = &tag
-			s.ids[tag.id] = &tag
-		} else {
-			// new edge
-			child := s.ids[line.Child]
-			parent := s.ids[line.Parent]
+		tag.children = make(map[string]*Tag)
+		tag.parent.children[line.Name] = &tag
 
-			child.parent = parent
-			parent.children = append(parent.children, child)
-		}
+		s.ids[line.Id] = &tag
 	}
 
 	return nil

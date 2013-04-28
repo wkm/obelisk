@@ -1,6 +1,7 @@
 package storetag
 
 import (
+	_ "circuit/kit/debug/ctrlc"
 	"os"
 	"path/filepath"
 	"sort"
@@ -18,6 +19,8 @@ func TestDB(t *testing.T) {
 		t.Fatal(err.Error())
 	}
 
+	println("about to insert data")
+
 	// insert some data
 	db.Store.NewTag("a")
 	db.Store.NewTag("b")
@@ -27,15 +30,16 @@ func TestDB(t *testing.T) {
 	db.Store.NewTag("g")
 	db.Store.NewTag("h")
 
-	db.Store.NewChildTag("i", "a")
-	db.Store.NewChildTag("j", "a")
-	db.Store.NewChildTag("k", "a")
+	db.Store.NewTag("a/i")
+	db.Store.NewTag("a", "j")
+	db.Store.NewTag("a/k")
 
-	db.Store.NewChildTag("l", "j")
-	db.Store.NewChildTag("m", "j")
-	db.Store.NewChildTag("n", "j")
-	db.Store.NewChildTag("o", "j")
+	db.Store.NewTag("a/j/l")
+	db.Store.NewTag("a/j/m")
+	db.Store.NewTag("a/j/n")
+	db.Store.NewTag("a/j/o")
 
+	println("about to enter flush")
 	db.Flush()
 	db.Shutdown()
 
@@ -44,7 +48,7 @@ func TestDB(t *testing.T) {
 		t.Fatal(err.Error())
 	}
 
-	res, err := db2.Store.Children("j")
+	res, err := db2.Store.Children("a/j")
 	if err != nil {
 		t.Fatalf("unexpected error %s", err.Error())
 	}

@@ -7,8 +7,8 @@ import (
 func TestTagStore(t *testing.T) {
 	s := NewStore()
 
-	if s.MaxId() != 0 {
-		t.Errorf("expected maxid of 0, got %v", s.MaxId())
+	if s.MaxId() != 1 {
+		t.Errorf("expected maxid of 1, got %v", s.MaxId())
 	}
 
 	id, err := s.NewTag("foo")
@@ -20,10 +20,10 @@ func TestTagStore(t *testing.T) {
 		t.Errorf("expected id=1 got %v", id)
 	}
 
-	// try retrieval
-	id, err = s.TagId("foo")
+	// ensure the id is the same
+	id, err = s.NewTag("foo")
 	if err != nil {
-		t.Errorf("unexpected error")
+		t.Errorf("unexpected error %s", err.Error())
 	}
 	if id != 1 {
 		t.Errorf("expected id=1 got %v", id)
@@ -31,15 +31,15 @@ func TestTagStore(t *testing.T) {
 
 	// try reinsert
 	id, err = s.NewTag("foo")
-	if err == nil {
-		t.Errorf("expected an error")
+	if err != nil {
+		t.Errorf("unexpected error %s", err.Error())
 	}
-	if id != 0 {
-		t.Errorf("expected id=0 got %v", id)
+	if id != 1 {
+		t.Errorf("expected id=1 got %v", id)
 	}
 
 	// insert child node
-	id, err = s.NewChildTag("bar", "foo")
+	id, err = s.NewTag("foo", "bar")
 	if err != nil {
 		t.Errorf("unexpected error %s", err.Error())
 	}
