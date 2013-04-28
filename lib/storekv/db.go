@@ -86,19 +86,19 @@ func (db *DB) backgroundWork() {
 
 // load all keys from youngest flush. (in addition to any keys already set)
 func (db *DB) Restore() error {
-	return persist.RestoreSnapshot(db.Store, db.Config.DiskStore, "storekv")
+	return persist.RestoreSnapshot(db.Store, db.Config.DiskStore, "kv")
 }
 
 // flush this db to disk
-// FIXME need to include a hash+
 func (db *DB) Flush() error {
 	statFlush.Incr()
-	return persist.FlushSnapshot(db.Store, db.Config.DiskStore, "storekv")
+	return persist.FlushSnapshot(db.Store, db.Config.DiskStore, "kv")
 }
 
 // FIXME implement
 func (db *DB) Cleanup() {
-	log.Printf("cleaning up")
+	statCleanup.Incr()
+	return persist.CleanupSnapshot(db.Config.DiskStore, "kv")
 }
 
 // shutdown this store

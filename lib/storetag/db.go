@@ -1,4 +1,4 @@
-package storetime
+package storetag
 
 import (
 	"circuit/kit/lockfile"
@@ -9,21 +9,20 @@ import (
 )
 
 type Config struct {
-	DiskStore     string        // which directory to store the dump files on disk
-	FlushPeriod   time.Duration // how often to flush to disk
-	FlushVersions int           // how many flushed versions to keep
-	CleanupPeriod time.Duration // how often to cleanup flushes
+	DiskStore     string
+	FlushPeriod   time.Duration
+	FlushVersions int
+	CleanupPeriod time.Duration
 }
 
 func NewConfig() Config {
 	var c Config
-	c.FlushVersions = 10
 	c.FlushPeriod = 1 * time.Minute
+	c.FlushVersions = 10
 	c.CleanupPeriod = 10 * time.Minute
 	return c
 }
 
-// the storetime DB has persistence feature
 type DB struct {
 	Store         *Store
 	Config        Config
@@ -33,38 +32,35 @@ type DB struct {
 	lockFile      *lockfile.LockFile
 }
 
-// create a new database
 func NewDB(config Config) (*DB, error) {
 	store := NewStore()
+	db := new(DB)
+
+	db.Store = store
+	db.Config = config
 
 	err := os.MkdirAll(config.DiskStore, 0700)
 	if err != nil {
 		return nil, err
 	}
 
-	lockfile, err := persist.Lock(config.DiskStore, "storetime")
+	lockFile, err := persist.Lock(config.DiskStore, "storetag")
 	if err != nil {
 		return nil, err
 	}
-
-	db := new(DB)
-	db.lockFile = lockfile
-	db.Config = config
-	db.Store = store
+	db.lockFile = lockFile
 
 	db.quit = make(chan bool)
 
-	// restore the database
 	err = db.Restore()
 	if err != nil {
-		log.Printf("error restoring: %s", err.Error())
+		log.Printf("error restoring %s", err.Error())
 	}
 
 	db.flushTicker = time.NewTicker(config.FlushPeriod)
 	db.cleanupTicker = time.NewTicker(config.CleanupPeriod)
 
 	go db.backgroundWork()
-
 	return db, nil
 }
 
@@ -90,20 +86,18 @@ func (db *DB) backgroundWork() {
 
 // load all keys from youngest flush. (in addition to any keys already set)
 func (db *DB) Restore() error {
-	return persist.RestoreSnapshot(db.Store, db.Config.DiskStore, "time")
+	return persist.RestoreSnapshot(db.Store, db.Config.DiskStore, "tag")
 }
 
 // flush this db to disk
-// FIXME need to include a hash+
 func (db *DB) Flush() error {
 	statFlush.Incr()
-	return persist.FlushSnapshot(db.Store, db.Config.DiskStore, "time")
+	return persist.FlushSnapshot(db.Store, db.Config.DiskStore, "tag")
 }
 
-// FIXME implement
-func (db *DB) Cleanup() {
+func (db *DB) Cleanup() error {
 	statCleanup.Incr()
-	return persist.CleanupSnapshot(db.Config.DiskStore, "time")
+	return persist.CleanupSnapshot(db.Config.DiskStore, "tag")
 }
 
 // shutdown this store

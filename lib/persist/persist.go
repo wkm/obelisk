@@ -24,6 +24,11 @@ func Lock(dir, key string) (*lockfile.LockFile, error) {
 	return lockfile.Create(filepath.Join(dir, key))
 }
 
+func CleanupSnapshot(dir, key string) error {
+	// FIXME implement
+	return nil
+}
+
 func FlushSnapshot(p Persistable, dir, key string) error {
 	ts := time.Now().Format(time.RFC3339)
 	fname := filepath.Join(dir, key+"-"+ts)
