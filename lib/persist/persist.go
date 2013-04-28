@@ -21,7 +21,7 @@ type Persistable interface {
 
 // create a lockfile
 func Lock(dir, key string) (*lockfile.LockFile, error) {
-	return lockfile.Create(filepath.Join(dir, key))
+	return lockfile.Create(filepath.Join(dir, key+".lock"))
 }
 
 func CleanupSnapshot(dir, key string) error {
