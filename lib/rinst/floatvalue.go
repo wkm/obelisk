@@ -3,6 +3,7 @@ package rinst
 import (
 	"fmt"
 	"sync"
+	"time"
 )
 
 // a container for an integer value which sometimes changes
@@ -41,6 +42,7 @@ func (v *FloatValue) Measure(n string, b MeasurementBuffer) {
 	v.Lock()
 	defer v.Unlock()
 
-	b <- Measurement{n, fmt.Sprintf("%f", v.value)}
-	b <- Measurement{n + ".sets", fmt.Sprintf("%d", v.changes)}
+	now := uint64(time.Now().Unix())
+	b <- Measurement{n, now, fmt.Sprintf("%f", v.value)}
+	b <- Measurement{n + ".sets", now, fmt.Sprintf("%d", v.changes)}
 }

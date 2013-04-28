@@ -3,6 +3,7 @@ package rinst
 import (
 	"fmt"
 	"sync/atomic"
+	"time"
 )
 
 type Counter struct {
@@ -27,5 +28,6 @@ func (c *Counter) Value() int64 {
 
 // get a readable value for a counter
 func (c *Counter) Measure(name string, b MeasurementBuffer) {
-	b <- Measurement{name, fmt.Sprintf("%d", c.Value())}
+	now := uint64(time.Now().Unix())
+	b <- Measurement{name, now, fmt.Sprintf("%d", c.Value())}
 }

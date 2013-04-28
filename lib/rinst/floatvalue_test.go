@@ -24,13 +24,13 @@ func TestFloatValue(t *testing.T) {
 		t.Error("floatvalue bad measure length")
 	}
 
-	expec := Measurement{"fig", "14.000000"}
+	expec := Measurement{"fig", 0, "14.000000"}
 	actual := <-b
 	if expec != actual {
 		t.Errorf("floatvalue bad measure value %v", actual)
 	}
 
-	expec = Measurement{"fig.sets", "3"}
+	expec = Measurement{"fig.sets", 0, "3"}
 	actual = <-b
 	if expec != actual {
 		t.Error("floatvalue bad measure numsets %v", actual)

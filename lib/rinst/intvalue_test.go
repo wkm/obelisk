@@ -24,12 +24,12 @@ func TestIntValue(t *testing.T) {
 		t.Error("intvalue bad measure length")
 	}
 
-	expec := Measurement{"fig", "15"}
+	expec := Measurement{"fig", 0, "15"}
 	if expec != <-b {
 		t.Error("intvalue bad measure value")
 	}
 
-	expec = Measurement{"fig.sets", "3"}
+	expec = Measurement{"fig.sets", 0, "3"}
 	if expec != <-b {
 		t.Error("intvalue bad measure numsets")
 	}

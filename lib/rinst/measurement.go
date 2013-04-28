@@ -5,5 +5,6 @@ type MeasurementBuffer chan Measurement
 // represents a single value measured by an instrument
 type Measurement struct {
 	Name  string
+	Time  uint64
 	Value string
 }

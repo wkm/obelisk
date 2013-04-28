@@ -3,6 +3,7 @@ package rinst
 import (
 	"fmt"
 	"sync/atomic"
+	"time"
 )
 
 // a container for an integer value which sometimes changes
@@ -30,6 +31,7 @@ func (v *IntValue) NumSets() uint32 {
 
 // get a readable value for a counter
 func (v *IntValue) Measure(n string, b MeasurementBuffer) {
-	b <- Measurement{n, fmt.Sprintf("%d", v.Get())}
-	b <- Measurement{n + ".sets", fmt.Sprintf("%d", v.NumSets())}
+	now := uint64(time.Now().Unix())
+	b <- Measurement{n, now, fmt.Sprintf("%d", v.Get())}
+	b <- Measurement{n + ".sets", now, fmt.Sprintf("%d", v.NumSets())}
 }
