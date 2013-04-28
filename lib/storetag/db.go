@@ -12,24 +12,21 @@ type Config struct {
 	DiskStore     string
 	FlushPeriod   time.Duration
 	FlushVersions int
-	CleanupPeriod time.Duration
 }
 
 func NewConfig() Config {
 	var c Config
 	c.FlushPeriod = 1 * time.Minute
 	c.FlushVersions = 10
-	c.CleanupPeriod = 10 * time.Minute
 	return c
 }
 
 type DB struct {
-	Store         *Store
-	Config        Config
-	quit          chan bool
-	flushTicker   *time.Ticker
-	cleanupTicker *time.Ticker
-	lockFile      *lockfile.LockFile
+	Store       *Store
+	Config      Config
+	quit        chan bool
+	flushTicker *time.Ticker
+	lockFile    *lockfile.LockFile
 }
 
 func NewDB(config Config) (*DB, error) {
@@ -58,7 +55,6 @@ func NewDB(config Config) (*DB, error) {
 	}
 
 	db.flushTicker = time.NewTicker(config.FlushPeriod)
-	db.cleanupTicker = time.NewTicker(config.CleanupPeriod)
 
 	go db.backgroundWork()
 	return db, nil
@@ -76,7 +72,6 @@ func (db *DB) backgroundWork() {
 			statFlush.Incr()
 			db.Flush()
 
-		case <-db.cleanupTicker.C:
 			log.Printf("cleaning up flush files")
 			statCleanup.Incr()
 			db.Cleanup()
@@ -104,7 +99,6 @@ func (db *DB) Cleanup() error {
 func (db *DB) Shutdown() {
 	close(db.quit)
 	db.flushTicker.Stop()
-	db.cleanupTicker.Stop()
 
 	err := db.lockFile.Release()
 	if err != nil {
