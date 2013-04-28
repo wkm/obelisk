@@ -1,0 +1,35 @@
+package main
+
+import (
+	"circuit/use/circuit"
+	"obelisk/lib/storetime"
+)
+
+var xServer circuit.X
+
+func ChildrenTags(node string) ([]string, error) {
+	retrn := xServer.Call("ChildrenTags", node)
+	var children []string
+	var err error
+	if retrn[0] != nil {
+		children = retrn[0].([]string)
+	}
+	if retrn[1] != nil {
+		err = retrn[1].(error)
+	}
+
+	return children, err
+}
+
+func QueryTime(node string, start, stop uint64) ([]storetime.Point, error) {
+	retrn := xServer.Call("QueryTime", node, start, stop)
+	var values []storetime.Point
+	var err error
+	if retrn[0] != nil {
+		values = retrn[0].([]storetime.Point)
+	}
+	if retrn[1] != nil {
+		err = retrn[1].(error)
+	}
+	return values, err
+}

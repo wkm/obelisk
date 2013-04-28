@@ -17,7 +17,7 @@ func init() {
 }
 
 func (start) Start() circuit.XPerm {
-	var server ServerApp
+	server := new(ServerApp)
 	server.Main()
 
 	circuit.Listen(ServiceName, server)

@@ -2,18 +2,54 @@ package main
 
 import (
 	_ "circuit/load"
+	"circuit/use/anchorfs"
+	"circuit/use/circuit"
 	"fmt"
 	"log"
 	"net/http"
+	"obelisk/server"
 )
 
 func main() {
 	log.Printf("obelisk/")
+	nodes, err := anchorfs.OpenDir("/obelisk-server")
+	if err != nil {
+		log.Fatalf("could not find /obelisk-server %s", err.Error())
+	}
+	_, workers, err := nodes.Files()
+	if err != nil {
+		log.Fatalf("could not list workers %s", err.Error())
+	}
+	if len(workers) < 1 {
+		log.Fatalf("could not find an obelisk-server worker")
+	}
+
+	log.Printf("found obelisk-server workers: %#v", workers)
+	for id, file := range workers {
+		xServer, err = circuit.TryDial(file.Owner(), server.ServiceName)
+		if err != nil {
+			log.Printf("  error dialing %v:%v with %s", id, file, err.Error())
+		} else {
+			// only need one connection
+			break
+		}
+	}
+
+	log.Printf("connected to %v", xServer)
+	hosts, err := ChildrenTags("host")
+	if err != nil {
+		log.Fatalf("could not retrieve list of hosts %s", err.Error())
+	}
+
+	log.Printf("hosts: %v", hosts)
+
 	http.HandleFunc("/zk/", zkHandler)
 	http.HandleFunc("/host/", hostHandler)
 	http.HandleFunc("/worker/", workerHandler)
 	http.HandleFunc("/", indexHandler)
-	err := http.ListenAndServe(":8080", nil)
+
+	log.Printf("starting HTTP")
+	err = http.ListenAndServe(":8080", nil)
 	if err != nil {
 		log.Printf("err: %s", err)
 	}
