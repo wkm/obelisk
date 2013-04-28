@@ -3,12 +3,13 @@ package main
 import (
 	"circuit/use/circuit"
 	"obelisk/lib/storetime"
+	"path/filepath"
 )
 
 var xServer circuit.X
 
-func ChildrenTags(node string) ([]string, error) {
-	retrn := xServer.Call("ChildrenTags", node)
+func ChildrenTags(node ...string) ([]string, error) {
+	retrn := xServer.Call("ChildrenTags", filepath.Join(node...))
 	var children []string
 	var err error
 	if retrn[0] != nil {

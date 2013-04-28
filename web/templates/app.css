@@ -28,3 +28,15 @@ a .callout {
 body {
 	margin-bottom: 15em;
 }
+
+.plot {
+	height: 150px;
+	/*background: #fafafa;*/
+	/*border: 1px solid #f3f3f3;*/
+	font: 10px sans-serif;
+}
+
+.dygraph-axis-label, .dygraph-legend {
+	font-size: 10px;
+	font-family: sans-serif;
+}

@@ -1,0 +1,21 @@
+{{template "_header.html" .}}
+
+<div class='row'>
+	<div class='twelve columns'>
+		<h1>Hosts</h1>
+	</div>
+</div>
+
+<div class='row'>
+	<ul class="small-block-grid-2 large-block-grid-4">
+	{{range .Object}}
+		<li>
+			<a href="/host/{{.}}">
+				<div class='panel'><tt>{{.}}</tt></div>
+			</a>
+		</li>
+	{{end}}
+	</ul>
+</div>
+
+{{template "_footer.html" .}}

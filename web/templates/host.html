@@ -1,9 +1,24 @@
 {{template "_header.html" .}}
-
+{{with .Object}}
 <div class='row'>
 	<div class='twelve columns'>
-		<h1>Hosts</h1>
+		<h1>{{.Name}}</h1>
 	</div>
+	<hr/>
 </div>
 
+<div class='row'>
+	<h3>Metrics</h3>
+</div>
+{{range .Metrics}}
+	<div class='row'>
+		<h6>{{.Name}}</h6>
+		<div id="plot-{{.Path}}" class='plot'></div>
+		<script type="text/javascript">
+			$(function() {chart("{{.Path}}")})
+		</script>
+	</div>
+{{end}}
+
+{{end}}
 {{template "_footer.html" .}}

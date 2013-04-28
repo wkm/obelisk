@@ -46,6 +46,9 @@ func main() {
 	http.HandleFunc("/zk/", zkHandler)
 	http.HandleFunc("/host/", hostHandler)
 	http.HandleFunc("/worker/", workerHandler)
+
+	http.HandleFunc("/api/time", timeHandler)
+
 	http.HandleFunc("/", indexHandler)
 
 	log.Printf("starting HTTP")
@@ -72,10 +75,6 @@ func respondError(rw http.ResponseWriter, msg string) {
 func redirectTo(rw http.ResponseWriter, req *http.Request, path string) {
 	log.Printf("Redirect -> %s", path)
 	http.Redirect(rw, req, path, http.StatusFound)
-}
-
-func hostHandler(rw http.ResponseWriter, req *http.Request) {
-	renderTemplate(req, rw, "/host.html", nil)
 }
 
 func indexHandler(rw http.ResponseWriter, req *http.Request) {
