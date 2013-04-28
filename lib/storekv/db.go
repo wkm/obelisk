@@ -93,7 +93,7 @@ func (db *DB) Flush() error {
 // FIXME implement
 func (db *DB) Cleanup() error {
 	statCleanup.Incr()
-	return persist.CleanupSnapshot(db.Config.DiskStore, "kv")
+	return persist.CleanupSnapshot(db.Config.FlushVersions, db.Config.DiskStore, "kv")
 }
 
 // shutdown this store
