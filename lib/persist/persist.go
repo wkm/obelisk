@@ -24,8 +24,27 @@ func Lock(dir, key string) (*lockfile.LockFile, error) {
 	return lockfile.Create(filepath.Join(dir, key+".lock"))
 }
 
-func CleanupSnapshot(dir, key string) error {
-	// FIXME implement
+func CleanupSnapshot(flushes int, dir, key string) error {
+	searchpath := filepath.Join(dir, key+"-*")
+	matches, err := filepath.Glob(searchpath)
+	if err != nil {
+		return err
+	}
+
+	if len(matches) < flushes {
+		// nothing to cleanup
+		return nil
+	}
+
+	sort.Strings(matches)
+	for _, path := range matches[:len(matches)-flushes] {
+		err := os.Remove(path)
+		if err != nil {
+			return err
+		}
+		log.Printf("cleaned up %s", path)
+	}
+
 	return nil
 }
 
