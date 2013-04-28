@@ -6,10 +6,10 @@ import (
 )
 
 // create a textual report of the values
-func TextReport(w io.Writer, coll *Collection) {
+func TextReport(w io.Writer, inst Instrument) {
 	b := make(MeasurementBuffer)
 	go func() {
-		coll.Snapshot(b)
+		inst.Measure("", b)
 		close(b)
 	}()
 

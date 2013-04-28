@@ -7,13 +7,13 @@ import (
 )
 
 func TestTextualReport(t *testing.T) {
-	coll := make(Collection)
+	coll := NewCollection()
 	c := coll.Counter("foo")
 	c.Incr()
 	c.Incr()
 
 	var buff bytes.Buffer
-	TextReport(&buff, &coll)
+	TextReport(&buff, coll)
 
 	if buff.String() != fmt.Sprintf("%s: %s\n", "foo", "2") {
 		t.Errorf("invalid text export: %s", buff.String())

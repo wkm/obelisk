@@ -5,7 +5,7 @@ import (
 )
 
 func TestLayout(t *testing.T) {
-	coll := make(Collection)
+	coll := NewCollection()
 	c := coll.Counter("foo")
 	c.Incr()
 	c.Incr()
