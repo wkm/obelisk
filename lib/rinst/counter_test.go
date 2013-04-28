@@ -21,8 +21,8 @@ func TestCounter(t *testing.T) {
 		t.Error("counter bad measure length")
 	}
 
-	expec := Measurement{"fig", 0, "2"}
-	if expec != <-b {
-		t.Error("counter bad measure")
+	recv := <-b
+	if recv.Name != "fig" || recv.Value != "2" {
+		t.Error("counter bad measure: %#v", recv)
 	}
 }

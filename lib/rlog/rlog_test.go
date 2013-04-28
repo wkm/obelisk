@@ -14,7 +14,7 @@ func TestLog(t *testing.T) {
 		t.Errorf("invalid log content (%s)", string(content))
 	}
 
-	if statPrints.Value() != 2 {
-		t.Errorf("invalid prints count %d", statPrints.Value())
+	if statPrint.Value() != 2 {
+		t.Errorf("invalid prints count %d", statPrint.Value())
 	}
 }

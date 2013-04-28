@@ -21,8 +21,8 @@ func TestLayout(t *testing.T) {
 		t.Errorf("layout snapshot bad length %d", len(b))
 	}
 
-	expect := Measurement{"foo", 0, "2"}
-	if expect != <-b {
-		t.Error("layout snapshot bad value")
+	recv := <-b
+	if recv.Name != "foo" || recv.Value != "2" {
+		t.Error("layout snapshot bad value %#v", recv)
 	}
 }
