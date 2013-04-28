@@ -19,8 +19,6 @@ func TestDB(t *testing.T) {
 		t.Fatal(err.Error())
 	}
 
-	println("about to insert data")
-
 	// insert some data
 	db.Store.NewTag("a")
 	db.Store.NewTag("b")
@@ -34,12 +32,11 @@ func TestDB(t *testing.T) {
 	db.Store.NewTag("a", "j")
 	db.Store.NewTag("a/k")
 
-	db.Store.NewTag("a/j/l")
-	db.Store.NewTag("a/j/m")
-	db.Store.NewTag("a/j/n")
-	db.Store.NewTag("a/j/o")
+	id1, _ := db.Store.NewTag("a/j/l")
+	id2, _ := db.Store.NewTag("a/j/m")
+	id3, _ := db.Store.NewTag("a/j/n")
+	id4, _ := db.Store.NewTag("a/j/o")
 
-	println("about to enter flush")
 	db.Flush()
 	db.Shutdown()
 
@@ -57,6 +54,26 @@ func TestDB(t *testing.T) {
 	str := strings.Join(res, ",")
 	if str != "l,m,n,o" {
 		t.Fatalf("expected l,m,n,o got %v", str)
+	}
+
+	r, _ := db.Store.Id("a/j/l")
+	if r != id1 {
+		t.Errorf("expected id=%v got %v", id1, r)
+	}
+
+	r, _ = db.Store.Id("a/j/m")
+	if r != id2 {
+		t.Errorf("expected id=%v got %v", id1, r)
+	}
+
+	r, _ = db.Store.Id("a/j/n")
+	if r != id3 {
+		t.Errorf("expected id=%v got %v", id1, r)
+	}
+
+	r, _ = db.Store.Id("a/j/o")
+	if r != id4 {
+		t.Errorf("expected id=%v got %v", id1, r)
 	}
 
 	db2.Shutdown()

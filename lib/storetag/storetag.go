@@ -65,6 +65,25 @@ func createPath(name ...string) []string {
 	return strings.Split("/"+filepath.Join(name...), "/")
 }
 
+// get the id of a tag, if it exists
+func (s *Store) Id(name ...string) (uint64, error) {
+	components := createPath(name...)
+
+	s.Lock()
+	defer s.Unlock()
+
+	cursor := s.root
+	for _, part := range components[1:] {
+		child, ok := cursor.children[part]
+		if !ok {
+			return 0, errors.New("unknown node " + part + " of " + strings.Join(components, "/"))
+		}
+		cursor = child
+	}
+
+	return cursor.id, nil
+}
+
 // get the id of a tag, creating it and the hierarchy to if it doesn't exist
 func (s *Store) NewTag(name ...string) (uint64, error) {
 	components := createPath(name...)

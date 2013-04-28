@@ -39,7 +39,24 @@ func TestTagStore(t *testing.T) {
 	}
 
 	// insert child node
-	id, err = s.NewTag("foo", "bar")
+	id, err = s.NewTag("foo/bar")
+	if err != nil {
+		t.Errorf("unexpected error %s", err.Error())
+	}
+	if id != 2 {
+		t.Errorf("expected id=2 got %v", id)
+	}
+
+	id, err = s.Id("foo/boo")
+	if err == nil {
+		t.Errorf("expected an error")
+	}
+	id, err = s.Id("foo/bar/boo")
+	if err == nil {
+		t.Errorf("expected an error")
+	}
+
+	id, err = s.Id("foo/bar")
 	if err != nil {
 		t.Errorf("unexpected error %s", err.Error())
 	}
