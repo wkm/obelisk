@@ -5,7 +5,7 @@ import (
 )
 
 // a collection of rinst stats
-var Stats = make(rinst.Collection)
+var Stats = rinst.NewCollection()
 
 var (
 	statPrint = Stats.Counter("print")

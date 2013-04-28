@@ -4,7 +4,7 @@ import (
 	"obelisk/lib/rinst"
 )
 
-var Stats = make(rinst.Collection)
+var Stats = rinst.NewCollection()
 
 var (
 	statTags    = Stats.Counter("tag")
