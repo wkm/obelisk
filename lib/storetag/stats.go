@@ -7,10 +7,12 @@ import (
 var Stats = rinst.NewCollection()
 
 var (
-	statReads   = Stats.Counter("read")
-	statWrites  = Stats.Counter("write")
-	statFlush   = Stats.Counter("flush")
-	statCleanup = Stats.Counter("cleanup")
-	statDump    = Stats.Counter("dump")
-	statLoad    = Stats.Counter("load")
+	statId       = Stats.Counter("id", "op", "id commands received")
+	statNew      = Stats.Counter("new", "op", "new commands received")
+	statChildren = Stats.Counter("children", "op", "children commands received")
+
+	statLoad    = Stats.Counter("load", "op", "load commands received")
+	statDump    = Stats.Counter("dump", "op", "dump commands received")
+	statFlush   = Stats.Counter("flush", "op", "flush commands received")
+	statCleanup = Stats.Counter("cleanup", "op", "cleanup commands received")
 )

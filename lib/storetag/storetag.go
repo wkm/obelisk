@@ -67,6 +67,7 @@ func createPath(name ...string) []string {
 
 // get the id of a tag, if it exists
 func (s *Store) Id(name ...string) (uint64, error) {
+	statId.Incr()
 	components := createPath(name...)
 
 	s.Lock()
@@ -86,6 +87,7 @@ func (s *Store) Id(name ...string) (uint64, error) {
 
 // get the id of a tag, creating it and the hierarchy to if it doesn't exist
 func (s *Store) NewTag(name ...string) (uint64, error) {
+	statNew.Incr()
 	components := createPath(name...)
 
 	s.Lock()
@@ -110,6 +112,7 @@ func (s *Store) NewTag(name ...string) (uint64, error) {
 
 // get the children of a tag
 func (s *Store) Children(name ...string) ([]string, error) {
+	statChildren.Incr()
 	components := createPath(name...)
 
 	s.Lock()
