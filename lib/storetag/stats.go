@@ -7,7 +7,6 @@ import (
 var Stats = rinst.NewCollection()
 
 var (
-	statTags    = Stats.Counter("tag")
 	statReads   = Stats.Counter("read")
 	statWrites  = Stats.Counter("write")
 	statFlush   = Stats.Counter("flush")

@@ -7,12 +7,11 @@ import (
 var Stats = rinst.NewCollection()
 
 var (
-	statKeys    = Stats.IntValue("keys")
-	statExists  = Stats.Counter("exists")
-	statGet     = Stats.Counter("get")
-	statSet     = Stats.Counter("set")
-	statLoad    = Stats.Counter("load")    // loads executed
-	statDump    = Stats.Counter("dump")    // dumps executed
-	statFlush   = Stats.Counter("flush")   // number of flushes
-	statCleanup = Stats.Counter("cleanup") // number of cleanups
+	statExists  = Stats.Counter("exists", "op", "exists commands received")
+	statGet     = Stats.Counter("get", "op", "get commands received")
+	statSet     = Stats.Counter("set", "op", "set commands received")
+	statLoad    = Stats.Counter("load", "op", "load commands received")
+	statDump    = Stats.Counter("dump", "op", "dump commands received")
+	statFlush   = Stats.Counter("flush", "op", "flush commands received")
+	statCleanup = Stats.Counter("cleanup", "op", "cleanup commands received")
 )

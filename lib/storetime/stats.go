@@ -7,12 +7,12 @@ import (
 var Stats = rinst.NewCollection()
 
 var (
-	statInsert  = Stats.Counter("insert")  // datapoints inserted
-	statQuery   = Stats.Counter("query")   // queries executed
-	statIter    = Stats.Counter("iter")    // points iterated over to fulfill queries
-	statDump    = Stats.Counter("dump")    // dumps executed
-	statLoad    = Stats.Counter("load")    // loads executed
-	statError   = Stats.Counter("error")   // number of errors encountered
-	statFlush   = Stats.Counter("flush")   // number of flushes
-	statCleanup = Stats.Counter("cleanup") // number of cleanups
+	statInsert  = Stats.Counter("insert", "points", "datapoints inserted")
+	statQuery   = Stats.Counter("query", "op", "query commands received")
+	statIter    = Stats.Counter("iter", "points", "points iterated over to fulfill ")
+	statDump    = Stats.Counter("dump", "op", "dump commands received")
+	statLoad    = Stats.Counter("load", "op", "load commands received")
+	statError   = Stats.Counter("error", "count", "number of errors")
+	statFlush   = Stats.Counter("flush", "op", "flush commands received")
+	statCleanup = Stats.Counter("cleanup", "op", "cleanup commands received")
 )

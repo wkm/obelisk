@@ -7,6 +7,6 @@ import (
 var Stats = rinst.NewCollection()
 
 var (
-	statMeasurements = Stats.Counter("measures")
+	statMeasurements = Stats.Counter("measures", "meas", "number of agent measurements")
 	// statMemory       = Stats.Allocation("mem")
 )

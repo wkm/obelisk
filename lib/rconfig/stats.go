@@ -7,7 +7,7 @@ import (
 var Stats = rinst.NewCollection()
 
 var (
-	statSet    = Stats.Counter("set")
-	statGet    = Stats.Counter("get")
-	statGetall = Stats.Counter("getall")
+	statSet    = Stats.Counter("set", "op", "set commands received")
+	statGet    = Stats.Counter("get", "op", "get commands received")
+	statGetall = Stats.Counter("getall", "op", "getall commands received")
 )

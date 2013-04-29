@@ -8,7 +8,7 @@ import (
 var Stats = rinst.NewCollection()
 
 var (
-	statPrint = Stats.Counter("print")
-	statFlush = Stats.Counter("flush")
-	statByte  = Stats.Counter("byte")
+	statPrint = Stats.Counter("print", "op", "print commands received")
+	statFlush = Stats.Counter("flush", "op", "print commands received")
+	statByte  = Stats.Counter("byte", "byte", "bytes received into log")
 )
