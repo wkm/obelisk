@@ -1,5 +1,5 @@
 function chart(metric) {
-	var start = new Date() - (60*60*24*7*1000)
+	var start = new Date() - (60*60*24*1*1000) // a day ago
 	var stop = new Date() - 0
 
 	$.ajax({
@@ -11,7 +11,7 @@ function chart(metric) {
 			stop:  stop
 		},
 		success: function (data, status, xhr ) {
-			console.log('plotting...')
+			console.log('plotting ...')
 			var pts = data['points']
 			for (var i = pts.length - 1; i >= 0; i--) {
 				pts[i][0] = new Date(pts[i][0])
@@ -29,7 +29,8 @@ function chart(metric) {
 					axisLineColor: '#babdb6',
 					gridLineColor: '#d3d7cf',
 					includeZero: true,
-					dateWindow: [start,stop]
+					dateWindow: [start,stop],
+					yAxisLabelWidth: 30
 				}
 			)
 		}
