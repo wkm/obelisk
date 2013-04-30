@@ -36,6 +36,7 @@ func (s *Store) Dump(w io.Writer) error {
 				return false
 			}
 
+			statIter.Incr()
 			p := i.(Point)
 			full := FullPoint{key, p.Time, p.Value}
 			err := enc.Encode(full)

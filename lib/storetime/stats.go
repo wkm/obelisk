@@ -9,7 +9,7 @@ var Stats = rinst.NewCollection()
 var (
 	statInsert  = Stats.Counter("insert", "points", "datapoints inserted")
 	statQuery   = Stats.Counter("query", "op", "query commands received")
-	statIter    = Stats.Counter("iter", "points", "points iterated over to fulfill ")
+	statIter    = Stats.Counter("iter", "points", "points iterated over to fulfill point-level operations (query, dump, etc.)")
 	statDump    = Stats.Counter("dump", "op", "dump commands received")
 	statLoad    = Stats.Counter("load", "op", "load commands received")
 	statError   = Stats.Counter("error", "count", "number of errors")
