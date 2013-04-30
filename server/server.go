@@ -105,3 +105,9 @@ func (app *ServerApp) QueryTime(node string, start, stop uint64) ([]storetime.Po
 
 	return app.timedb.Store.Query(id, start, stop)
 }
+
+func (app *ServerApp) GetMetricInfo(node string) (rinst.Schema, error) {
+	var schema rinst.Schema
+	err := app.kvdb.Store.GetGob(node, &schema)
+	return schema, err
+}
