@@ -13,7 +13,7 @@ import (
 // a store of named timeseries
 type Store struct {
 	sync.Mutex
-	values map[uint64]*llrb.Tree
+	values map[uint64]*llrb.LLRB
 }
 
 // a <time,value> pair
@@ -22,10 +22,15 @@ type Point struct {
 	Value float64
 }
 
+// sort Point by their time
+func (this Point) Less(than llrb.Item) bool {
+	return this.Time < than.(Point).Time
+}
+
 // create a new in-memory timeseries store
 func NewStore() *Store {
 	s := new(Store)
-	s.values = make(map[uint64]*llrb.Tree)
+	s.values = make(map[uint64]*llrb.LLRB)
 	return s
 }
 
@@ -45,8 +50,8 @@ func (s *Store) Insert(key, time uint64, value float64) *Store {
 	return s
 }
 
-func newTree() *llrb.Tree {
-	return llrb.New(lessPoint)
+func newTree() *llrb.LLRB {
+	return llrb.New()
 }
 
 // return all points from key with time in [start,stop]
@@ -99,9 +104,4 @@ func (s *Store) FlatQuery(key, start, stop uint64) ([]float64, error) {
 	}
 
 	return ary, nil
-}
-
-// sort Point by their time
-func lessPoint(a, b interface{}) bool {
-	return a.(Point).Time < b.(Point).Time
 }

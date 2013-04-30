@@ -29,7 +29,7 @@ func CurrentProcessStatus() ([]ProcessStatus, error) {
 	pids := sigar.ProcList{}
 	err := pids.Get()
 	if err != nil {
-		return nil, errors.W(err)
+		return nil, err
 	}
 
 	status := make([]ProcessStatus, len(pids.List))

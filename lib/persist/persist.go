@@ -28,7 +28,7 @@ func CleanupSnapshot(flushes int, dir, key string) error {
 	searchpath := filepath.Join(dir, key+"-*")
 	matches, err := filepath.Glob(searchpath)
 	if err != nil {
-		return errors.W(err)
+		return err
 	}
 
 	if len(matches) < flushes {
@@ -40,7 +40,7 @@ func CleanupSnapshot(flushes int, dir, key string) error {
 	for _, path := range matches[:len(matches)-flushes] {
 		err := os.Remove(path)
 		if err != nil {
-			return errors.W(err)
+			return err
 		}
 		log.Printf("cleaned up %s", path)
 	}
@@ -56,14 +56,14 @@ func FlushSnapshot(p Persistable, dir, key string) error {
 	f, err := os.Create(fname)
 	if err != nil {
 		log.Printf("could not flush %s", err.Error())
-		return errors.W(err)
+		return err
 	}
 	defer f.Close()
 
 	err = p.Dump(f)
 	if err != nil {
 		log.Printf("error flushing %s", err.Error())
-		return errors.W(err)
+		return err
 	}
 
 	log.Printf("flushed")
@@ -75,7 +75,7 @@ func RestoreSnapshot(p Persistable, dir, key string) error {
 
 	matches, err := filepath.Glob(searchpath)
 	if err != nil {
-		return errors.W(err)
+		return err
 	}
 
 	if len(matches) < 1 {
