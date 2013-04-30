@@ -3,6 +3,7 @@ package storetag
 import (
 	"encoding/gob"
 	"io"
+	"obelisk/lib/errors"
 )
 
 type Line struct {
@@ -31,7 +32,7 @@ func (s *Store) Dump(w io.Writer) error {
 
 		err := enc.Encode(val)
 		if err != nil {
-			return err
+			return errors.W(err)
 		}
 	}
 

@@ -1,15 +1,20 @@
 package server
 
 import (
+	"encoding/gob"
 	"log"
 	"obelisk/lib/rinst"
 	"strconv"
 )
 
-func (app *ServerApp) ReceiveStats(hostname string, measurements rinst.MeasurementBuffer) error {
+func init() {
+	gob.Register(rinst.Schema{})
+}
+
+func (app *ServerApp) ReceiveStats(hostname string, buffer rinst.MeasurementBuffer) error {
 	log.Printf("receiving stats from %s", hostname)
 	for {
-		measure, ok := <-measurements
+		measure, ok := <-buffer
 		if !ok {
 			return nil
 		}
@@ -27,5 +32,20 @@ func (app *ServerApp) ReceiveStats(hostname string, measurements rinst.Measureme
 		}
 
 		app.timedb.Store.Insert(id, measure.Time, flt)
+	}
+}
+
+func (app *ServerApp) DeclareSchema(hostname string, buffer rinst.SchemaBuffer) error {
+	log.Printf("receiving schema from %s", hostname)
+	for {
+		schema, ok := <-buffer
+		if !ok {
+			return nil
+		}
+
+		err := app.kvdb.Store.SetGob("host/"+hostname+"/"+schema.Name, schema)
+		if err != nil {
+			return err
+		}
 	}
 }

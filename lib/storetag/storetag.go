@@ -8,7 +8,7 @@
 package storetag
 
 import (
-	"errors"
+	"obelisk/lib/errors"
 	"path/filepath"
 	"strings"
 	"sync"
@@ -77,7 +77,7 @@ func (s *Store) Id(name ...string) (uint64, error) {
 	for _, part := range components[1:] {
 		child, ok := cursor.children[part]
 		if !ok {
-			return 0, errors.New("unknown node " + part + " of " + strings.Join(components, "/"))
+			return 0, errors.N("unknown node " + part + " of " + strings.Join(components, "/"))
 		}
 		cursor = child
 	}
@@ -122,7 +122,7 @@ func (s *Store) Children(name ...string) ([]string, error) {
 	for _, part := range components[1:] {
 		child, ok := cursor.children[part]
 		if !ok {
-			return nil, errors.New("unknown node " + part + " of " + strings.Join(components, "/"))
+			return nil, errors.N("unknown node " + part + " of " + strings.Join(components, "/"))
 		}
 
 		cursor = child

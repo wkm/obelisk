@@ -5,7 +5,9 @@
 package storekv
 
 import (
-	"errors"
+	"bytes"
+	"encoding/gob"
+	"obelisk/lib/errors"
 	"sync"
 )
 
@@ -70,4 +72,29 @@ func (s *Store) Set(name string, value []byte) error {
 	s.Values[name] = value
 
 	return nil
+}
+
+// FIXME I think this should reuse an encoder for performance reasons
+func (s *Store) SetGob(name string, obj interface{}) error {
+	var b bytes.Buffer
+	enc := gob.NewEncoder(&b)
+	err := enc.Encode(obj)
+
+	if err != nil {
+		return errors.W(err)
+	}
+
+	return s.Set(name, b.Bytes())
+}
+
+// get the gob value of a key into obj
+func (s *Store) GetGob(name string, obj interface{}) error {
+	value, err := s.Get(name)
+	if err != nil {
+		return errors.W(err)
+	}
+
+	var b = bytes.NewBuffer(value)
+	dec := gob.NewDecoder(b)
+	return dec.Decode(obj)
 }

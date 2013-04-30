@@ -25,6 +25,19 @@ func (app *ServerApp) Main() {
 	app.startTagStore()
 	app.startKVStore()
 
+	host, err := os.Hostname()
+	if err != nil {
+		panic("could not derive hostname " + err.Error())
+	}
+
+	buffer := make(rinst.SchemaBuffer, 1000)
+	go func() {
+		Stats.Schema("", buffer)
+		close(buffer)
+	}()
+
+	app.DeclareSchema(host, buffer)
+
 	go app.periodic()
 }
 

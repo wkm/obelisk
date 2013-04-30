@@ -4,6 +4,7 @@ import (
 	"encoding/gob"
 	"github.com/petar/GoLLRB/llrb"
 	"io"
+	"obelisk/lib/errors"
 )
 
 // a fully qualified point which
@@ -49,17 +50,17 @@ func (s *Store) Dump(w io.Writer) error {
 
 		if err != nil {
 			statError.Incr()
-			return err
+			return errors.W(err)
 		}
 
 		series.AscendGreaterOrEqual(Point{0, 0}, iterfn)
 		if hasErrored {
-			return err
+			return errors.W(err)
 		}
 
 		if err != nil {
 			statError.Incr()
-			return err
+			return errors.W(err)
 		}
 	}
 

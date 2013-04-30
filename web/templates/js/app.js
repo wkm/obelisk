@@ -28,7 +28,8 @@ function chart(metric) {
 					stepPlot: true,
 					axisLineColor: '#babdb6',
 					gridLineColor: '#d3d7cf',
-					includeZero: true
+					includeZero: true,
+					dateWindow: [start,stop]
 				}
 			)
 		}

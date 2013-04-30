@@ -3,6 +3,7 @@ package storekv
 import (
 	"encoding/gob"
 	"io"
+	"obelisk/lib/errors"
 )
 
 type FullRow struct {
@@ -25,7 +26,7 @@ func (s *Store) Dump(w io.Writer) error {
 	for k, v := range s.Values {
 		err := enc.Encode(FullRow{k, v})
 		if err != nil {
-			return err
+			return errors.W(err)
 		}
 	}
 
@@ -43,7 +44,7 @@ func (s *Store) Load(r io.Reader) error {
 			break
 		}
 		if err != nil {
-			return err
+			return errors.W(err)
 		}
 
 		s.Set(row.Key, row.Value)
