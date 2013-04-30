@@ -8,13 +8,14 @@ function chart(metric) {
 		data: {
 			query: metric,
 			start: start,
-			stop:  stop
+			stop:  stop,
+			resolution: 50
 		},
 		success: function (data, status, xhr ) {
-			console.log('plotting ...')
 			var pts = data['points']
 			for (var i = pts.length - 1; i >= 0; i--) {
 				pts[i][0] = new Date(pts[i][0])
+				pts[i][1] = [pts[i][1], pts[i][2]]
 			}
 
 			var g = new Dygraph(
@@ -24,13 +25,17 @@ function chart(metric) {
 					colors: ['#204a87'],
 					errorBars: false,
 					showRoller: false,
-					strokeWidth: 2.5,
-					stepPlot: true,
-					axisLineColor: '#babdb6',
-					gridLineColor: '#d3d7cf',
+					strokeWidth: 1.5,
+					pointSize: 2,
+					drawPoints: true,
+					// stepPlot: true,
+					axisLineColor: '#d3d7cf',
+					gridLineColor: 'rgb(236,236,234)',
 					includeZero: true,
 					dateWindow: [start,stop],
-					yAxisLabelWidth: 30
+					yAxisLabelWidth: 30,
+					errorBars: true,
+					sigma: 0.5
 				}
 			)
 		}

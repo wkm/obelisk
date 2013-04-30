@@ -2,7 +2,9 @@ package main
 
 import (
 	"encoding/json"
+	"math"
 	"net/http"
+	"obelisk/web/util"
 	"strconv"
 )
 
@@ -23,8 +25,15 @@ func timeHandler(rw http.ResponseWriter, req *http.Request) {
 		return
 	}
 
+	resolution, err := strconv.ParseUint(query.Get("resolution"), 10, 64)
+	if err != nil {
+		respondError(rw, err.Error())
+		return
+	}
+
 	obj["query"] = q
 	obj["start"] = start
+	obj["resolution"] = resolution
 	obj["stop"] = stop
 
 	res, err := QueryTime(q, start/1000, stop/1000)
@@ -32,11 +41,32 @@ func timeHandler(rw http.ResponseWriter, req *http.Request) {
 		respondError(rw, err.Error())
 	}
 
-	points := make([][]interface{}, len(res))
+	// FIXME extract into a function
+	// FIXME should depend on the type of the instrument
+	// make into a rate
+	var last = math.MaxFloat64
+	dps := make([]*util.DataPoint, len(res))
 	for i, v := range res {
-		points[i] = make([]interface{}, 2)
+		val := v.Value
+		if last > v.Value {
+			val = 0
+		} else {
+			val = v.Value - last
+		}
+		last = v.Value
+
+		dsp := util.DataPoint(util.DSPoint{v.Time, val})
+		dps[i] = &dsp
+	}
+
+	sampled := util.DownSample(uint(resolution), dps)
+
+	points := make([][]interface{}, len(sampled))
+	for i, v := range sampled {
+		points[i] = make([]interface{}, 3)
 		points[i][0] = v.Time * 1000
-		points[i][1] = v.Value
+		points[i][1] = v.Avg
+		points[i][2] = v.Err
 	}
 
 	obj["points"] = points
