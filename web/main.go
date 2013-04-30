@@ -8,10 +8,14 @@ import (
 	"log"
 	"net/http"
 	"obelisk/server"
+	"runtime"
 )
 
 func main() {
 	log.Printf("obelisk/")
+	log.Printf("setting maxprocs to %d", runtime.NumCPU())
+	runtime.GOMAXPROCS(runtime.NumCPU())
+
 	nodes, err := anchorfs.OpenDir("/obelisk-server")
 	if err != nil {
 		log.Fatalf("could not find /obelisk-server %s", err.Error())
