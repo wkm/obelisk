@@ -2,6 +2,7 @@ package main
 
 import (
 	"circuit/use/circuit"
+	"obelisk/lib/rinst"
 	"obelisk/lib/storetime"
 	"path/filepath"
 )
@@ -33,4 +34,17 @@ func QueryTime(node string, start, stop uint64) ([]storetime.Point, error) {
 		err = retrn[1].(error)
 	}
 	return values, err
+}
+
+func GetMetricInfo(node string) (rinst.Schema, error) {
+	retrn := xServer.Call("GetMetricInfo", node)
+	var info rinst.Schema
+	var err error
+	if retrn[0] != nil {
+		info = retrn[0].(rinst.Schema)
+	}
+	if retrn[1] != nil {
+		err = retrn[1].(error)
+	}
+	return info, err
 }

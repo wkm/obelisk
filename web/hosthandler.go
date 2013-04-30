@@ -3,6 +3,7 @@ package main
 import (
 	"log"
 	"net/http"
+	"obelisk/lib/rinst"
 	"path/filepath"
 	"sort"
 	"strings"
@@ -14,8 +15,10 @@ type HostInfo struct {
 }
 
 type MetricInfo struct {
-	Name string
-	Path string
+	Name       string
+	Unit, Desc string
+	TypeName   string
+	Path       string
 }
 
 func hostHandler(rw http.ResponseWriter, req *http.Request) {
@@ -45,8 +48,24 @@ func hostHandler(rw http.ResponseWriter, req *http.Request) {
 
 	metrics := make([]*MetricInfo, len(tags))
 	for i, tag := range tags {
+		name := filepath.Join("host", root, tag)
+		info, err := GetMetricInfo(name)
+		if err != nil {
+			log.Printf("err: %s", err.Error())
+			continue
+		}
+
 		m := new(MetricInfo)
-		m.Name = tag
+		m.Name = info.Name
+		m.Desc = info.Description
+		m.Unit = info.Unit
+		switch info.Type {
+		case rinst.TypeCounter:
+			m.TypeName = "counter"
+		case rinst.TypeValue:
+			m.TypeName = "value"
+
+		}
 		m.Path = filepath.Join("host", root, tag)
 		metrics[i] = m
 	}
