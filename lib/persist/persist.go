@@ -2,9 +2,9 @@ package persist
 
 import (
 	"circuit/kit/lockfile"
-	"errors"
 	"io"
 	"log"
+	"obelisk/lib/errors"
 	"os"
 	"path/filepath"
 	"sort"
@@ -79,7 +79,7 @@ func RestoreSnapshot(p Persistable, dir, key string) error {
 	}
 
 	if len(matches) < 1 {
-		return errors.New("no flushes to restore")
+		return errors.N("no flushes to restore")
 	}
 
 	sort.Strings(matches)
@@ -105,5 +105,5 @@ func RestoreSnapshot(p Persistable, dir, key string) error {
 		return nil
 	}
 
-	return errors.New("could not successfully restore any flush")
+	return errors.N("could not successfully restore any flush")
 }

@@ -31,6 +31,7 @@ func hostHandler(rw http.ResponseWriter, req *http.Request) {
 		}
 
 		renderTemplate(req, rw, "/allhosts.html", children)
+		return
 	}
 
 	log.Printf("host data for %s", root)
