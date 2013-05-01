@@ -1,5 +1,5 @@
 function chart(metric) {
-	var start = new Date() - (60*60*24*1*1000) // a day ago
+	var start = new Date() - (60*60*24*7*1000) // a day ago
 	var stop = new Date() - 0
 
 	$.ajax({
@@ -9,7 +9,7 @@ function chart(metric) {
 			query: metric,
 			start: start,
 			stop:  stop,
-			resolution: 50
+			resolution: 75
 		},
 		success: function (data, status, xhr ) {
 			var pts = data['points']
@@ -35,7 +35,7 @@ function chart(metric) {
 					dateWindow: [start,stop],
 					yAxisLabelWidth: 30,
 					errorBars: true,
-					sigma: 0.5
+					sigma: 1.0
 				}
 			)
 		}
