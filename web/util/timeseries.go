@@ -39,6 +39,7 @@ func DownSample(resolution uint, data []*DataPoint) []SampledDataPoint {
 
 		for dataCursor < len(samples) && (*data[dataCursor]).Time() < bucketEnd {
 			bucket.Sample((*data[dataCursor]).Value())
+			dataCursor++
 		}
 
 		samples[bucketCursor] = SampledDataPoint{

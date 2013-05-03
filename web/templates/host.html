@@ -14,7 +14,7 @@
 	<ul class='small-block-grid-2 large-block-grid-2'>
 		{{range .Metrics}}
 			<li>
-				<h6><tt>{{.Name}}</tt> <span class='subheader'>{{.Desc}} <small>{{.TypeName}}</small></span></h6>
+				<h6><tt>{{.Name}}</tt> <span class='subheader'>{{.Desc}}</span></h6>
 				<div id="plot-{{.Path}}" class='plot'></div>
 				<script type="text/javascript">
 					$(function() {chart("{{.Path}}")})

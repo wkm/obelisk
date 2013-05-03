@@ -2,6 +2,7 @@ package main
 
 import (
 	"encoding/json"
+	"log"
 	"math"
 	"net/http"
 	"obelisk/web/util"
@@ -64,7 +65,7 @@ func timeHandler(rw http.ResponseWriter, req *http.Request) {
 	points := make([][]interface{}, len(sampled))
 	for i, v := range sampled {
 		points[i] = make([]interface{}, 3)
-		points[i][0] = v.Time * 1000
+		points[i][0] = v.Time * 1000 // ms precision for javascript
 		points[i][1] = v.Avg
 		points[i][2] = v.Err
 	}
