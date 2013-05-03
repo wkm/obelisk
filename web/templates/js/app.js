@@ -1,5 +1,5 @@
 function chart(metric) {
-	var start = new Date() - (60*60*24*7*1000) // a day ago
+	var start = new Date() - (60*60*24*1*1000) // a day ago
 	var stop = new Date() - 0
 
 	$.ajax({
@@ -13,20 +13,25 @@ function chart(metric) {
 		},
 		success: function (data, status, xhr ) {
 			var pts = data['points']
+			var max = 0
 			for (var i = pts.length - 1; i >= 0; i--) {
 				pts[i][0] = new Date(pts[i][0])
 				pts[i][1] = [pts[i][1], pts[i][2]]
+
+				if (pts[i][1][0] + pts[i][1][1] > max) {
+					max = pts[i][1][0] + pts[i][1][1]
+				}
 			}
 
 			var g = new Dygraph(
 				document.getElementById('plot-'+metric),
 				pts,
 				{
-					colors: ['#204a87'],
-					errorBars: false,
+					colors: ['#3465a4'],
+					valueRange: [0, 1.2*max],
 					showRoller: false,
 					strokeWidth: 1.5,
-					pointSize: 2,
+					pointSize: 1.5,
 					drawPoints: true,
 					// stepPlot: true,
 					axisLineColor: '#d3d7cf',
