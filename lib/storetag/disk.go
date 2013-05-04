@@ -3,6 +3,7 @@ package storetag
 import (
 	"encoding/gob"
 	"io"
+	"log"
 )
 
 type Line struct {
@@ -52,11 +53,19 @@ func (s *Store) Load(r io.Reader) error {
 		if err == io.EOF {
 			break
 		}
+		if err != nil {
+			return err
+		}
 
 		var tag Tag
+		var ok bool
 		tag.id = line.Id
 		tag.name = line.Name
-		tag.parent = s.ids[line.Parent]
+		tag.parent, ok = s.ids[line.Parent]
+		if !ok {
+			log.Printf("unknown parent for tag %#v", line)
+			continue
+		}
 
 		tag.children = make(map[string]*Tag)
 		tag.parent.children[line.Name] = &tag
