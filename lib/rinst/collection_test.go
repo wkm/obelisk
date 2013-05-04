@@ -23,6 +23,6 @@ func TestLayout(t *testing.T) {
 
 	recv := <-b
 	if recv.Name != "foo" || recv.Value != "2" {
-		t.Error("layout snapshot bad value %#v", recv)
+		t.Errorf("layout snapshot bad value %#v", recv)
 	}
 }
