@@ -1,5 +1,6 @@
 function chart(metric) {
-	var start = new Date() - (60*60*24*1*1000) // a day ago
+	var oneDay = 60*60*24*1000
+	var start = new Date() - (oneDay/2) 
 	var stop = new Date() - 0
 
 	$.ajax({
@@ -40,6 +41,7 @@ function chart(metric) {
 					dateWindow: [start,stop],
 					yAxisLabelWidth: 30,
 					errorBars: true,
+					labelsKMB: true,
 					sigma: 1.0
 				}
 			)

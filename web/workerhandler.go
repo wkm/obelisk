@@ -4,6 +4,8 @@ import (
 	"circuit/sys/acid"
 	"circuit/use/circuit"
 	"net/http"
+	"obelisk/lib/rinst"
+	rinstService "obelisk/lib/rinst/service"
 	"obelisk/lib/rlog"
 	"strings"
 	"time"
@@ -74,6 +76,14 @@ func workerHandler(rw http.ResponseWriter, req *http.Request) {
 	workerInfo.ID = afile.Addr.WorkerID().String()
 
 	switch query {
+	case "instrumentation":
+		instService := xAcid.Call(rinstService.ServiceName)[0].(*rinst.Collection)
+		sb := make(rinst.SchemaBuffer, 10)
+		go instService.Schema("", sb)
+
+		mb := make(rinst.MeasurementBuffer, 10)
+		go instService.Measure("", mb)
+
 	case "metrics":
 		workerInfo.AcidStats = xAcid.Call("Stat")[0].(*acid.Stat)
 		workerInfo.PauseNsString = commaSeparated(workerInfo.AcidStats.PauseNs[:])
