@@ -3,6 +3,7 @@ package server
 import (
 	"log"
 	"obelisk/lib/rinst"
+	"obelisk/lib/rinst/service"
 	"obelisk/lib/storekv"
 	"obelisk/lib/storetag"
 	"obelisk/lib/storetime"
@@ -24,6 +25,8 @@ func (app *ServerApp) Main() {
 	app.startTimeStore()
 	app.startTagStore()
 	app.startKVStore()
+
+	service.Expose(Stats)
 
 	host, err := os.Hostname()
 	if err != nil {

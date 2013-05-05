@@ -2,6 +2,7 @@ package service
 
 import (
 	"circuit/use/circuit"
+	"log"
 	"obelisk/lib/rinst"
 )
 
@@ -12,6 +13,7 @@ func init() {
 }
 
 // expose the instrumentation collection
-func Expose(receiver rinst.Collection) {
+func Expose(receiver *rinst.Collection) {
+	log.Printf("exposing rinst service as %s", ServiceName)
 	circuit.Listen(ServiceName, receiver)
 }
