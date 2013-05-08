@@ -1,5 +1,9 @@
 package util
 
+import (
+	"math"
+)
+
 type DataPoint interface {
 	Time() uint64
 	Value() float64
@@ -37,15 +41,19 @@ func DownSample(resolution uint, data []*DataPoint) []SampledDataPoint {
 
 		bucket := StdDevStream{}
 
-		for dataCursor < len(samples) && (*data[dataCursor]).Time() < bucketEnd {
+		for dataCursor < len(data) && (*data[dataCursor]).Time() < bucketEnd {
 			bucket.Sample((*data[dataCursor]).Value())
 			dataCursor++
 		}
 
-		samples[bucketCursor] = SampledDataPoint{
-			bucketStart,
-			bucket.Mean(),
-			bucket.SampleStdDev(),
+		if bucket.Count() < 1 {
+			samples[bucketCursor] = SampledDataPoint{bucketStart, math.NaN(), 0}
+		} else {
+			samples[bucketCursor] = SampledDataPoint{
+				bucketStart,
+				bucket.Mean(),
+				bucket.SampleStdDev(),
+			}
 		}
 	}
 
