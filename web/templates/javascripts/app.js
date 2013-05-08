@@ -19,20 +19,22 @@ function shadeColor(color, porcent) {
     return "#"+RR+GG+BB;
 }
 
-function chart(metric) {
+function chart(options) {
 	var oneDay = 60*60*24*1000
-	var start = new Date() - (oneDay/2) 
-	var stop = new Date() - 0
+
+	if (options['start'] == undefined)
+		options['start'] = new Date() - (oneDay/2)
+	if (options['stop'] == undefined)
+		options['stop'] = new Date() - 0
+	if (options['resolution'] == undefined)
+		options['resolution'] = 75
+	if (options['rate'] == undefined)
+		options['rate'] = true
 
 	$.ajax({
 		dataType: 'json',
 		url: '/api/time',
-		data: {
-			query: metric,
-			start: start,
-			stop:  stop,
-			resolution: 75
-		},
+		data: options,
 		success: function (data, status, xhr ) {
 			var pts = data['points']
 			var max = 0
@@ -46,7 +48,7 @@ function chart(metric) {
 			}
 
 			var g = new Dygraph(
-				document.getElementById('plot-'+metric),
+				document.getElementById('plot-'+options['query']),
 				pts,
 				{
 					colors: [shadeColor('#4F909C', 30)],
@@ -55,11 +57,11 @@ function chart(metric) {
 					strokeWidth: 2.5,
 					pointSize: 2,
 					drawPoints: true,
-					// stepPlot: true,
+					// stepPlot: true, 
 					axisLineColor: shadeColor('#A3A0A1', -20),
 					gridLineColor: shadeColor('#A3A0A1', -40),
 					includeZero: true,
-					dateWindow: [start,stop],
+					dateWindow: [options.start, options.stop],
 					yAxisLabelWidth: 30,
 					errorBars: true,
 					labelsKMB: true,

@@ -9,7 +9,6 @@ import (
 )
 
 func timeHandler(rw http.ResponseWriter, req *http.Request) {
-
 	query := req.URL.Query()
 	obj := make(map[string]interface{})
 
@@ -32,10 +31,17 @@ func timeHandler(rw http.ResponseWriter, req *http.Request) {
 		return
 	}
 
+	rate, err := strconv.ParseBool(query.Get("rate"))
+	if err != nil {
+		respondError(rw, err.Error())
+		return
+	}
+
 	obj["query"] = q
 	obj["start"] = start
 	obj["resolution"] = resolution
 	obj["stop"] = stop
+	obj["rate"] = rate
 
 	res, err := QueryTime(q, start/1000, stop/1000)
 	if err != nil {
@@ -43,18 +49,18 @@ func timeHandler(rw http.ResponseWriter, req *http.Request) {
 	}
 
 	// FIXME extract into a function
-	// FIXME should depend on the type of the instrument
-	// make into a rate
 	var last = math.MaxFloat64
 	dps := make([]*util.DataPoint, len(res))
 	for i, v := range res {
 		val := v.Value
-		if last > v.Value {
-			val = 0
-		} else {
-			val = v.Value - last
+		if rate {
+			if last > v.Value {
+				val = 0
+			} else {
+				val = v.Value - last
+			}
+			last = v.Value
 		}
-		last = v.Value
 
 		dsp := util.DataPoint(util.DSPoint{v.Time, val})
 		dps[i] = &dsp
@@ -66,12 +72,15 @@ func timeHandler(rw http.ResponseWriter, req *http.Request) {
 	for i, v := range sampled {
 		points[i] = make([]interface{}, 3)
 		points[i][0] = v.Time * 1000 // ms precision for javascript
-		points[i][1] = v.Avg
+
+		if !math.IsNaN(v.Avg) {
+			points[i][1] = v.Avg
+		} else {
+			points[i][1] = nil
+		}
 
 		if !math.IsNaN(v.Err) {
 			points[i][2] = v.Err
-		} else {
-			points[i][2] = 0
 		}
 	}
 

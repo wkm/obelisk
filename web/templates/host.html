@@ -19,7 +19,7 @@
 				<h6><tt>{{.Name}}</tt> <span class='subheader'>{{.Desc}}</span></h6>
 				<div id="plot-{{.Path}}" class='plot'></div>
 				<script type="text/javascript">
-					$(function() {chart("{{.Path}}")})
+					$(function() {chart({query: "{{.Path}}", rate: {{.IsRate}}})})
 				</script>
 			</li>
 		{{end}}

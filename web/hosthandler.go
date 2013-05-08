@@ -18,6 +18,7 @@ type MetricInfo struct {
 	Name       string
 	Unit, Desc string
 	TypeName   string
+	IsRate     bool
 	Path       string
 }
 
@@ -62,9 +63,10 @@ func hostHandler(rw http.ResponseWriter, req *http.Request) {
 		switch info.Type {
 		case rinst.TypeCounter:
 			m.TypeName = "counter"
+			m.IsRate = true
 		case rinst.TypeValue:
 			m.TypeName = "value"
-
+			m.IsRate = false
 		}
 		m.Path = filepath.Join("host", root, tag)
 		metrics[i] = m
