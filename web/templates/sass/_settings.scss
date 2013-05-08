@@ -47,7 +47,7 @@ $body-font-style: normal;
 // Colors
 
 $primary-color: #E7E2D9;
-$secondary-color: #A3A0A1;
+$secondary-color: lighten($body-bg, 5%);
 $alert-color: $red;
 $success-color: $green;
 
@@ -59,8 +59,8 @@ $success-color: $green;
 // Inset shadow shiny edges and depressions.
 
 // $shiny-edge-size: 0 1px 0;
-// $shiny-edge-color: rgba(#fff, .5);
-// $shiny-edge-active-color: rgba(#000, .2);
+$shiny-edge-color: rgba(lighten($body-font-color, 2%), .5);
+$shiny-edge-active-color: rgba(#000, .2);
 
 // Control whether or not CSS classes come through in the CSS files.
 
@@ -314,8 +314,8 @@ $hr-border-color: lighten($body-bg, 5%);
 // Button text styles.
 
 // $button-font-family: inherit;
-// $button-font-color: #fff;
-// $button-font-color-alt: #333;
+$button-font-color: $body-font-color;
+$button-font-color-alt: $body-bg;
 // $button-font-med: emCalc(16px);
 // $button-font-tny: emCalc(11px);
 // $button-font-sml: emCalc(13px);
