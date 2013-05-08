@@ -1,3 +1,24 @@
+function shadeColor(color, porcent) {
+
+    var R = parseInt(color.substring(1,3),16)
+    var G = parseInt(color.substring(3,5),16)
+    var B = parseInt(color.substring(5,7),16);
+
+    R = parseInt(R * (100 + porcent) / 100);
+    G = parseInt(G * (100 + porcent) / 100);
+    B = parseInt(B * (100 + porcent) / 100);
+
+    R = (R<255)?R:255;  
+    G = (G<255)?G:255;  
+    B = (B<255)?B:255;  
+
+    var RR = ((R.toString(16).length==1)?"0"+R.toString(16):R.toString(16));
+    var GG = ((G.toString(16).length==1)?"0"+G.toString(16):G.toString(16));
+    var BB = ((B.toString(16).length==1)?"0"+B.toString(16):B.toString(16));
+
+    return "#"+RR+GG+BB;
+}
+
 function chart(metric) {
 	var oneDay = 60*60*24*1000
 	var start = new Date() - (oneDay/2) 
@@ -28,21 +49,21 @@ function chart(metric) {
 				document.getElementById('plot-'+metric),
 				pts,
 				{
-					colors: ['#3465a4'],
+					colors: [shadeColor('#4F909C', 30)],
 					valueRange: [0, 1.2*max],
 					showRoller: false,
-					strokeWidth: 1.5,
-					pointSize: 1.5,
+					strokeWidth: 2.5,
+					pointSize: 2,
 					drawPoints: true,
 					// stepPlot: true,
-					axisLineColor: '#d3d7cf',
-					gridLineColor: 'rgb(236,236,234)',
+					axisLineColor: shadeColor('#A3A0A1', -20),
+					gridLineColor: shadeColor('#A3A0A1', -40),
 					includeZero: true,
 					dateWindow: [start,stop],
 					yAxisLabelWidth: 30,
 					errorBars: true,
 					labelsKMB: true,
-					sigma: 1.0
+					sigma: 0.5
 				}
 			)
 		}

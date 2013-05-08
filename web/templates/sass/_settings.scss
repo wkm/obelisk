@@ -2,6 +2,11 @@
 // Foundation Variables
 //
 
+$red:    #9C5B4F;
+$green:  #909C4F;
+$blue:   #4F909C;
+$purple: #5B4F9C;
+
 // The default font-size is set to 100% of the browser style sheet (usually 16px)
 // for compatibility with brower-based text zoom or user-set defaults.
 $base-font-size: 100% !default;
@@ -25,11 +30,11 @@ $em-base: 16px !default;
 
 // $default-float: left;
 
-// $body-bg: #fff;
-// $body-font-color: #222;
-// $body-font-family: "Helvetica Neue", "Helvetica", Helvetica, Arial, sans-serif;
-// $body-font-weight: normal;
-// $body-font-style: normal;
+$body-bg: #454546;
+$body-font-color: #A3A0A1;
+$body-font-family: "Helvetica Neue", "Helvetica", Helvetica, Arial, sans-serif;
+$body-font-weight: normal;
+$body-font-style: normal;
 
 // Font-smoothing
 
@@ -41,10 +46,10 @@ $em-base: 16px !default;
 
 // Colors
 
-// $primary-color: #2ba6cb;
-// $secondary-color: #e9e9e9;
-// $alert-color: #c60f13;
-// $success-color: #5da423;
+$primary-color: #E7E2D9;
+$secondary-color: #A3A0A1;
+$alert-color: $red;
+$success-color: $green;
 
 // Make sure border radius matches unless we want it different.
 
@@ -126,7 +131,7 @@ $em-base: 16px !default;
 // $header-font-family: "Helvetica Neue", "Helvetica", Helvetica, Arial, sans-serif;
 // $header-font-weight: bold;
 // $header-font-style: normal;
-// $header-font-color: #222;
+$header-font-color: $body-font-color;
 // $header-line-height: 1.4;
 // $header-top-margin: .2em;
 // $header-bottom-margin: .5em;
@@ -181,7 +186,7 @@ $em-base: 16px !default;
 
 // $hr-border-width: 1px;
 // $hr-border-style: solid;
-// $hr-border-color: #ddd;
+$hr-border-color: lighten($body-bg, 5%);
 // $hr-margin: emCalc(20px);
 
 // Lists
@@ -817,14 +822,14 @@ $em-base: 16px !default;
 
 // Background and border styles
 
-// $panel-bg: darken(#fff, 5%);
+$panel-bg: darken($body-bg, 5%);
 // $panel-border-style: solid;
 // $panel-border-size: 1px;
 
 // Control how much we darken things on hover
 
-// $panel-function-factor: 10%;
-// $panel-border-color: darken($panel-bg, $panel-function-factor);
+$panel-function-factor: 1%;
+$panel-border-color: darken($panel-bg, $panel-function-factor);
 
 // Inner padding and bottom margin
 
@@ -1081,20 +1086,20 @@ $em-base: 16px !default;
 
 // Background color for the table and even rows
 
-// $table-bg: #fff;
-// $table-even-row-bg: #f9f9f9;
+$table-bg: lighten($body-bg, 1%);
+$table-even-row-bg: lighten($body-bg, 5%);
 
 // Table cell border style
 
 // $table-border-style: solid;
 // $table-border-size: 1px;
-// $table-border-color: #ddd;
+$table-border-color: darken($body-bg, 3%);
 
 // Table head styles
 
 // $table-head-bg: #f5f5f5;
 // $table-head-font-size: emCalc(14px);
-// $table-head-font-color: #222;
+$table-head-font-color: lighten($body-font-color, 5%);
 // $table-head-font-weight: bold;
 // $table-head-padding: emCalc(8px) emCalc(10px) emCalc(10px);
 
@@ -1102,7 +1107,7 @@ $em-base: 16px !default;
 
 // $table-row-padding: emCalc(9px) emCalc(10px);
 // $table-row-font-size: emCalc(14px);
-// $table-row-font-color: #222;
+$table-row-font-color: lighten($body-font-color, 10%);
 // $table-line-height: emCalc(18px);
 
 // Display and margin of tables
@@ -1157,7 +1162,7 @@ $em-base: 16px !default;
 
 // Background color for the top bar
 
-// $topbar-bg: #111;
+$topbar-bg: darken(#454546, 10%);
 
 // Height and margin
 

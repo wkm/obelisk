@@ -1,19 +1,19 @@
 {{template "_header.html" .}}
 {{with .Object}}
-<div class='row'>
+<div class='fat-row'>
 	<div class='twelve columns'>
 		<h1>Host <a href="/host/{{.Name}}">{{.Name}}</a></h1>
 	</div>
 	<hr/>
 </div>
 
-<div class='row'>
+<div class='fat-row'>
 	<div class='twelve columns'>
 		<h3>Metrics</h3>
 	</div>
 </div>
-<div class='row'>
-	<ul class='small-block-grid-2 large-block-grid-2'>
+<div class='fat-row'>
+	<ul class='small-block-grid-2 large-block-grid-4'>
 		{{range .Metrics}}
 			<li>
 				<h6><tt>{{.Name}}</tt> <span class='subheader'>{{.Desc}}</span></h6>

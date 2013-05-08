@@ -6,7 +6,7 @@ import (
 	"net/http"
 	"obelisk/lib/rinst"
 	rinstService "obelisk/lib/rinst/service"
-	"obelisk/lib/rlog"
+	rlogService "obelisk/lib/rlog/service"
 	"strings"
 	"time"
 )
@@ -100,7 +100,7 @@ func workerHandler(rw http.ResponseWriter, req *http.Request) {
 		renderTemplate(req, rw, "/worker/worker_profiling.html", workerInfo)
 
 	case "logging":
-		xRlog, err := circuit.TryDial(afile.Addr, rlog.ServiceName)
+		xRlog, err := circuit.TryDial(afile.Addr, rlogService.ServiceName)
 		if err != nil {
 			respondError(rw, err.Error())
 			return

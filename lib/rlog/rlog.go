@@ -42,5 +42,5 @@ func (r *MemoryLog) FlushLog() []byte {
 
 // create a logger for a named category
 func Logger(ctg string) Log {
-
+	return nil
 }

@@ -9,6 +9,7 @@ import (
 )
 
 func timeHandler(rw http.ResponseWriter, req *http.Request) {
+
 	query := req.URL.Query()
 	obj := make(map[string]interface{})
 
@@ -66,13 +67,21 @@ func timeHandler(rw http.ResponseWriter, req *http.Request) {
 		points[i] = make([]interface{}, 3)
 		points[i][0] = v.Time * 1000 // ms precision for javascript
 		points[i][1] = v.Avg
-		points[i][2] = v.Err
+
+		if !math.IsNaN(v.Err) {
+			points[i][2] = v.Err
+		} else {
+			points[i][2] = 0
+		}
 	}
 
 	obj["points"] = points
 
-	// response
 	rw.Header().Add("Content-Type", "text/json")
 	enc := json.NewEncoder(rw)
-	enc.Encode(obj)
+	err = enc.Encode(obj)
+	if err != nil {
+		respondError(rw, err.Error())
+		return
+	}
 }
