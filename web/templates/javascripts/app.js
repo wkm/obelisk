@@ -19,11 +19,13 @@ function shadeColor(color, porcent) {
     return "#"+RR+GG+BB;
 }
 
+var charts = []
+
 function chart(options) {
 	var oneDay = 60*60*24*1000
 
 	if (options['start'] == undefined)
-		options['start'] = new Date() - (oneDay/2)
+		options['start'] = new Date() - (oneDay/4)
 	if (options['stop'] == undefined)
 		options['stop'] = new Date() - 0
 	if (options['resolution'] == undefined)
@@ -35,31 +37,38 @@ function chart(options) {
 		dataType: 'json',
 		url: '/api/time',
 		data: options,
-		success: function (data, status, xhr ) {
+		success: function (data, status, xhr) {
 			var pts = data['points']
+			var processed = []
 			var max = 0
 			for (var i = pts.length - 1; i >= 0; i--) {
 				pts[i][0] = new Date(pts[i][0])
-				pts[i][1] = [pts[i][1], pts[i][2]]
-
-				if (pts[i][1][0] + pts[i][1][1] > max) {
-					max = pts[i][1][0] + pts[i][1][1]
+				if (pts[i][1] == null) {
+					pts[i][1] = 0
+				} else {
+					pts[i][1] = [pts[i][1], pts[i][2]]
+					if (pts[i][1][0] + pts[i][1][1] > max)
+						max = pts[i][1][0] + pts[i][1][1]
 				}
+				processed[processed.length] = [pts[i][0], pts[i][1]] 
 			}
+			if (max == 0)
+				max = 1
 
-			var g = new Dygraph(
+			chart[options['query']] = new Dygraph(
 				document.getElementById('plot-'+options['query']),
-				pts,
+				processed,
 				{
-					colors: [shadeColor('#4F909C', 30)],
+					colors: [shadeColor('#5B4F9C', 20)],
 					valueRange: [0, 1.2*max],
 					showRoller: false,
-					strokeWidth: 2.5,
+					strokeWidth: 2,
 					pointSize: 2,
+					drawPointCallback: Dygraph.Circles.SQUARE,
 					drawPoints: true,
 					// stepPlot: true, 
-					axisLineColor: shadeColor('#A3A0A1', -20),
-					gridLineColor: shadeColor('#A3A0A1', -40),
+					axisLineColor: shadeColor('#f2efee', -20),
+					gridLineColor: shadeColor('#f2efee', -10),
 					includeZero: true,
 					dateWindow: [options.start, options.stop],
 					yAxisLabelWidth: 30,
