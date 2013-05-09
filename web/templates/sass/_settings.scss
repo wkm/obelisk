@@ -30,9 +30,9 @@ $em-base: 16px !default;
 
 // $default-float: left;
 
-$body-bg: #454546;
-$body-font-color: #A3A0A1;
-$body-font-family: "Helvetica Neue", "Helvetica", Helvetica, Arial, sans-serif;
+$body-bg: #f2efee;
+$body-font-color: #33323e;
+$body-font-family: "Titillium Web", "Helvetica Neue", "Helvetica", Helvetica, Arial, sans-serif;
 $body-font-weight: normal;
 $body-font-style: normal;
 
@@ -46,7 +46,7 @@ $body-font-style: normal;
 
 // Colors
 
-$primary-color: #E7E2D9;
+$primary-color: lighten(#33323e, 20%);
 $secondary-color: lighten($body-bg, 5%);
 $alert-color: $red;
 $success-color: $green;
@@ -59,8 +59,8 @@ $success-color: $green;
 // Inset shadow shiny edges and depressions.
 
 // $shiny-edge-size: 0 1px 0;
-$shiny-edge-color: rgba(lighten($body-font-color, 2%), .5);
-$shiny-edge-active-color: rgba(#000, .2);
+$shiny-edge-color: rgba(darken($body-bg, 10%), .5);
+$shiny-edge-active-color: rgba($body-font-color, .4);
 
 // Control whether or not CSS classes come through in the CSS files.
 
@@ -128,7 +128,7 @@ $shiny-edge-active-color: rgba(#000, .2);
 
 // Heading font styles
 
-// $header-font-family: "Helvetica Neue", "Helvetica", Helvetica, Arial, sans-serif;
+$header-font-family: $body-font-family;
 // $header-font-weight: bold;
 // $header-font-style: normal;
 $header-font-color: $body-font-color;
@@ -172,7 +172,7 @@ $header-font-color: $body-font-color;
 
 // <code> tags
 
-// $code-color: darken($alert-color, 15%);
+$code-color: $body-font-color;
 // $code-font-family: Consolas, 'Liberation Mono', Courier, monospace;
 // $code-font-weight: bold;
 
@@ -186,7 +186,7 @@ $header-font-color: $body-font-color;
 
 // $hr-border-width: 1px;
 // $hr-border-style: solid;
-$hr-border-color: lighten($body-bg, 5%);
+$hr-border-color: darken($body-bg, 5%);
 // $hr-margin: emCalc(20px);
 
 // Lists
@@ -314,8 +314,8 @@ $hr-border-color: lighten($body-bg, 5%);
 // Button text styles.
 
 // $button-font-family: inherit;
-$button-font-color: $body-font-color;
-$button-font-color-alt: $body-bg;
+$button-font-color: $body-bg;
+$button-font-color-alt: $body-font-color;
 // $button-font-med: emCalc(16px);
 // $button-font-tny: emCalc(11px);
 // $button-font-sml: emCalc(13px);
@@ -329,9 +329,9 @@ $button-font-color-alt: $body-bg;
 
 // Button border styles.
 
-// $button-border-width: 1px;
-// $button-border-style: solid;
-// $button-border-color: darken($primary-color, $button-function-factor);
+$button-border-width: 1px;
+$button-border-style: solid;
+$button-border-color: darken($body-font-color, 1%);
 
 // Radius used throughout the core.
 
@@ -828,7 +828,7 @@ $panel-bg: darken($body-bg, 5%);
 
 // Control how much we darken things on hover
 
-$panel-function-factor: 1%;
+$panel-function-factor: 3%;
 $panel-border-color: darken($panel-bg, $panel-function-factor);
 
 // Inner padding and bottom margin
@@ -1087,7 +1087,7 @@ $panel-border-color: darken($panel-bg, $panel-function-factor);
 // Background color for the table and even rows
 
 $table-bg: lighten($body-bg, 1%);
-$table-even-row-bg: lighten($body-bg, 5%);
+$table-even-row-bg: darken($body-bg, 1%);
 
 // Table cell border style
 
@@ -1162,7 +1162,7 @@ $table-row-font-color: lighten($body-font-color, 10%);
 
 // Background color for the top bar
 
-$topbar-bg: darken(#454546, 10%);
+$topbar-bg: $body-bg;
 
 // Height and margin
 
@@ -1180,14 +1180,14 @@ $topbar-bg: darken(#454546, 10%);
 
 // Link colors and styles for top-level nav
 
-// $topbar-link-color: #fff;
-// $topbar-link-weight: bold;
+$topbar-link-color: $body-font-color;
+$topbar-link-weight: bold;
 // $topbar-link-font-size: emCalc(13px);
-// $topbar-link-hover-lightness: -30% !default; // Darken by 30%
+$topbar-link-hover-lightness: -5%;
 
 // Top bar dropdown elements
 
-// $topbar-dropdown-bg: #333;
+$topbar-dropdown-bg: $body-bg;
 // $topbar-dropdown-link-color: #fff;
 // $topbar-dropdown-toggle-size: 5px;
 // $topbar-dropdown-toggle-color: #fff;

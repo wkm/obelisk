@@ -7,9 +7,12 @@
 // Comment out this import if you are customizing you imports below
 @import "foundation";
 
+@import url("http://fonts.googleapis.com/css?family=Titillium+Web:400,600,700,200,300");
+
 body,html { 
 	background: $body-bg;
-	-webkit-font-smoothing: antialiased;
+	background-image: url("http://noisepng.com/noise-200-200-1-monochrome.png");
+	/* -webkit-font-smoothing: antialiased; */
 }
 
 .zk-node,tt {
@@ -26,6 +29,21 @@ body,html {
 
 table th {
 	text-align: left;
+}
+
+.top-bar, .top-bar-section .left {
+	border-bottom: 2px solid $body-font-color;
+}
+.top-bar {
+	height: $topbar-height + 2;
+
+	.divider {
+		border-color: lighten($body-font-color, 60%) !important;
+		border-width: 0 1px 0 0 !important;
+	}
+	a:hover {
+		background: $body-bg;
+	}
 }
 
 code {
@@ -50,7 +68,7 @@ body {
 .dygraph-axis-label, .dygraph-legend {
 	font-size: 10px;
 	font-family: sans-serif;
-	color: #A3A0A1;
+	color: lighten($body-font-color, 15%);
 }
 
 .fat-row {
