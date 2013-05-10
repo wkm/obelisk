@@ -5,16 +5,21 @@ import (
 )
 
 func TestLog(t *testing.T) {
-	log := &MemoryLog{}
-	log.Printf("%s", "hello")
-	log.Printf("%d", 12)
-	content := log.FlushLog()
+	c := NewConfig()
+	log := c.Logger("foo")
 
-	if string(content) != "hello\n12\n" {
-		t.Errorf("invalid log content (%s)", string(content))
+	prox, ok := log.(*LogProxy)
+	if !ok {
+		t.Errorf("expected log to be a LogProxy but was %#v", log)
 	}
 
-	if statPrint.Value() != 2 {
-		t.Errorf("invalid prints count %d", statPrint.Value())
+	if prox.Delegate == nil {
+		t.Fatalf("expected delegate to exist")
+	}
+
+	delegate := *prox.Delegate
+	_, ok = delegate.(StdoutLog)
+	if !ok {
+		t.Errorf("expected delegate to be a StdoutLog but was %#v", delegate)
 	}
 }

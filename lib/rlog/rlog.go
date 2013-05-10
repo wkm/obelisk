@@ -4,8 +4,8 @@
 package rlog
 
 import (
-	"bytes"
-	"fmt"
+	"path/filepath"
+	"sync"
 )
 
 type Log interface {
@@ -14,33 +14,93 @@ type Log interface {
 
 	// ensure the log's buffer has been synchronized
 	Sync()
+
+	// close the log
+	Close()
 }
 
-type MemoryLog struct {
-	Buffer bytes.Buffer
+// the log proxy encodes a log's configuration along with a
+// delegate which actually preforms the logging
+type LogProxy struct {
+	Category string
+	Prefix   string
+	Delegate *Log
 }
 
-// print a message into the log, terminated by a new line
-func (r *MemoryLog) Printf(format string, obj ...interface{}) {
-	statPrint.Incr()
-	lines, _ := fmt.Fprintf(&r.Buffer, format, obj...)
-	r.Buffer.WriteRune('\n')
-	statByte.Add(uint(lines) + 1)
+func (p LogProxy) Printf(format string, obj ...interface{}) {
+	(*p.Delegate).Printf(format, obj...)
+}
+func (p LogProxy) Sync() {
+	(*p.Delegate).Sync()
+}
+func (p LogProxy) Close() {
+	(*p.Delegate).Close()
 }
 
-func (r *MemoryLog) Sync() {
-	// memory logs don't synchronize
+type Config struct {
+	sync.Mutex
+	BaseDir *string
+	logs    map[string]*LogProxy
 }
 
-// gets the current content of the log; truncating the contents
-func (r *MemoryLog) FlushLog() []byte {
-	statFlush.Incr()
-	content := r.Buffer.Bytes()
-	r.Buffer.Reset()
-	return content
+func NewConfig() *Config {
+	c := Config{}
+	c.logs = make(map[string]*LogProxy)
+	return &c
 }
 
-// create a logger for a named category
-func Logger(ctg string) Log {
-	return nil
+var LogConfig = NewConfig()
+
+// var log = config.Logger("rlog")
+
+// configure the global logger
+func ConfigureLogger(c *Config) {
+	rlog := c.Logger("rlog")
+	rlog.Printf("configuring %v", c)
+
+	c.Lock()
+	defer c.Unlock()
+	LogConfig = c
+}
+
+// given a log proxy, will fill it out
+func (c *Config) Create(p *LogProxy) Log {
+	c.Lock()
+	defer c.Unlock()
+
+	if p.Delegate != nil {
+		p.Close()
+	}
+
+	var logger Log
+	var err error
+	if c.BaseDir == nil {
+		logger, err = StdoutLog{p.Category}, nil
+	} else {
+		logger, err = NewFileLog(filepath.Join(*c.BaseDir), p.Category, p.Category)
+	}
+
+	if err != nil {
+		println("received error creating %v: %s", p, err.Error())
+	}
+
+	// FIXME threadsafe? we don't lock the logproxy
+	p.Delegate = &logger
+	return p
+}
+
+// get a logger for a named category
+func (c *Config) Logger(ctg string) Log {
+	c.Lock()
+	proxy, ok := c.logs[ctg]
+	if !ok {
+		proxy = &LogProxy{ctg, ctg, nil}
+		c.logs[ctg] = proxy
+	}
+
+	log := c.logs[ctg]
+	c.Unlock()
+
+	c.Create(log)
+	return proxy
 }
