@@ -84,14 +84,43 @@ body {
 	}
 }
 
-/*
-.sub-nav {
+.page-nav-bar {
+	.button {
+		color: $body-font-color;
+		border: 1.5px solid lighten($body-font-color, 20%);
+		background: none;
+		font-weight: bold;
+
+		&:hover {
+			background: darken($body-bg, 10%);
+		}
+
+		&.active {
+			background: lighten($body-font-color, 25%);
+			color: $body-bg;
+		}
+	}
+
+	.button-group {
+		display: inline-block;
+
+		.name {
+			float: none;
+			clear: both;
+			display: block;
+			font-size: 90%;
+			width: 100%;
+		}
+	}
+}
+
+/*.sub-nav {
 	dd {
 		border: 1px solid $body-font-color;
 		padding: inherit .5em;
 	}
-}
-*/
+}*/
+
 .fat-row {
 	padding: 0 15px;
 }
