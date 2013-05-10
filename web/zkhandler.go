@@ -6,7 +6,6 @@ import (
 	"circuit/load/config"
 	"circuit/sys/zanchorfs"
 	"fmt"
-	"log"
 	"net/http"
 	"path"
 	"strings"

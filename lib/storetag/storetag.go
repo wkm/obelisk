@@ -9,10 +9,13 @@ package storetag
 
 import (
 	"obelisk/lib/errors"
+	"obelisk/lib/rlog"
 	"path/filepath"
 	"strings"
 	"sync"
 )
+
+var log = rlog.LogConfig.Logger("storetag")
 
 type Store struct {
 	sync.Mutex

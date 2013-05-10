@@ -2,7 +2,6 @@ package storetag
 
 import (
 	"circuit/kit/lockfile"
-	"log"
 	"obelisk/lib/persist"
 	"os"
 	"time"

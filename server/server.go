@@ -1,7 +1,6 @@
 package server
 
 import (
-	"log"
 	"obelisk/lib/rinst"
 	"obelisk/lib/rinst/service"
 	"obelisk/lib/storekv"
@@ -72,7 +71,7 @@ func (app *ServerApp) startTimeStore() {
 	c.DiskStore = filepath.Join(ObeliskDirectory, "store", "time")
 	app.timedb, err = storetime.NewDB(c)
 	if err != nil {
-		log.Fatalf("error starting time store %s", err.Error())
+		log.Printf("error starting time store %s", err.Error())
 	}
 }
 
@@ -82,7 +81,7 @@ func (app *ServerApp) startTagStore() {
 	c.DiskStore = filepath.Join(ObeliskDirectory, "store", "tag")
 	app.tagdb, err = storetag.NewDB(c)
 	if err != nil {
-		log.Fatalf("error starting tag store %s", err.Error())
+		log.Printf("error starting tag store %s", err.Error())
 	}
 }
 
@@ -92,7 +91,7 @@ func (app *ServerApp) startKVStore() {
 	c.DiskStore = filepath.Join(ObeliskDirectory, "store", "kv")
 	app.kvdb, err = storekv.NewDB(c)
 	if err != nil {
-		log.Fatalf("error starting keyvalue store%s", err.Error())
+		log.Printf("error starting keyvalue store%s", err.Error())
 	}
 }
 

@@ -2,9 +2,11 @@ package service
 
 import (
 	"circuit/use/circuit"
-	"log"
 	"obelisk/lib/rinst"
+	"obelisk/lib/rlog"
 )
+
+var log = rlog.LogConfig.Logger("rinst-service")
 
 const (
 	ServiceName = "remote-instrumentation"

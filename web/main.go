@@ -5,11 +5,13 @@ import (
 	"circuit/use/anchorfs"
 	"circuit/use/circuit"
 	"fmt"
-	"log"
 	"net/http"
+	"obelisk/lib/rlog"
 	"obelisk/server"
 	"runtime"
 )
+
+var log = rlog.LogConfig.Logger("web")
 
 func main() {
 	log.Printf("obelisk/")
@@ -18,14 +20,17 @@ func main() {
 
 	nodes, err := anchorfs.OpenDir("/obelisk-server")
 	if err != nil {
-		log.Fatalf("could not find /obelisk-server %s", err.Error())
+		log.Printf("could not find /obelisk-server %s", err.Error())
+		return
 	}
 	_, workers, err := nodes.Files()
 	if err != nil {
-		log.Fatalf("could not list workers %s", err.Error())
+		log.Printf("could not list workers %s", err.Error())
+		return
 	}
 	if len(workers) < 1 {
-		log.Fatalf("could not find an obelisk-server worker")
+		log.Printf("could not find an obelisk-server worker")
+		return
 	}
 
 	log.Printf("found obelisk-server workers: %#v", workers)
@@ -42,7 +47,7 @@ func main() {
 	log.Printf("connected to %v", xServer)
 	hosts, err := ChildrenTags("host")
 	if err != nil {
-		log.Fatalf("could not retrieve list of hosts %s", err.Error())
+		log.Printf("could not retrieve list of hosts %s", err.Error())
 	}
 
 	log.Printf("hosts: %v", hosts)
@@ -56,7 +61,7 @@ func main() {
 	http.HandleFunc("/", indexHandler)
 
 	log.Printf("starting HTTP")
-	err = http.ListenAndServe(":8080", nil)
+	err = http.ListenAndServe(":8080", LogAccess(http.DefaultServeMux))
 	if err != nil {
 		log.Printf("err: %s", err)
 	}

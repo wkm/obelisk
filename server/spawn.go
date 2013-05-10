@@ -2,7 +2,6 @@ package server
 
 import (
 	"circuit/use/circuit"
-	"log"
 	"obelisk/lib/storetime"
 )
 

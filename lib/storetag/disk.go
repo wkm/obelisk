@@ -3,7 +3,6 @@ package storetag
 import (
 	"encoding/gob"
 	"io"
-	"log"
 )
 
 type Line struct {

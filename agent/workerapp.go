@@ -3,7 +3,7 @@ package agent
 import (
 	"circuit/use/circuit"
 	"obelisk/lib/rconfig"
-	"obelisk/lib/rlog"
+	// "obelisk/lib/rlog"
 	"time"
 )
 
@@ -13,7 +13,7 @@ type WorkerApp struct{}
 type WorkerInterface struct{}
 
 func (WorkerApp) Main() {
-	circuit.Listen(rlog.ServiceName, rlog.Log)
+	// circuit.Listen(rlog.ServiceName, rlog.Log)
 	circuit.Listen(rconfig.ServiceName, rconfig.Config)
 	circuit.Daemonize(func() {
 		ticker := time.NewTicker(10 * time.Second)

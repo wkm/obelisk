@@ -1,7 +1,6 @@
 package main
 
 import (
-	"log"
 	"net/http"
 	"obelisk/lib/rinst"
 	"path/filepath"

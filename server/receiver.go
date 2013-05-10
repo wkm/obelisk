@@ -2,10 +2,12 @@ package server
 
 import (
 	"encoding/gob"
-	"log"
 	"obelisk/lib/rinst"
+	"obelisk/lib/rlog"
 	"strconv"
 )
+
+var log = rlog.LogConfig.Logger("obelisk-server")
 
 func init() {
 	gob.Register(rinst.Schema{})

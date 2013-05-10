@@ -2,11 +2,13 @@ package storekv
 
 import (
 	"circuit/kit/lockfile"
-	"log"
 	"obelisk/lib/persist"
+	"obelisk/lib/rlog"
 	"os"
 	"time"
 )
+
+var log = rlog.LogConfig.Logger("storekv")
 
 type Config struct {
 	DiskStore     string
