@@ -25,7 +25,7 @@ function chart(options) {
 	var oneDay = 60*60*24*1000
 
 	if (options['start'] == undefined)
-		options['start'] = new Date() - (oneDay/4)
+		options['start'] = new Date() - (oneDay/6)
 	if (options['stop'] == undefined)
 		options['stop'] = new Date() - 0
 	if (options['resolution'] == undefined)

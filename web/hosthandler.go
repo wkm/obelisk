@@ -11,7 +11,12 @@ import (
 
 type HostInfo struct {
 	Name    string
-	Metrics []*MetricInfo
+	Metrics map[string]*MetricGroup
+}
+
+type MetricGroup struct {
+	Name string
+	Info map[string]*MetricInfo
 }
 
 type MetricInfo struct {
@@ -47,12 +52,19 @@ func hostHandler(rw http.ResponseWriter, req *http.Request) {
 	}
 	sort.Strings(tags)
 
-	metrics := make([]*MetricInfo, len(tags))
-	for i, tag := range tags {
+	groups := make(map[string]*MetricGroup)
+	for _, tag := range tags {
+		paths := strings.SplitN(tag, ".", 2)
+		groupName := paths[0]
+		if group, ok := groups[groupName]; !ok {
+			group = &MetricGroup{groupName, make(map[string]*MetricInfo)}
+			groups[groupName] = group
+		}
+
 		name := filepath.Join("host", root, tag)
 		info, err := GetMetricInfo(name)
 		if err != nil {
-			log.Printf("err: %s", err.Error())
+			log.Printf("err: %s: %s", name, err.Error())
 			continue
 		}
 
@@ -69,7 +81,8 @@ func hostHandler(rw http.ResponseWriter, req *http.Request) {
 			m.IsRate = false
 		}
 		m.Path = filepath.Join("host", root, tag)
-		metrics[i] = m
+		groups[groupName].Info[m.Path] = m
 	}
-	renderTemplate(req, rw, "/host.html", &HostInfo{root, metrics})
+
+	renderTemplate(req, rw, "/host.html", &HostInfo{root, groups})
 }

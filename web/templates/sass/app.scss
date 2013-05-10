@@ -71,6 +71,27 @@ body {
 	color: lighten($body-font-color, 15%);
 }
 
+.metric h6 {
+	height: 1.5em;
+	
+	text-overflow: ellipsis;
+	overflow: hidden;
+	cursor: pointer;
+
+	&:hover {
+		overflow: visible;
+		z-index: 1;
+	}
+}
+
+/*
+.sub-nav {
+	dd {
+		border: 1px solid $body-font-color;
+		padding: inherit .5em;
+	}
+}
+*/
 .fat-row {
 	padding: 0 15px;
 }
