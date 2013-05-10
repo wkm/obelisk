@@ -11,12 +11,11 @@ type StdoutLog struct {
 
 func (l StdoutLog) Printf(format string, obj ...interface{}) {
 	statPrint.Incr()
-	bytes, _ := fmt.Fprintf(os.Stderr, "[%s] ", l.Category)
+	params := make([]interface{}, len(obj)+1)
+	params[0] = l.Category
+	copy(params[1:], obj)
+	bytes, _ := fmt.Fprintf(os.Stderr, "[%s] "+format+"\n", params...)
 	statByte.Add(uint(bytes))
-
-	bytes, _ = fmt.Fprintf(os.Stderr, format, obj...)
-	os.Stderr.WriteString("\n")
-	statByte.Add(uint(bytes) + 1)
 }
 
 func (l StdoutLog) Sync() {
