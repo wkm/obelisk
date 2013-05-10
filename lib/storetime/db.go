@@ -2,11 +2,13 @@ package storetime
 
 import (
 	"circuit/kit/lockfile"
-	"log"
 	"obelisk/lib/persist"
+	"obelisk/lib/rlog"
 	"os"
 	"time"
 )
+
+var log = rlog.LogConfig.Logger("storetime")
 
 type Config struct {
 	DiskStore     string        // which directory to store the dump files on disk
@@ -32,6 +34,7 @@ type DB struct {
 
 // create a new database
 func NewDB(config Config) (*DB, error) {
+	log.Printf("creating storetime db")
 	store := NewStore()
 
 	err := os.MkdirAll(config.DiskStore, 0700)
@@ -58,7 +61,6 @@ func NewDB(config Config) (*DB, error) {
 	}
 
 	db.flushTicker = time.NewTicker(config.FlushPeriod)
-
 	go db.backgroundWork()
 
 	return db, nil
@@ -92,17 +94,21 @@ func (db *DB) Restore() error {
 // FIXME need to include a hash+
 func (db *DB) Flush() error {
 	statFlush.Incr()
+	log.Printf("flushing database")
 	return persist.FlushSnapshot(db.Store, db.Config.DiskStore, "time")
 }
 
-// FIXME implement
+// remove old flush versions
 func (db *DB) Cleanup() error {
 	statCleanup.Incr()
+	log.Printf("preforming cleanup")
 	return persist.CleanupSnapshot(db.Config.FlushVersions, db.Config.DiskStore, "time")
 }
 
 // shutdown this store
 func (db *DB) Shutdown() {
+	log.Printf("shutting down database")
+
 	close(db.quit)
 	db.flushTicker.Stop()
 

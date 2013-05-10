@@ -3,13 +3,15 @@ package persist
 import (
 	"circuit/kit/lockfile"
 	"io"
-	"log"
 	"obelisk/lib/errors"
+	"obelisk/lib/rlog"
 	"os"
 	"path/filepath"
 	"sort"
 	"time"
 )
+
+var log = rlog.LogConfig.Logger("persist")
 
 type Persistable interface {
 	// dump the current state into the given writer
