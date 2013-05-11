@@ -57,9 +57,8 @@
 <div class='fat-row'>
 	<div class='6 columns'>
 			<dl class='sub-nav'>
-				<dt>Sections</dt>
 				{{range .Metrics}}
-					<dd><a href='#section-{{.Name}}'><tt>{{.Name}}</tt></a></dd>
+					<dd><h5><a href='#section-{{.Name}}'><tt>{{.Name}}</tt></a></h5></dd>
 				{{end}}
 			</dl>
 	</div>
@@ -70,11 +69,12 @@
 		<div class='12 columns'>
 			<h4 id="section-{{.Name}}"><tt>{{.Name}}</tt></h4>
 		</div>
-		<ul class='small-block-grid-1 large-block-grid-2'>
+		<ul class='metric-layout small-block-grid-1 large-block-grid-2'>
 			{{range .Info}}
 				<li class='metric'>
 					<h6><tt>{{.Name}}</tt> <span class='subheader'>{{.Desc}}</span></h6>
 					<div id="plot-{{.Path}}" class='drawing plot'></div>
+					<div id="labels-{{.Path}}" class='labels'></div>
 					<script type="text/javascript">
 						$(function() {chart({query: "{{.Path}}", labels: ["{{.Unit}}"], rate: {{.IsRate}}})})
 					</script>

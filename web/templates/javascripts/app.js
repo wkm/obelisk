@@ -21,15 +21,20 @@ function shadeColor(color, porcent) {
 
 var oneHour = 60*60*1000
 var settings = {
+	columns: 2,         // number of columns to show
 	overlay: 1,         // overlay factor
 	duration: 4*oneHour,  // duration of the plot
-	resolution: 75,     // number of data points per plot
-	layoutFactor: 1     // increase the resolution based on layout
+	resolution: 75      // number of data points per plot
 }
 var charts = []
 
 var baseOptions = {
-	colors: [shadeColor('#5B4F9C', 20), shadeColor('#f2efee', -20)],
+	colors: [
+		shadeColor('#5B4F9C', 20), 
+		shadeColor('#f2efee', -30),
+		shadeColor('#f2efee', -20),
+		shadeColor('#f2efee', -15)
+	],
 	showRoller: false,
 	strokeWidth: 2,
 	pointSize: 2,
@@ -42,7 +47,7 @@ var baseOptions = {
 	labelsKMB: true,
 	sigma: 0.5,
 	logscale: false,
-	labels: ['date', 'a', 'b'],
+	legend: 'always',
 	'a': {
 		drawPoints: true
 	},
@@ -53,11 +58,33 @@ var baseOptions = {
 	}
 }
 
+var overlayPlotStyles = [
+	{ // primary data
+		drawPoints: true
+	},
+	{ // first overlay
+		drawPoints: false,
+		strokePattern: Dygraph.DOTTED_LINE,
+		strokeWidth: 1
+	},
+	{ // second overlay
+		drawPoints: false,
+		strokePattern: Dygraph.DOTTED_LINE,
+		strokeWidth: 1
+	},
+	{ // third overlay
+		drawPoints: false,
+		strokePattern: Dygraph.DOTTED_LINE,
+		strokeWidth: 1
+	}
+]
+
 function chart(options) {
 	overlay = settings.overlay
+	plotstart = new Date() - settings.duration
 	start = new Date() - settings.duration * overlay
 	stop = new Date() - 0
-	resolution = settings.resolution * settings.layoutFactor * overlay
+	resolution = settings.resolution * overlay
 
 	if (options['rate'] == undefined)
 		options['rate'] = true
@@ -89,6 +116,7 @@ function chart(options) {
 
 			// build overlay factor
 			var overlayed = []
+			console.log("creating final chart of ", resolution/overlay)
 			for (var i = 0; i < resolution/overlay; i++) {
 				// get the original date shown
 				overlayed[i] = [processed[overlay * i][0]]
@@ -112,21 +140,37 @@ function chart(options) {
 				}
 			}
 
+			var labels = ['time']
 			if (charts[options['query']].graph == null) {
+				var chartOptions = $.extend({}, baseOptions, {
+					labelsDiv: 'labels-'+options['query'],
+					valueRange: [0, 1.2*max],
+					dateWindow: [plotstart, stop]
+				})
+
+				// add plot styles for each overlay
+				for (var i = 0; i < overlay; i++) {
+					var label = options['labels'][0]
+					if (i > 0) {
+						label = label+" "+i+"th gen"
+					}
+					labels.push(label)
+					chartOptions[label] = overlayPlotStyles[i]
+				}
+
+				chartOptions['labels'] = labels
+
 				charts[options['query']].div = document.getElementById('plot-'+options['query'])
 				charts[options['query']].graph = new Dygraph(
 					charts[options['query']].div,
 					overlayed,
-					$.extend({}, baseOptions, {
-						valueRange: [0, 1.2*max],
-						dateWindow: [start, stop]
-					})
+					chartOptions
 				)
 			} else {
 				charts[options['query']].graph.updateOptions({
 					file: overlayed,
 					valueRange: [0, 1.2*max],
-					dateWindow: [start, stop]
+					dateWindow: [plotstart, stop]
 				})
 			}
 
@@ -150,10 +194,20 @@ function setResolution(points) {
 	redraw(false)
 }
 
+function setColumns(columns) {
+	$('.metric-layout').addClass('large-block-grid-'+columns)
+	$('.metric-layout').removeClass('large-block-grid-'+settings.columns)
+	settings.columns = columns
+	redraw(false)
+}
+
 function redraw(destroy) {
 	// freeze all charts
 	for (var name in charts) {
 		$(charts[name].div).addClass('drawing')
+
+		// dygraphs isn't happy with adding new timeseries to existing
+		// charts, this will force the graph to get reinitialized
 		if (destroy) {
 			charts[name].graph.destroy()
 			charts[name].graph = null
