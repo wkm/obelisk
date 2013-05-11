@@ -13,8 +13,8 @@ func init() {
 	gob.Register(rinst.Schema{})
 }
 
-func (app *ServerApp) ReceiveStats(hostname string, buffer rinst.MeasurementBuffer) error {
-	log.Printf("receiving stats from %s", hostname)
+func (app *ServerApp) ReceiveStats(worker string, buffer rinst.MeasurementBuffer) error {
+	log.Printf("receiving stats from %s", worker)
 	for {
 		measure, ok := <-buffer
 		if !ok {
@@ -26,7 +26,7 @@ func (app *ServerApp) ReceiveStats(hostname string, buffer rinst.MeasurementBuff
 			return err
 		}
 
-		id, err := app.tagdb.Store.NewTag("host/" + hostname + "/" + measure.Name)
+		id, err := app.tagdb.Store.NewTag("worker/" + worker + "/" + measure.Name)
 		flt, err := strconv.ParseFloat(measure.Value, 64)
 		if err != nil {
 			log.Printf("invalid measurement %s in %s", err.Error(), measure)
@@ -37,15 +37,15 @@ func (app *ServerApp) ReceiveStats(hostname string, buffer rinst.MeasurementBuff
 	}
 }
 
-func (app *ServerApp) DeclareSchema(hostname string, buffer rinst.SchemaBuffer) error {
-	log.Printf("receiving schema from %s", hostname)
+func (app *ServerApp) DeclareSchema(worker string, buffer rinst.SchemaBuffer) error {
+	log.Printf("receiving schema from %s", worker)
 	for {
 		schema, ok := <-buffer
 		if !ok {
 			return nil
 		}
 
-		err := app.kvdb.Store.SetGob("host/"+hostname+"/"+schema.Name, schema)
+		err := app.kvdb.Store.SetGob("worker/"+worker+"/"+schema.Name, schema)
 		if err != nil {
 			return err
 		}

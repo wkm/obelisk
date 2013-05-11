@@ -1,12 +1,12 @@
 package server
 
 import (
+	"circuit/use/circuit"
 	"obelisk/lib/rinst"
 	"obelisk/lib/rinst/service"
 	"obelisk/lib/storekv"
 	"obelisk/lib/storetag"
 	"obelisk/lib/storetime"
-	"os"
 	"path/filepath"
 	"time"
 )
@@ -27,18 +27,14 @@ func (app *ServerApp) Main() {
 
 	service.Expose(Stats)
 
-	host, err := os.Hostname()
-	if err != nil {
-		panic("could not derive hostname " + err.Error())
-	}
-
+	// FIXME all this probably should use the flush utilities
 	buffer := make(rinst.SchemaBuffer, 1000)
 	go func() {
 		Stats.Schema("", buffer)
 		close(buffer)
 	}()
 
-	app.DeclareSchema(host, buffer)
+	app.DeclareSchema(circuit.WorkerAddr().WorkerID().String(), buffer)
 
 	go app.periodic()
 }
@@ -55,13 +51,8 @@ func (app *ServerApp) periodic() {
 			close(buffer)
 		}()
 
-		host, err := os.Hostname()
-		if err != nil {
-			log.Printf("could not get hostname %s", err.Error())
-			continue
-		}
-
-		app.ReceiveStats(host, buffer)
+		worker := circuit.WorkerAddr().WorkerID().String()
+		app.ReceiveStats(worker, buffer)
 	}
 }
 
