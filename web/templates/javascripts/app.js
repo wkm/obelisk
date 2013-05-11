@@ -19,24 +19,47 @@ function shadeColor(color, porcent) {
     return "#"+RR+GG+BB;
 }
 
+var oneHour = 60*60*1000
+var settings = {
+	duration: 4*oneHour,  // duration of the plot
+	resolution: 75,     // number of data points per plot
+	layoutFactor: 1     // increase the resolution based on layout
+}
 var charts = []
 
-function chart(options) {
-	var oneDay = 60*60*24*1000
+var baseOptions = {
+	colors: [shadeColor('#5B4F9C', 20)],
+	showRoller: false,
+	strokeWidth: 2,
+	pointSize: 2,
+	drawPointCallback: Dygraph.Circles.SQUARE,
+	drawPoints: true,
+	// stepPlot: true, 
+	axisLineColor: shadeColor('#f2efee', -20),
+	gridLineColor: shadeColor('#f2efee', -10),
+	includeZero: true,
+	yAxisLabelWidth: 30,
+	errorBars: true,
+	labelsKMB: true,
+	sigma: 0.5
+}
 
-	if (options['start'] == undefined)
-		options['start'] = new Date() - (oneDay/6)
-	if (options['stop'] == undefined)
-		options['stop'] = new Date() - 0
-	if (options['resolution'] == undefined)
-		options['resolution'] = 75
+function chart(options) {
+	start = new Date() - settings.duration
+	stop = new Date() - 0
+	resolution = settings.resolution * settings.layoutFactor
+
 	if (options['rate'] == undefined)
 		options['rate'] = true
 
 	$.ajax({
 		dataType: 'json',
 		url: '/api/time',
-		data: options,
+		data: $.extend({}, options, {
+			start: start,
+			stop: stop,
+			resolution: resolution
+		}),
 		success: function (data, status, xhr) {
 			var pts = data['points']
 			var processed = []
@@ -52,31 +75,56 @@ function chart(options) {
 				}
 				processed[processed.length] = [pts[i][0], pts[i][1]] 
 			}
+
+			// don't want a plot range of [0, 0]
 			if (max == 0)
 				max = 1
 
-			chart[options['query']] = new Dygraph(
-				document.getElementById('plot-'+options['query']),
-				processed,
-				{
-					colors: [shadeColor('#5B4F9C', 20)],
-					valueRange: [0, 1.2*max],
-					showRoller: false,
-					strokeWidth: 2,
-					pointSize: 2,
-					drawPointCallback: Dygraph.Circles.SQUARE,
-					drawPoints: true,
-					// stepPlot: true, 
-					axisLineColor: shadeColor('#f2efee', -20),
-					gridLineColor: shadeColor('#f2efee', -10),
-					includeZero: true,
-					dateWindow: [options.start, options.stop],
-					yAxisLabelWidth: 30,
-					errorBars: true,
-					labelsKMB: true,
-					sigma: 0.5
+			if (charts[options['query']] == undefined) {
+				// initialize chart object
+				charts[options['query']] = {
+					options: options,
+					graph: null
 				}
-			)
+
+				charts[options['query']].div = document.getElementById('plot-'+options['query'])
+				charts[options['query']].graph = new Dygraph(
+					charts[options['query']].div,
+					processed,
+					$.extend({}, baseOptions, {
+						valueRange: [0, 1.2*max],
+						dateWindow: [start, stop]
+					})
+				)
+			} else {
+				charts[options['query']].graph.updateOptions({
+					file: processed,
+					valueRange: [0, 1.2*max],
+					dateWindow: [start, stop]
+				})
+			}
+
+			$(charts[options['query']].div).removeClass('drawing')
 		}
 	})
+}
+
+function setDuration(hours) {
+	settings.duration = hours * oneHour
+	redraw()
+}
+
+function setResolution(points) {
+	settings.resolution = points
+	redraw()
+}
+
+function redraw() {
+	// freeze all charts
+	for (var name in charts) {
+		$(charts[name].div).addClass('drawing')
+	}
+	for (var name in charts) {
+		chart(charts[name].options)
+	}
 }

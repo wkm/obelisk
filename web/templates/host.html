@@ -13,6 +13,11 @@
 	</div>
 	<div class='large-10 columns right'>
 		<div class='page-nav-bar right'>
+			<ul class='button-group even-2'>
+				<li class='name'>overlay</li>
+				<li><a href='#' onclick='setOverlay(4)' class='small button'>4x</a></li>
+				<li><a href='#' onclick='setOverlay(1)' class='small button'>1x</a></li>
+			</ul>
 			<ul class='button-group even-5'>
 				<li class='name'>duration</li>				
 				<li><a href='#' onclick='setDuration(30*24)' class='small button'> 30d </a></li>
@@ -23,14 +28,18 @@
 			</ul>
 			<ul class='button-group even-2'>
 				<li class='name'>detail</li>
-				<li><a href='#' onclick='setResolution(75)' class='active small button'> fast </a></li>
 				<li><a href='#' onclick='setResolution(300)' class='small button'> hires </a></li>
+				<li><a href='#' onclick='setResolution(75)' class='active small button'> fast </a></li>
 			</ul>
 			<ul class='button-group even-3'>
 				<li class='name'>layout</li>
 				<li><a href='#' onclick='setColumns(3)' class='small button'> <i class='icon-th'></i> </a></li>
 				<li><a href='#' onclick='setColumns(2)' class='active small button'> <i class='icon-th-large'></i> </a></li>
 				<li><a href='#' onclick='setColumns(1)' class='small button'> <i class='icon-reorder'></i> </a></li>
+			</ul>
+			<ul class='button-group'>
+				<li class='name'>&nbsp;</li>
+				<li><a href='#' onclick='redraw()' class='small button'>update</a></li>
 			</ul>
 		</div>
 	</div>
@@ -47,6 +56,7 @@
 </div>
 {{range .Metrics}}
 	<div class='fat-row'>
+		<hr/>
 		<div class='12 columns'>
 			<h4 id="section-{{.Name}}"><tt>{{.Name}}</tt></h4>
 		</div>
@@ -54,14 +64,13 @@
 			{{range .Info}}
 				<li class='metric'>
 					<h6><tt>{{.Name}}</tt> <span class='subheader'>{{.Desc}}</span></h6>
-					<div id="plot-{{.Path}}" class='plot'></div>
+					<div id="plot-{{.Path}}" class='drawing plot'></div>
 					<script type="text/javascript">
-						$(function() {chart({query: "{{.Path}}", rate: {{.IsRate}}})})
+						$(function() {chart({query: "{{.Path}}", labels: ["{{.Unit}}"], rate: {{.IsRate}}})})
 					</script>
 				</li>
 			{{end}}
 		</ul>
-		<hr/>
 	</div>
 {{end}}
 

@@ -71,6 +71,11 @@ body {
 	color: lighten($body-font-color, 15%);
 }
 
+.drawing {
+	opacity: 0.2;
+	background: lighten($body-bg, 10%);
+}
+
 .metric h6 {
 	height: 1.5em;
 	
@@ -108,7 +113,9 @@ body {
 			float: none;
 			clear: both;
 			display: block;
-			font-size: 90%;
+			font-weight: bold;
+			font-size: 70%;
+			text-transform: uppercase;
 			width: 100%;
 		}
 	}
