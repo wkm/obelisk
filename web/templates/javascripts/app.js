@@ -21,6 +21,7 @@ function shadeColor(color, porcent) {
 
 var oneHour = 60*60*1000
 var settings = {
+	overlay: 1,         // overlay factor
 	duration: 4*oneHour,  // duration of the plot
 	resolution: 75,     // number of data points per plot
 	layoutFactor: 1     // increase the resolution based on layout
@@ -28,12 +29,10 @@ var settings = {
 var charts = []
 
 var baseOptions = {
-	colors: [shadeColor('#5B4F9C', 20)],
+	colors: [shadeColor('#5B4F9C', 20), shadeColor('#f2efee', -20)],
 	showRoller: false,
 	strokeWidth: 2,
 	pointSize: 2,
-	drawPointCallback: Dygraph.Circles.SQUARE,
-	drawPoints: true,
 	// stepPlot: true, 
 	axisLineColor: shadeColor('#f2efee', -20),
 	gridLineColor: shadeColor('#f2efee', -10),
@@ -41,13 +40,24 @@ var baseOptions = {
 	yAxisLabelWidth: 30,
 	errorBars: true,
 	labelsKMB: true,
-	sigma: 0.5
+	sigma: 0.5,
+	logscale: false,
+	labels: ['date', 'a', 'b'],
+	'a': {
+		drawPoints: true
+	},
+	'b': {
+		drawPoints: false,
+		strokePattern: Dygraph.DOTTED_LINE,
+		strokeWidth: 1
+	}
 }
 
 function chart(options) {
-	start = new Date() - settings.duration
+	overlay = settings.overlay
+	start = new Date() - settings.duration * overlay
 	stop = new Date() - 0
-	resolution = settings.resolution * settings.layoutFactor
+	resolution = settings.resolution * settings.layoutFactor * overlay
 
 	if (options['rate'] == undefined)
 		options['rate'] = true
@@ -58,7 +68,8 @@ function chart(options) {
 		data: $.extend({}, options, {
 			start: start,
 			stop: stop,
-			resolution: resolution
+			resolution: resolution,
+			overlay: overlay // ignored for now (but logged)
 		}),
 		success: function (data, status, xhr) {
 			var pts = data['points']
@@ -76,6 +87,19 @@ function chart(options) {
 				processed[processed.length] = [pts[i][0], pts[i][1]] 
 			}
 
+			// build overlay factor
+			var overlayed = []
+			for (var i = 0; i < resolution/overlay; i++) {
+				// get the original date shown
+				overlayed[i] = [processed[overlay * i][0]]
+
+				// fill out data points for this date across all overlays, but the first
+				// entry should be the most recent
+				for (var j = 0; j < overlay; j++) {
+					overlayed[i][overlay - j] = processed[j*resolution/overlay + i][1]
+				}
+			}
+
 			// don't want a plot range of [0, 0]
 			if (max == 0)
 				max = 1
@@ -86,11 +110,13 @@ function chart(options) {
 					options: options,
 					graph: null
 				}
+			}
 
+			if (charts[options['query']].graph == null) {
 				charts[options['query']].div = document.getElementById('plot-'+options['query'])
 				charts[options['query']].graph = new Dygraph(
 					charts[options['query']].div,
-					processed,
+					overlayed,
 					$.extend({}, baseOptions, {
 						valueRange: [0, 1.2*max],
 						dateWindow: [start, stop]
@@ -98,7 +124,7 @@ function chart(options) {
 				)
 			} else {
 				charts[options['query']].graph.updateOptions({
-					file: processed,
+					file: overlayed,
 					valueRange: [0, 1.2*max],
 					dateWindow: [start, stop]
 				})
@@ -109,20 +135,29 @@ function chart(options) {
 	})
 }
 
+function setOverlay(overlay) {
+	settings.overlay = overlay
+	redraw(true)
+}
+
 function setDuration(hours) {
 	settings.duration = hours * oneHour
-	redraw()
+	redraw(false)
 }
 
 function setResolution(points) {
 	settings.resolution = points
-	redraw()
+	redraw(false)
 }
 
-function redraw() {
+function redraw(destroy) {
 	// freeze all charts
 	for (var name in charts) {
 		$(charts[name].div).addClass('drawing')
+		if (destroy) {
+			charts[name].graph.destroy()
+			charts[name].graph = null
+		}
 	}
 	for (var name in charts) {
 		chart(charts[name].options)
