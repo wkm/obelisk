@@ -3,6 +3,7 @@ package main
 import (
 	"bytes"
 	"io/ioutil"
+	"mime"
 	"net/http"
 	"os"
 	"path/filepath"
@@ -15,6 +16,7 @@ var (
 	templateDir     = "templates"
 	lastUpdated     = time.Unix(0, 0)
 	cachedTemplates *template.Template
+	cachedFiles     = make(map[string]*[]byte)
 )
 
 // a template response is the top-level object fed templates containing information
@@ -32,14 +34,13 @@ func renderTemplate(req *http.Request, rw http.ResponseWriter, name string, obje
 
 	name = strings.TrimPrefix(name, "/")
 	ext := filepath.Ext(name)
+	rw.Header().Set("Content-Type", mime.TypeByExtension(ext))
 
-	// FIXME use mime.GetTypeByExtension
-	switch ext {
-	case ".html":
-		rw.Header().Set("Content-Type", "text/html")
-
-	case ".css":
-		rw.Header().Set("Content-Type", "text/css")
+	// check if we have cached the file
+	data, ok := cachedFiles[name]
+	if ok {
+		rw.Write(*data)
+		return
 	}
 
 	// we have to buffer response writes so we have an opportunity to modify the headers
@@ -75,7 +76,8 @@ func getTemplates() *template.Template {
 
 	if lastModified.Unix() > lastUpdated.Unix() {
 		lastUpdated = lastModified
-		log.Printf("building templates from %s", lastUpdated.Format(time.Kitchen))
+		log.Printf("building templates and buffers from %s", lastUpdated.Format(time.Kitchen))
+		cachedFiles = make(map[string]*[]byte)
 		cachedTemplates = buildTemplates("templates")
 	} else {
 		// use cached
@@ -90,22 +92,19 @@ func buildTemplates(directory string) *template.Template {
 	t := template.New("")
 	var templateWalkFn func(path string, io os.FileInfo, err error) error
 	templateWalkFn = func(path string, io os.FileInfo, err error) error {
-		// process template file
-		name := strings.TrimPrefix(strings.Replace(path, directory, "", 1), "/")
-		t = t.New(name)
-		t.Funcs(htmlHelpers)
-		art, err := ioutil.ReadFile(path)
-		if err != nil {
-			log.Printf("err: %s", err.Error())
+		// recurse into directories
+		if io.IsDir() {
 			return nil
 		}
 
-		t, err = t.Parse(string(art))
-		if err != nil {
-			log.Printf("err: %s", err.Error())
+		// non-html is buffered
+		if filepath.Ext(path) != ".html" {
+			buildBuffer(directory, path)
+		} else {
+			buildTemplate(directory, path, t)
 		}
 
-		log.Printf("created template `%s`", name)
+		// process template file
 		return nil
 	}
 
@@ -116,4 +115,34 @@ func buildTemplates(directory string) *template.Template {
 	}
 
 	return t
+}
+
+func buildBuffer(directory, path string) {
+	name := strings.TrimPrefix(strings.Replace(path, directory, "", 1), "/")
+	data, err := ioutil.ReadFile(path)
+	if err != nil {
+		log.Printf("err: %s", err.Error())
+		return
+	}
+
+	cachedFiles[name] = &data
+	log.Printf("buffer `%s`", name)
+}
+
+func buildTemplate(directory, path string, t *template.Template) {
+	name := strings.TrimPrefix(strings.Replace(path, directory, "", 1), "/")
+	t = t.New(name)
+	t.Funcs(htmlHelpers)
+	art, err := ioutil.ReadFile(path)
+	if err != nil {
+		log.Printf("err: %s", err.Error())
+		return
+	}
+
+	t, err = t.Parse(string(art))
+	if err != nil {
+		log.Printf("err: %s", err.Error())
+	}
+
+	log.Printf("template `%s`", name)
 }
