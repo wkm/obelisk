@@ -121,6 +121,14 @@ body {
 	}
 }
 
+.tooltip {
+	border: 1px solid darken($body-bg, 10%);
+
+	.nub {
+		border-color: transparent transparent darken($body-bg, 10%) transparent;
+	}
+}
+
 /*.sub-nav {
 	dd {
 		border: 1px solid $body-font-color;
