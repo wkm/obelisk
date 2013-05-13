@@ -141,15 +141,25 @@ body {
 	font-size: 75%;
 }
 
-/*.sub-nav {
-	dd {
-		border: 1px solid $body-font-color;
-		padding: inherit .5em;
-	}
-}*/
+.sub-nav {
+	margin-bottom: 0;
+}
 
 .fat-row {
 	padding: 0 15px;
+}
+
+.inverse {
+	border: 1px solid darken($body-font-color, 10%);
+	margin-top: -30px;
+	margin-left: -15px;
+	padding-top: 10px;
+	padding-left: 25px;
+	padding-bottom: -10px;
+
+	color: $body-bg;
+	a,h1,h2,h3,h4,h5,h6,dt,.has-tip { color: $body-bg !important; }
+	background: $body-font-color;
 }
 
 .verticalheader {
