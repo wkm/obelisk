@@ -102,7 +102,7 @@ function chart(options) {
 			var pts = data['points']
 			var processed = []
 			var max = 0
-			for (var i = pts.length - 1; i >= 0; i--) {
+			for (var i = 0; i < pts.length; i++) {
 				pts[i][0] = new Date(pts[i][0])
 				if (pts[i][1] == null) {
 					pts[i][1] = 0
@@ -118,7 +118,6 @@ function chart(options) {
 			var overlayed = []
 			for (var i = 0; i < resolution/overlay; i++) {
 				// get the original date shown
-				// console.log('resolution - ', resolution/overlay + i)
 				overlayed[i] = [processed[resolution - resolution/overlay + i][0]]
 
 				// fill out data points for this date across all overlays, but the first
