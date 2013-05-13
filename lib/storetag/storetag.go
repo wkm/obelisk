@@ -80,7 +80,7 @@ func (s *Store) Id(name ...string) (uint64, error) {
 	for _, part := range components[1:] {
 		child, ok := cursor.children[part]
 		if !ok {
-			return 0, errors.N("unknown node " + part + " of " + strings.Join(components, "/"))
+			return 0, errors.N("unknown node %s of %s", part, strings.Join(components, "/"))
 		}
 		cursor = child
 	}
