@@ -23,21 +23,3 @@ Obelisk is a management interface for Gocircuit deployments.
     * `rconfig`: [experimental] remote configuration stuffs
     * `rinstreporter`: [stupid] just... stupid
 
-
-## Consuming Measurements
-
-```go
-ch := make(chan Vars, 1000)
-
-for {
-	time.Sleep(time.Second)
-	for r := fetchVars() {
-		r.write(ch)
-	}
-}
-
-for {
-	w <- ch
-	vena.Write(w)
-}
-```
