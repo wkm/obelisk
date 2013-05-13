@@ -1,21 +1,24 @@
 {{with .Object}}
 <div class='fat-row'>
-	<div class='twelve columns'>
+	<div class='large-4 columns'>
 		<h2>
 			<small class='verticalheader light'>worker</small>
-			<a href="/worker/{{urlquery .Path}}">{{html .ID}}</a>
+			<a href="/worker/{{urlquery .Path}}">{{html .ID}}
 			{{if .Alive}}
-				<span class='subheader'>(alive)</span>
+				<!-- <small>
+					<i class='icon-heart-empty'></i>
+				</small> -->
 			{{else}}
-				<span class='subheader'>(unreachable: <small>{{html .Error}}</small>)</span>
+				<span class=''>
+					<i class='icon-warning-sign has-tip' data-tooltip
+						title='unreachable: {{.Error}}'
+					></i>
+				</span>
 			{{end}}
 		</h2>
-	</div>
-</div>
-<div class='fat-row'>
-	<div class='twelve columns'>
 		<dl class='sub-nav'>
-			<dt class='active'><a href='?metrics'>Statistics</a></dt>
+			<dt><a href='?'>Summary</a></dt>
+			<dt class='active'><a href='?instrumentation'>Statistics</a></dt>
 			<dt><a href='?profiling'>Profiling</a></dt>
 			<dt><a href='?stacktrace'>Stacktrace</a></dt>
 			<dt><a href='?logging'>Logging</a></dt>

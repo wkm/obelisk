@@ -46,6 +46,7 @@ func timeHandler(rw http.ResponseWriter, req *http.Request) {
 	res, err := QueryTime(q, start/1000, stop/1000)
 	if err != nil {
 		respondError(rw, err.Error())
+		return
 	}
 
 	// FIXME extract into a function

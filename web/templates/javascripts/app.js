@@ -118,7 +118,7 @@ function chart(options) {
 			var overlayed = []
 			for (var i = 0; i < resolution/overlay; i++) {
 				// get the original date shown
-				console.log('resolution - ', resolution/overlay + i)
+				// console.log('resolution - ', resolution/overlay + i)
 				overlayed[i] = [processed[resolution - resolution/overlay + i][0]]
 
 				// fill out data points for this date across all overlays, but the first

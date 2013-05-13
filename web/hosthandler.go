@@ -51,10 +51,19 @@ func hostHandler(rw http.ResponseWriter, req *http.Request) {
 		return
 	}
 
-	tags, err := ChildrenTags("host", root, "workers")
+	groups, err := workerResponseData(workers[0])
 	if err != nil {
 		respondError(rw, err.Error())
 		return
+	}
+
+	renderTemplate(req, rw, "/host.html", &HostInfo{root, groups, workers})
+}
+
+func workerResponseData(worker string) (map[string]*MetricGroup, error) {
+	tags, err := ChildrenTags("worker", worker)
+	if err != nil {
+		return nil, err
 	}
 	sort.Strings(tags)
 
@@ -67,7 +76,7 @@ func hostHandler(rw http.ResponseWriter, req *http.Request) {
 			groups[groupName] = group
 		}
 
-		name := filepath.Join("host", root, tag)
+		name := filepath.Join("worker", worker, tag)
 		info, err := GetMetricInfo(name)
 		if err != nil {
 			log.Printf("err: %s: %s", name, err.Error())
@@ -87,11 +96,9 @@ func hostHandler(rw http.ResponseWriter, req *http.Request) {
 			m.TypeName = "value"
 			m.IsRate = false
 		}
-		m.Path = filepath.Join("host", root, tag)
+		m.Path = filepath.Join("worker", worker, tag)
 		groups[groupName].Info[m.Path] = m
-
-		break
 	}
 
-	renderTemplate(req, rw, "/host.html", &HostInfo{root, groups, workers})
+	return groups, nil
 }

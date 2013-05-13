@@ -4,8 +4,8 @@ import (
 	"circuit/sys/acid"
 	"circuit/use/circuit"
 	"net/http"
-	"obelisk/lib/rinst"
-	rinstService "obelisk/lib/rinst/service"
+	// "obelisk/lib/rinst"
+	// rinstService "obelisk/lib/rinst/service"
 	rlogService "obelisk/lib/rlog/service"
 	"strings"
 	"time"
@@ -27,6 +27,9 @@ type WorkerInfo struct {
 
 	// profiling components
 	CPUProfile string
+
+	// metrics component
+	HostInfo *HostInfo
 
 	// logging bits
 	Log string
@@ -102,14 +105,15 @@ func workerHandler(rw http.ResponseWriter, req *http.Request) {
 
 	switch query {
 	case "instrumentation":
-		// FIXME this has to open a connection to the instrumentation service; not xacid
-		instService := xAcid.Call(rinstService.ServiceName)[0].(*rinst.Collection)
+		workers := []string{root}
+		groups, err := workerResponseData(root)
+		if err != nil {
+			respondError(rw, err.Error())
+			return
+		}
 
-		sb := make(rinst.SchemaBuffer, 10)
-		go instService.Schema("", sb)
-
-		mb := make(rinst.MeasurementBuffer, 10)
-		go instService.Measure("", mb)
+		workerInfo.HostInfo = &HostInfo{"", groups, workers}
+		renderTemplate(req, rw, "/worker/worker_instrumentation.html", workerInfo)
 
 	case "metrics":
 		if !workerInfo.Alive {

@@ -1,5 +1,5 @@
 <div class='fat-row'>
-	<div class='large-10 columns right'>
+	<div class='large-8 columns right'>
 		<div class='page-nav-bar right'>
 			<ul class='button-group'>
 				<li class='name'>
@@ -54,40 +54,45 @@
 	</div>
 </div>
 <div class='fat-row'>
-	{{if .Workers}}
+	<!--{{if .Workers}}
 		<div class='6 columns'>
 			<dl class='sub-nav'>
-				<dt>Constituent Workers</dt>
-				<dd>a1</dd>
-				<dd>a2</dd>
+				<dt>Constituent Workers:</dt>
+				{{range .Workers}}
+					<dd><a href='/worker/{{urlquery .}}'>{{html .}}</a></dd>
+				{{end}}
 			</dl>
 		</div>
-	{{end}}
+	{{end}}-->
 	<div class='6 columns'>
 		<dl class='sub-nav'>
-			{{range .}}
-				<dd><a href='#section-{{urlquery .Name}}'><tt>{{html .Name}}</tt></a></dd>
+			<dt>Sections</dt>
+			{{range .Metrics}}
+				<dd><a href='#section-{{urlquery .Name}}'><tt>&#167;{{html .Name}}</tt></a></dd>
 			{{end}}
 		</dl>
 	</div>
 </div>
 {{range .Metrics}}
 	<div class='fat-row'>
-		<hr/>
 		<div class='12 columns'>
-			<h4 id="section-{{urlquery .Name}}"><tt>{{html .Name}}</tt></h4>
+			<h4 id="section-{{urlquery .Name}}"><a href='#section-{{urlquery .Name}}'>
+				<span class='subheader'>&#167;</span>
+				<tt>{{html .Name}}</tt>
+			</a></h4>
 		</div>
 		<ul class='metric-layout small-block-grid-1 large-block-grid-2'>
 			{{range .Info}}
 				<li class='metric'>
 					<h6><tt>{{html .Name}}</tt> <span class='subheader'>{{html .Desc}}</span></h6>
-					<div id="plot-{{urlquery .Path}}" class='drawing plot'></div>
-					<div id="labels-{{urlquery .Path}}" class='labels'></div>
+					<div id="plot-{{.Path}}" class='drawing plot'></div>
+					<div id="labels-{{.Path}}" class='labels'></div>
 					<script type="text/javascript">
-						$(function() {chart({query: "{{urlquery .Path}}", labels: ["{{html .Unit}}"], rate: {{.IsRate}}})})
+						$(function() {chart({query: "{{.Path}}", labels: ["{{html .Unit}}"], rate: {{.IsRate}}})})
 					</script>
 				</li>
 			{{end}}
 		</ul>
+		<hr/>
 	</div>
 {{end}}
