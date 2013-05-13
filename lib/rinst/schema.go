@@ -3,8 +3,12 @@ package rinst
 type SchemaType uint
 
 const (
-	TypeValue   = iota // a raw reading
-	TypeCounter        // a monotonic counter
+	TypeIntValue = iota
+	TypeBoolValue
+	TypeFloatValue
+	TypeDateValue
+	TypeCounter // a monotonic counter
+
 )
 
 type SchemaBuffer chan Schema

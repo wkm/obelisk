@@ -7,6 +7,7 @@ import (
 	"time"
 )
 
+// a boolean value represents a
 type BoolValue struct {
 	value      int32
 	changes    uint32
@@ -41,6 +42,6 @@ func (v *BoolValue) Measure(n string, b MeasurementBuffer) {
 }
 
 func (v *BoolValue) Schema(name string, b SchemaBuffer) {
-	b <- Schema{name, TypeValue, v.unit, v.desc}
+	b <- Schema{name, TypeBoolValue, v.unit, v.desc}
 	b <- Schema{name + ".sets", TypeCounter, "set", "rate of changes to this value"}
 }

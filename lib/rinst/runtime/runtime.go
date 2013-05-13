@@ -48,29 +48,29 @@ var statsGauge = rinst.GaugeValue{
 	// SchemaFn
 	func(n string, b rinst.SchemaBuffer) {
 		// general statistics
-		b <- rinst.Schema{n + "alloc", rinst.TypeValue, "byte", "bytes allocated and still in use"}
-		b <- rinst.Schema{n + "totalAlloc", rinst.TypeValue, "byte", "bytes allocated (even if freed)"}
-		b <- rinst.Schema{n + "sys", rinst.TypeValue, "byte", "bytes obtained from the system"}
+		b <- rinst.Schema{n + "alloc", rinst.TypeIntValue, "byte", "bytes allocated and still in use"}
+		b <- rinst.Schema{n + "totalAlloc", rinst.TypeIntValue, "byte", "bytes allocated (even if freed)"}
+		b <- rinst.Schema{n + "sys", rinst.TypeIntValue, "byte", "bytes obtained from the system"}
 		b <- rinst.Schema{n + "lookup", rinst.TypeCounter, "lookup", "number of pointer lookups"}
 		b <- rinst.Schema{n + "malloc", rinst.TypeCounter, "malloc", "number of mallocs"}
 		b <- rinst.Schema{n + "free", rinst.TypeCounter, "free", "number of frees"}
 
 		// heap statistics
-		b <- rinst.Schema{n + "heap.alloc", rinst.TypeValue, "byte", "bytes allocated and still in use"}
-		b <- rinst.Schema{n + "heap.sys", rinst.TypeValue, "byte", "bytes obtained from the system"}
-		b <- rinst.Schema{n + "heap.idle", rinst.TypeValue, "byte", "bytes in idle spans"}
-		b <- rinst.Schema{n + "heap.inuse", rinst.TypeValue, "byte", "bytes in non-idle spans"}
-		b <- rinst.Schema{n + "heap.released", rinst.TypeValue, "byte", "bytes released to the OS"}
-		b <- rinst.Schema{n + "heap.objects", rinst.TypeValue, "byte", "total number of allocated objects"}
+		b <- rinst.Schema{n + "heap.alloc", rinst.TypeIntValue, "byte", "bytes allocated and still in use"}
+		b <- rinst.Schema{n + "heap.sys", rinst.TypeIntValue, "byte", "bytes obtained from the system"}
+		b <- rinst.Schema{n + "heap.idle", rinst.TypeIntValue, "byte", "bytes in idle spans"}
+		b <- rinst.Schema{n + "heap.inuse", rinst.TypeIntValue, "byte", "bytes in non-idle spans"}
+		b <- rinst.Schema{n + "heap.released", rinst.TypeIntValue, "byte", "bytes released to the OS"}
+		b <- rinst.Schema{n + "heap.objects", rinst.TypeIntValue, "byte", "total number of allocated objects"}
 
 		// fixed size allocation
-		b <- rinst.Schema{n + "stack.inuse", rinst.TypeValue, "byte", "bootstrap stacks"}
-		b <- rinst.Schema{n + "stack.sys", rinst.TypeValue, "byte", "bootstrap stacks"}
-		b <- rinst.Schema{n + "mspan.inuse", rinst.TypeValue, "byte", "mspan structures"}
-		b <- rinst.Schema{n + "mspan.sys", rinst.TypeValue, "byte", "mspan structures"}
-		b <- rinst.Schema{n + "mcache.inuse", rinst.TypeValue, "byte", "mcache structures"}
-		b <- rinst.Schema{n + "mcache.sys", rinst.TypeValue, "byte", "mcache structures"}
-		b <- rinst.Schema{n + "buckhashsys", rinst.TypeValue, "byte", "profiling bucket hash table bytes obtained from system"}
+		b <- rinst.Schema{n + "stack.inuse", rinst.TypeIntValue, "byte", "bootstrap stacks"}
+		b <- rinst.Schema{n + "stack.sys", rinst.TypeIntValue, "byte", "bootstrap stacks"}
+		b <- rinst.Schema{n + "mspan.inuse", rinst.TypeIntValue, "byte", "mspan structures"}
+		b <- rinst.Schema{n + "mspan.sys", rinst.TypeIntValue, "byte", "mspan structures"}
+		b <- rinst.Schema{n + "mcache.inuse", rinst.TypeIntValue, "byte", "mcache structures"}
+		b <- rinst.Schema{n + "mcache.sys", rinst.TypeIntValue, "byte", "mcache structures"}
+		b <- rinst.Schema{n + "buckhashsys", rinst.TypeIntValue, "byte", "profiling bucket hash table bytes obtained from system"}
 
 		b <- rinst.Schema{n + "gc.num", rinst.TypeCounter, "gc", "number of garbage collections"}
 	},

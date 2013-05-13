@@ -50,6 +50,6 @@ func (v *FloatValue) Measure(n string, b MeasurementBuffer) {
 
 // the schema of this value
 func (v *FloatValue) Schema(name string, b SchemaBuffer) {
-	b <- Schema{name, TypeValue, v.unit, v.desc}
+	b <- Schema{name, TypeFloatValue, v.unit, v.desc}
 	b <- Schema{name + ".sets", TypeCounter, "set", "rate of changes to this value"}
 }
