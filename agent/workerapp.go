@@ -15,7 +15,7 @@ type WorkerInterface struct{}
 func (WorkerApp) Main() {
 	// circuit.Listen(rlog.ServiceName, rlog.Log)
 	circuit.Listen(rconfig.ServiceName, rconfig.Config)
-	circuit.Daemonize(func() {
+	circuit.RunInBack(func() {
 		ticker := time.NewTicker(10 * time.Second)
 		for {
 			select {

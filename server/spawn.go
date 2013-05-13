@@ -20,7 +20,7 @@ func (start) Start() circuit.XPerm {
 	server.Main()
 
 	circuit.Listen(ServiceName, server)
-	circuit.Daemonize(func() { <-(chan bool)(nil) })
+	circuit.RunInBack(func() { <-(chan bool)(nil) })
 	return circuit.PermRef(server)
 }
 
