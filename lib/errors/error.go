@@ -20,6 +20,10 @@ func N(format string, args ...interface{}) *Error {
 
 // create a new error by wrapping an existing error
 func W(err error) *Error {
+	if err == nil {
+		return nil
+	}
+
 	return N("underlying %s", err.Error())
 }
 
