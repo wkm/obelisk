@@ -10,6 +10,7 @@ var (
 	statId       = Stats.Counter("id", "op", "id commands received")
 	statNew      = Stats.Counter("new", "op", "new commands received")
 	statChildren = Stats.Counter("children", "op", "children commands received")
+	statDelete   = Stats.Counter("delete", "op", "delete commands received")
 
 	statLoad    = Stats.Counter("load", "op", "load commands received")
 	statDump    = Stats.Counter("dump", "op", "dump commands received")

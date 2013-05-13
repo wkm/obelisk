@@ -140,3 +140,27 @@ func (s *Store) Children(name ...string) ([]string, error) {
 
 	return childrenNames, nil
 }
+
+// delete a node
+func (s *Store) Delete(name ...string) error {
+	statDelete.Incr()
+	components := createPath(name...)
+
+	s.Lock()
+	defer s.Unlock()
+
+	cursor := s.root
+	for _, part := range components[1:] {
+		child, ok := cursor.children[part]
+		if !ok {
+			return errors.N("unknown node " + part + " of " + strings.Join(components, "/"))
+		}
+
+		cursor = child
+	}
+
+	delete(cursor.parent.children, cursor.name)
+	cursor.parent = nil
+
+	return nil
+}
