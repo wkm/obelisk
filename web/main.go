@@ -55,6 +55,7 @@ func main() {
 	http.HandleFunc("/zk/", zkHandler)
 	http.HandleFunc("/host/", hostHandler)
 	http.HandleFunc("/worker/", workerHandler)
+	http.HandleFunc("/service/", serviceHandler)
 
 	http.HandleFunc("/api/time", timeHandler)
 
