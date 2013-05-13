@@ -66,7 +66,7 @@
 	<div class='6 columns'>
 		<dl class='sub-nav'>
 			{{range .}}
-				<dd><a href='#section-{{.Name}}'><tt>{{.Name}}</tt></a></dd>
+				<dd><a href='#section-{{urlquery .Name}}'><tt>{{html .Name}}</tt></a></dd>
 			{{end}}
 		</dl>
 	</div>
@@ -75,16 +75,16 @@
 	<div class='fat-row'>
 		<hr/>
 		<div class='12 columns'>
-			<h4 id="section-{{.Name}}"><tt>{{.Name}}</tt></h4>
+			<h4 id="section-{{urlquery .Name}}"><tt>{{html .Name}}</tt></h4>
 		</div>
 		<ul class='metric-layout small-block-grid-1 large-block-grid-2'>
 			{{range .Info}}
 				<li class='metric'>
-					<h6><tt>{{.Name}}</tt> <span class='subheader'>{{.Desc}}</span></h6>
-					<div id="plot-{{.Path}}" class='drawing plot'></div>
-					<div id="labels-{{.Path}}" class='labels'></div>
+					<h6><tt>{{html .Name}}</tt> <span class='subheader'>{{html .Desc}}</span></h6>
+					<div id="plot-{{urlquery .Path}}" class='drawing plot'></div>
+					<div id="labels-{{urlquery .Path}}" class='labels'></div>
 					<script type="text/javascript">
-						$(function() {chart({query: "{{.Path}}", labels: ["{{.Unit}}"], rate: {{.IsRate}}})})
+						$(function() {chart({query: "{{urlquery .Path}}", labels: ["{{html .Unit}}"], rate: {{.IsRate}}})})
 					</script>
 				</li>
 			{{end}}

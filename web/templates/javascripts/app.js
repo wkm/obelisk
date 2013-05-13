@@ -116,10 +116,10 @@ function chart(options) {
 
 			// build overlay factor
 			var overlayed = []
-			console.log("creating final chart of ", resolution/overlay)
 			for (var i = 0; i < resolution/overlay; i++) {
 				// get the original date shown
-				overlayed[i] = [processed[overlay * i][0]]
+				console.log('resolution - ', resolution/overlay + i)
+				overlayed[i] = [processed[resolution - resolution/overlay + i][0]]
 
 				// fill out data points for this date across all overlays, but the first
 				// entry should be the most recent
@@ -127,6 +127,7 @@ function chart(options) {
 					overlayed[i][overlay - j] = processed[j*resolution/overlay + i][1]
 				}
 			}
+
 
 			// don't want a plot range of [0, 0]
 			if (max == 0)

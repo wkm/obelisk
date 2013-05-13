@@ -3,11 +3,11 @@
 	<div class='twelve columns'>
 		<h2>
 			<small class='verticalheader light'>worker</small>
-			<a href="/worker/{{.Path}}">{{.ID}}</a>
+			<a href="/worker/{{urlquery .Path}}">{{html .ID}}</a>
 			{{if .Alive}}
 				<span class='subheader'>(alive)</span>
 			{{else}}
-				<span class='subheader'>(unreachable: <small>{{.Error}}</small>)</span>
+				<span class='subheader'>(unreachable: <small>{{html .Error}}</small>)</span>
 			{{end}}
 		</h2>
 	</div>

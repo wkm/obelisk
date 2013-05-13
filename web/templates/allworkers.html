@@ -11,7 +11,7 @@
 	{{range .Object}}
 		<li>
 			<a href="/worker/{{urlquery .}}">
-				<div class='panel'><tt>{{.}}</tt></div>
+				<div class='panel'><tt>{{html .}}</tt></div>
 			</a>
 		</li>
 	{{end}}

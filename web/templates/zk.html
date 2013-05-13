@@ -3,16 +3,16 @@
 <div class='row'>
 	<div class='twelve columns'>
 		<h3>
-			<span class='subheader'>ZK:</span> {{.Node}} <span class='subheader'>(rev. {{.Stat.Version}}.{{.Stat.CVersion}}.{{.Stat.AVersion}})</span>
+			<span class='subheader'>ZK:</span> {{html .Node}} <span class='subheader'>(rev. {{html .Stat.Version}}.{{html .Stat.CVersion}}.{{html .Stat.AVersion}})</span>
 			<!--<span class='pull-right'><i class='icon-spinner icon-spin'></i></span>-->
 		</h3>
 	</div>
 	<div class='row'>
 		<div class='12 columns'>
 			{{if .Anchor}}
-				<a href="/worker/{{.Anchor.Addr.WorkerID}}">
+				<a href="/worker/{{urlquery .Anchor.Addr.WorkerID}}">
 					<div class='panel callout radius'>
-						Worker: <strong>{{.Anchor.Addr.WorkerID}}</strong>
+						Worker: <strong>{{html .Anchor.Addr.WorkerID}}</strong>
 						<i class='icon-angle-right'></i>
 					</div>
 				</a>
@@ -39,9 +39,9 @@
 				<tr><th>node</th><th></th><th>meta</th></tr>
 				{{if .Parent}}
 					<tr>
-						<td colspan=3 class='zk-node zk-dir'><a href="{{.Parent}}">
+						<td colspan=3 class='zk-node zk-dir'><a href="{{urlquery .Parent}}">
 							<i class='icon-reply'></i>
-							{{.Parent}}/
+							{{html .Parent}}/
 						</a></td>
 					</tr>
 				{{end}}
@@ -49,22 +49,22 @@
 					<tr>
 						{{if .IsDir}}
 							<td class='zk-node zk-dir'>
-								<a href="./{{.Name}}/">
+								<a href="./{{urlquery .Name}}/">
 									<i class='icon-folder-close'></i>
-									{{.Name}}/
+									{{html .Name}}/
 								</a>
 							</td>
 						{{else}}
 							<td class='zk-node'>
-								<a href="./{{.Name}}">
+								<a href="./{{urlquery .Name}}">
 									<i class='icon-file'></i>
-									{{.Name}}
+									{{html .Name}}
 								</a>
 							</td>
 						{{end}}
 						<td>
 							{{if .Error}}
-								Error: {{.Error}}
+								Error: {{html .Error}}
 							{{end}}
 
 							{{if .GobData}}
@@ -76,13 +76,13 @@
 								{{end}}
 							{{end}}
 							{{if .Stat.DataLength}}
-								<small>({{.Stat.DataLength}} bytes)</small>
+								<small>({{html .Stat.DataLength}} bytes)</small>
 							{{end}}
 						</td>
 						<td width=200>
-							{{.MTimeStr}}
+							{{html .MTimeStr}}
 							{{if .Stat.EphemeralOwner}}
-								<small>(ephemeral: {{.Stat.EphemeralOwner}})</small>
+								<small>(ephemeral: {{html .Stat.EphemeralOwner}})</small>
 							{{end}}
 						</td>
 					</tr>

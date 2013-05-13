@@ -21,7 +21,7 @@
 	{{range .Object}}
 		<li>
 			<a href="/host/{{urlquery .}}">
-				<div class='panel'><tt>{{.}}</tt></div>
+				<div class='panel'><tt>{{html .}}</tt></div>
 			</a>
 		</li>
 	{{end}}
