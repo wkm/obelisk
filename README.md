@@ -1,6 +1,9 @@
 # Obelisk
 Obelisk is a management interface for Gocircuit deployments.
 
+## Features
+* 
+
 ## Components
 * `/web` -- a web interface to obelisk
 * `/agent` -- a small worker which is intended to run on every host; provides

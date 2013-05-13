@@ -1,7 +1,7 @@
 package main
 
 import (
-	_ "circuit/load"
+	_ "circuit/load/cmd"
 	"circuit/use/circuit"
 	"log"
 	"obelisk/server"
