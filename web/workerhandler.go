@@ -15,6 +15,9 @@ type WorkerInfo struct {
 	Path string
 	ID   string
 
+	Alive bool
+	Error string
+
 	// metrics components
 	AcidStats     *acid.Stat
 	PauseNsString string
@@ -50,34 +53,58 @@ func workerHandler(rw http.ResponseWriter, req *http.Request) {
 	root = strings.TrimPrefix(root, "/worker/")
 	root = strings.TrimSuffix(root, "/")
 
+	if root == "" {
+		children, err := ChildrenTags("worker")
+		if err != nil {
+			respondError(rw, err.Error())
+			return
+		}
+
+		renderTemplate(req, rw, "/allworkers.html", children)
+		return
+	}
+
 	query := req.URL.RawQuery
 
-	data, _, err := zk.Get("/" + root)
+	log.Printf("querying for worker address")
+	retrn := xServer.Call("GetWorkerAddr", root)
+	log.Printf("received %#v", retrn)
+	var addr circuit.Addr
+	if retrn[0] != nil {
+		addr = retrn[0].(circuit.Addr)
+	}
+	if retrn[1] != nil {
+		err = retrn[1].(error)
+	}
+
 	if err != nil {
 		respondError(rw, err.Error())
 		return
 	}
 
-	afile, err := getAnchorFile(data)
-	if err != nil {
-		respondError(rw, err.Error())
+	if addr == nil {
+		respondError(rw, "could not derive address")
 		return
 	}
 
 	// get worker information
-	xAcid, err := circuit.TryDial(afile.Addr, "acid")
+	workerInfo := new(WorkerInfo)
+	xAcid, err := circuit.TryDial(addr, "acid")
 	if err != nil {
-		respondError(rw, err.Error())
-		return
+		workerInfo.Alive = false
+		workerInfo.Error = err.Error()
+	} else {
+		workerInfo.Alive = true
 	}
 
-	workerInfo := new(WorkerInfo)
 	workerInfo.Path = root
-	workerInfo.ID = afile.Addr.WorkerID().String()
+	workerInfo.ID = addr.WorkerID().String()
 
 	switch query {
 	case "instrumentation":
+		// FIXME this has to open a connection to the instrumentation service; not xacid
 		instService := xAcid.Call(rinstService.ServiceName)[0].(*rinst.Collection)
+
 		sb := make(rinst.SchemaBuffer, 10)
 		go instService.Schema("", sb)
 
@@ -85,22 +112,35 @@ func workerHandler(rw http.ResponseWriter, req *http.Request) {
 		go instService.Measure("", mb)
 
 	case "metrics":
+		if !workerInfo.Alive {
+			respondError(rw, "no statistics on unalive worker")
+			return
+		}
+
 		workerInfo.AcidStats = xAcid.Call("Stat")[0].(*acid.Stat)
 		workerInfo.PauseNsString = commaSeparated(workerInfo.AcidStats.PauseNs[:])
 		renderTemplate(req, rw, "/worker/worker_stats.html", workerInfo)
 
 	case "stacktrace":
+		if !workerInfo.Alive {
+			respondError(rw, "no statistics on unalive worker")
+			return
+		}
 		retrn := xAcid.Call("RuntimeProfile", "goroutine", 1)
 		workerInfo.RuntimeProfile = string(retrn[0].([]byte))
 		renderTemplate(req, rw, "/worker/worker_stacktrace.html", workerInfo)
 
 	case "profiling":
+		if !workerInfo.Alive {
+			respondError(rw, "no statistics on unalive worker")
+			return
+		}
 		retrn := xAcid.Call("CPUProfile", 10*time.Second)
 		workerInfo.CPUProfile = string(retrn[0].([]byte))
 		renderTemplate(req, rw, "/worker/worker_profiling.html", workerInfo)
 
 	case "logging":
-		xRlog, err := circuit.TryDial(afile.Addr, rlogService.ServiceName)
+		xRlog, err := circuit.TryDial(addr, rlogService.ServiceName)
 		if err != nil {
 			respondError(rw, err.Error())
 			return

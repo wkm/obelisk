@@ -120,13 +120,13 @@ func zkHandler(rw http.ResponseWriter, req *http.Request) {
 			zkr.Anchor = afile
 		}
 
-		str, err := getAsGob(zkr.Data)
-		if err == nil {
-			log.Printf("yes, gob: %s", str)
-			zkr.GobData = str
-		} else {
-			log.Printf("not gob because %s", err.Error())
-		}
+		// str, err := getAsGob(zkr.Data)
+		// if err == nil {
+		// 	log.Printf("yes, gob: %s", str)
+		// 	zkr.GobData = str
+		// } else {
+		// 	log.Printf("not gob because %s", err.Error())
+		// }
 
 		// get data on children nodes
 		children, _, err := zk.Children(root)

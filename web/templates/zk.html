@@ -10,9 +10,9 @@
 	<div class='row'>
 		<div class='12 columns'>
 			{{if .Anchor}}
-				<a href="/worker{{.Node}}">
+				<a href="/worker/{{.Anchor.Addr.WorkerID}}">
 					<div class='panel callout radius'>
-						Worker: <strong>{{.Anchor.Addr}}</strong>
+						Worker: <strong>{{.Anchor.Addr.WorkerID}}</strong>
 						<i class='icon-angle-right'></i>
 					</div>
 				</a>
@@ -90,7 +90,7 @@
 			</table>
 		</div>
 		<div class='row'>
-			<div class='large-4 right columns end'>
+			<div class='large-4 right columns end page-nav-bar'>
 				<ul class='button-group'>
 					{{if .Nodes}}
 						<li><a href="?deletechildren" class='small button'>Delete Children</a></li>
