@@ -1,0 +1,21 @@
+{{template "_header.html" .}}
+
+<div class='fat-row'>
+	<div class='twelve columns'>
+		<h1>Workers</h1>
+	</div>
+</div>
+
+<div class='fat-row'>
+	<ul class="small-block-grid-2 large-block-grid-6">
+	{{range .Object}}
+		<li>
+			<a href="/worker/{{urlquery .}}">
+				<div class='panel'><tt>{{.}}</tt></div>
+			</a>
+		</li>
+	{{end}}
+	</ul>
+</div>
+
+{{template "_footer.html" .}}

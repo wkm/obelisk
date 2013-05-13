@@ -1024,10 +1024,10 @@ $panel-border-color: darken($panel-bg, $panel-function-factor);
 // Definition
 
 // $sub-nav-font-size: emCalc(14px);
-// $sub-nav-font-color: #999;
-// $sub-nav-font-weight: normal;
+$sub-nav-font-color: lighten($body-font-color, 20%);
+$sub-nav-font-weight: bold;
 // $sub-nav-text-decoration: none;
-// $sub-nav-border-radius: 1000px;
+$sub-nav-border-radius: 3px;
 
 // Active item styles
 
@@ -1199,10 +1199,10 @@ $topbar-dropdown-bg: $body-bg;
 // $topbar-menu-link-transform: uppercase;
 // $topbar-menu-link-font-size: emCalc(13px);
 // $topbar-menu-link-weight: bold;
-// $topbar-menu-link-color: #fff;
-// $topbar-menu-icon-color: #fff;
-// $topbar-menu-link-color-toggled: #888;
-// $topbar-menu-icon-color-toggled: #888;
+$topbar-menu-link-color: $body-font-color;
+$topbar-menu-icon-color: $body-font-color;
+$topbar-menu-link-color-toggled: lighten($body-font-color, 10%);
+$topbar-menu-icon-color-toggled: lighten($body-font-color, 10%);
 
 // Transitions and breakpoint styles
 

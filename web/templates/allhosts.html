@@ -1,16 +1,26 @@
 {{template "_header.html" .}}
 
-<div class='row'>
-	<div class='twelve columns'>
+<div class='fat-row'>
+	<div class='large-2 columns'>
 		<h1>Hosts</h1>
+	</div>
+	<div class='large-10 columns'>
+		<div class='row collapse'>
+			<div class='small-1 columns'>
+				<span class='prefix'><i class='icon-search'></i></span>
+			</div>
+			<div class='small-11 columns'>
+				<input type='text' placeholder='search'/>
+			</div>
+		</div>
 	</div>
 </div>
 
-<div class='row'>
-	<ul class="small-block-grid-2 large-block-grid-4">
+<div class='fat-row'>
+	<ul class="small-block-grid-2 large-block-grid-6">
 	{{range .Object}}
 		<li>
-			<a href="/host/{{.}}">
+			<a href="/host/{{urlquery .}}">
 				<div class='panel'><tt>{{.}}</tt></div>
 			</a>
 		</li>

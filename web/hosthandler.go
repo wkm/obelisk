@@ -11,6 +11,7 @@ import (
 type HostInfo struct {
 	Name    string
 	Metrics map[string]*MetricGroup
+	Workers []string
 }
 
 type MetricGroup struct {
@@ -44,7 +45,13 @@ func hostHandler(rw http.ResponseWriter, req *http.Request) {
 
 	log.Printf("host data for %s", root)
 
-	tags, err := ChildrenTags("host", root)
+	workers, err := ChildrenTags("host", root, "workers")
+	if err != nil {
+		respondError(rw, err.Error())
+		return
+	}
+
+	tags, err := ChildrenTags("host", root, "workers")
 	if err != nil {
 		respondError(rw, err.Error())
 		return
@@ -75,13 +82,16 @@ func hostHandler(rw http.ResponseWriter, req *http.Request) {
 		case rinst.TypeCounter:
 			m.TypeName = "counter"
 			m.IsRate = true
-		case rinst.TypeValue:
+
+		case rinst.TypeIntValue, rinst.TypeBoolValue, rinst.TypeFloatValue, rinst.TypeDateValue:
 			m.TypeName = "value"
 			m.IsRate = false
 		}
 		m.Path = filepath.Join("host", root, tag)
 		groups[groupName].Info[m.Path] = m
+
+		break
 	}
 
-	renderTemplate(req, rw, "/host.html", &HostInfo{root, groups})
+	renderTemplate(req, rw, "/host.html", &HostInfo{root, groups, workers})
 }

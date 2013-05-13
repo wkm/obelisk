@@ -1,0 +1,93 @@
+<div class='fat-row'>
+	<div class='large-10 columns right'>
+		<div class='page-nav-bar right'>
+			<ul class='button-group'>
+				<li class='name'>
+					grouping
+					<i data-tooltip class='has-tip icon-question-sign' title='how to group metrics across workers'></i>
+				</li>
+				<li><a href='#' onclick='setGrouping("aggregate")' class='small button'>aggregate</a></li>
+				<li><a href='#' onclick='setGrouping("stack")' class='small button'>stack</a></li>
+				<li><a href='#' onclick='setGrouping("compare")' class='small button'>side-by-side</a></li>
+			</ul>
+
+			<ul class='button-group even-3'>
+				<li class='name'>
+					overlay 
+					<i data-tooltip class='has-tip icon-question-sign' title='overlay previous data for comparison'></i>
+				</li>
+				<li><a href='#' onclick='setOverlay(4)' class='small button'>4x</a></li>
+				<li><a href='#' onclick='setOverlay(2)' class='small button'>2x</a></li>
+				<li><a href='#' onclick='setOverlay(1)' class='active small button'>1x</a></li>
+			</ul>
+			<ul class='button-group even-5'>
+				<li class='name'>
+					duration
+					<i data-tooltip class='has-tip icon-question-sign' title='the duration of data shown'></i>
+				</li>				
+				<li><a href='#' onclick='setDuration(30*24)' class='small button'> 30d </a></li>
+				<li><a href='#' onclick='setDuration(7*24)' class='small button'> 7d </a></li>
+				<li><a href='#' onclick='setDuration(96)' class='small button'> 96h </a></li>
+				<li><a href='#' onclick='setDuration(24)' class='small button'> 24h </a></li>
+				<li><a href='#' onclick='setDuration(4)' class='active small button'> 4h </a></li>
+			</ul>
+			<ul class='button-group'>
+				<li class='name'>
+					detail
+					<i data-tooltip class='has-tip icon-question-sign' title='density of datapoints'></i>
+				</li>
+				<li><a href='#' onclick='setResolution(300)' class='small button'> hires </a></li>
+				<li><a href='#' onclick='setResolution(75)' class='active small button'> fast </a></li>
+			</ul>
+			<ul class='button-group even-3'>
+				<li class='name'>layout</li>
+				<li><a href='#' onclick='setColumns(3)' class='small button'> <i class='icon-th'></i> </a></li>
+				<li><a href='#' onclick='setColumns(2)' class='active small button'> <i class='icon-th-large'></i> </a></li>
+				<li><a href='#' onclick='setColumns(1)' class='small button'> <i class='icon-reorder'></i> </a></li>
+			</ul>
+			<ul class='button-group'>
+				<li class='name'>&nbsp;</li>
+				<li><a href='#' onclick='redraw()' class='small button'>update</a></li>
+				<li><a href='#' onclick='toggleRefresh()' class='small button'>auto</a></il>
+			</ul>
+		</div>
+	</div>
+</div>
+<div class='fat-row'>
+	{{if .Workers}}
+		<div class='6 columns'>
+			<dl class='sub-nav'>
+				<dt>Constituent Workers</dt>
+				<dd>a1</dd>
+				<dd>a2</dd>
+			</dl>
+		</div>
+	{{end}}
+	<div class='6 columns'>
+		<dl class='sub-nav'>
+			{{range .}}
+				<dd><a href='#section-{{.Name}}'><tt>{{.Name}}</tt></a></dd>
+			{{end}}
+		</dl>
+	</div>
+</div>
+{{range .Metrics}}
+	<div class='fat-row'>
+		<hr/>
+		<div class='12 columns'>
+			<h4 id="section-{{.Name}}"><tt>{{.Name}}</tt></h4>
+		</div>
+		<ul class='metric-layout small-block-grid-1 large-block-grid-2'>
+			{{range .Info}}
+				<li class='metric'>
+					<h6><tt>{{.Name}}</tt> <span class='subheader'>{{.Desc}}</span></h6>
+					<div id="plot-{{.Path}}" class='drawing plot'></div>
+					<div id="labels-{{.Path}}" class='labels'></div>
+					<script type="text/javascript">
+						$(function() {chart({query: "{{.Path}}", labels: ["{{.Unit}}"], rate: {{.IsRate}}})})
+					</script>
+				</li>
+			{{end}}
+		</ul>
+	</div>
+{{end}}

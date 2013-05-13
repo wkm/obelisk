@@ -1,31 +1,26 @@
 {{with .Object}}
-<div class='row'>
+<div class='fat-row'>
 	<div class='twelve columns'>
-		<h1>
-			<span class='subheader'>worker</span> 
+		<h2>
+			<small class='verticalheader light'>worker</small>
 			<a href="/worker/{{.Path}}">{{.ID}}</a>
-		</h1>
+			{{if .Alive}}
+				<span class='subheader'>(alive)</span>
+			{{else}}
+				<span class='subheader'>(unreachable: <small>{{.Error}}</small>)</span>
+			{{end}}
+		</h2>
 	</div>
 </div>
-<div class='row'>
+<div class='fat-row'>
 	<div class='twelve columns'>
-		<nav class='top-bar'>
-			<section class='top-bar-section'>
-				<ul class='left'>
-					<li class='divider'></li>
-					<li><a href='?metrics'>Statistics</a></li>
-					<li class='divider'></li>
-					<li><a href='?profiling'>Profiling</a></li>
-					<li class='divider'></li>
-					<li><a href='?stacktrace'>Stacktrace</a></li>
-					<li class='divider'></li>
-					<li><a href='?logging'>Logging</a></li>
-					<li class='divider'></li>
-					<li><a href='?metrics'>Metrics</a></li>
-					<li class='divider'></li>
-				</ul>
-			</section>
-		</nav>
+		<dl class='sub-nav'>
+			<dt class='active'><a href='?metrics'>Statistics</a></dt>
+			<dt><a href='?profiling'>Profiling</a></dt>
+			<dt><a href='?stacktrace'>Stacktrace</a></dt>
+			<dt><a href='?logging'>Logging</a></dt>
+			<dt><a href='?metrics'>Metrics</a></dt>
+		</dl>
 	</div>
 </div>
 {{end}}
