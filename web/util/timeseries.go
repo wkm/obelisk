@@ -23,24 +23,19 @@ type SampledDataPoint struct {
 }
 
 // down sample a sorted time series into a target resolution
-func DownSample(resolution uint, data []*DataPoint) []SampledDataPoint {
+func DownSample(start, stop uint64, resolution uint, data []*DataPoint) []SampledDataPoint {
 	samples := make([]SampledDataPoint, resolution)
 	if len(data) < 1 {
 		return samples
 	}
 
-	startTime := (*data[0]).Time()
-	endTime := (*data[len(data)-1]).Time()
-
-	delTime := (endTime - startTime) / uint64(resolution)
-
+	delTime := (stop - start) / uint64(resolution)
 	dataCursor := 0
 	for bucketCursor := uint(0); bucketCursor < resolution; bucketCursor++ {
-		bucketStart := startTime + uint64(bucketCursor)*delTime
+		bucketStart := start + uint64(bucketCursor)*delTime
 		bucketEnd := bucketStart + delTime
 
 		bucket := StdDevStream{}
-
 		for dataCursor < len(data) && (*data[dataCursor]).Time() < bucketEnd {
 			bucket.Sample((*data[dataCursor]).Value())
 			dataCursor++
