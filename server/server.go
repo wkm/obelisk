@@ -43,7 +43,7 @@ func (app *ServerApp) Main() {
 }
 
 func (app *ServerApp) periodic() {
-	ticker := time.Tick(1 * time.Minute)
+	ticker := time.Tick(1 * time.Second)
 	for {
 		<-ticker
 
