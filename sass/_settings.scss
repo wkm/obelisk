@@ -2,6 +2,11 @@
 // Foundation Variables
 //
 
+$red:    #9C5B4F;
+$green:  #909C4F;
+$blue:   #4F909C;
+$purple: #5B4F9C;
+
 // The default font-size is set to 100% of the browser style sheet (usually 16px)
 // for compatibility with brower-based text zoom or user-set defaults.
 $base-font-size: 100% !default;
@@ -25,11 +30,11 @@ $em-base: 16px !default;
 
 // $default-float: left;
 
-// $body-bg: #fff;
-// $body-font-color: #222;
-// $body-font-family: "Helvetica Neue", "Helvetica", Helvetica, Arial, sans-serif;
-// $body-font-weight: normal;
-// $body-font-style: normal;
+$body-bg: #f2efee;
+$body-font-color: #33323e;
+$body-font-family: "Titillium Web", "Helvetica Neue", "Helvetica", Helvetica, Arial, sans-serif;
+$body-font-weight: 200;
+$body-font-style: normal;
 
 // Font-smoothing
 
@@ -41,10 +46,10 @@ $em-base: 16px !default;
 
 // Colors
 
-// $primary-color: #2ba6cb;
-// $secondary-color: #e9e9e9;
-// $alert-color: #c60f13;
-// $success-color: #5da423;
+$primary-color: lighten(#33323e, 20%);
+$secondary-color: lighten($body-bg, 5%);
+$alert-color: $red;
+$success-color: $green;
 
 // Make sure border radius matches unless we want it different.
 
@@ -54,8 +59,8 @@ $em-base: 16px !default;
 // Inset shadow shiny edges and depressions.
 
 // $shiny-edge-size: 0 1px 0;
-// $shiny-edge-color: rgba(#fff, .5);
-// $shiny-edge-active-color: rgba(#000, .2);
+$shiny-edge-color: rgba(darken($body-bg, 10%), .5);
+$shiny-edge-active-color: rgba($body-font-color, .4);
 
 // Control whether or not CSS classes come through in the CSS files.
 
@@ -123,10 +128,10 @@ $em-base: 16px !default;
 
 // Heading font styles
 
-// $header-font-family: "Helvetica Neue", "Helvetica", Helvetica, Arial, sans-serif;
+$header-font-family: $body-font-family;
 // $header-font-weight: bold;
 // $header-font-style: normal;
-// $header-font-color: #222;
+$header-font-color: $body-font-color;
 // $header-line-height: 1.4;
 // $header-top-margin: .2em;
 // $header-bottom-margin: .5em;
@@ -167,7 +172,7 @@ $em-base: 16px !default;
 
 // <code> tags
 
-// $code-color: darken($alert-color, 15%);
+$code-color: $body-font-color;
 // $code-font-family: Consolas, 'Liberation Mono', Courier, monospace;
 // $code-font-weight: bold;
 
@@ -181,7 +186,7 @@ $em-base: 16px !default;
 
 // $hr-border-width: 1px;
 // $hr-border-style: solid;
-// $hr-border-color: #ddd;
+$hr-border-color: darken($body-bg, 5%);
 // $hr-margin: emCalc(20px);
 
 // Lists
@@ -309,8 +314,8 @@ $em-base: 16px !default;
 // Button text styles.
 
 // $button-font-family: inherit;
-// $button-font-color: #fff;
-// $button-font-color-alt: #333;
+$button-font-color: $body-bg;
+$button-font-color-alt: $body-font-color;
 // $button-font-med: emCalc(16px);
 // $button-font-tny: emCalc(11px);
 // $button-font-sml: emCalc(13px);
@@ -324,9 +329,9 @@ $em-base: 16px !default;
 
 // Button border styles.
 
-// $button-border-width: 1px;
-// $button-border-style: solid;
-// $button-border-color: darken($primary-color, $button-function-factor);
+$button-border-width: 1px;
+$button-border-style: solid;
+$button-border-color: darken($body-font-color, 1%);
 
 // Radius used throughout the core.
 
@@ -817,14 +822,14 @@ $em-base: 16px !default;
 
 // Background and border styles
 
-// $panel-bg: darken(#fff, 5%);
+$panel-bg: darken($body-bg, 5%);
 // $panel-border-style: solid;
 // $panel-border-size: 1px;
 
 // Control how much we darken things on hover
 
-// $panel-function-factor: 10%;
-// $panel-border-color: darken($panel-bg, $panel-function-factor);
+$panel-function-factor: 3%;
+$panel-border-color: darken($panel-bg, $panel-function-factor);
 
 // Inner padding and bottom margin
 
@@ -986,7 +991,7 @@ $em-base: 16px !default;
 
 // Padding
 
-// $side-nav-padding: emCalc(14px) 0;
+$side-nav-padding: emCalc(10px) 0; 
 
 // List styles
 
@@ -1013,16 +1018,16 @@ $em-base: 16px !default;
 
 // Margin and padding
 
-// $sub-nav-list-margin: emCalc(-4px) 0 emCalc(18px);
+// $sub-nav-list-margin: emCalc(-4px) 0 emCalc(5px);
 // $sub-nav-list-padding-top: emCalc(4px);
 
 // Definition
 
 // $sub-nav-font-size: emCalc(14px);
-// $sub-nav-font-color: #999;
-// $sub-nav-font-weight: normal;
+$sub-nav-font-color: lighten($body-font-color, 20%);
+$sub-nav-font-weight: bold;
 // $sub-nav-text-decoration: none;
-// $sub-nav-border-radius: 1000px;
+$sub-nav-border-radius: 2px;
 
 // Active item styles
 
@@ -1081,20 +1086,20 @@ $em-base: 16px !default;
 
 // Background color for the table and even rows
 
-// $table-bg: #fff;
-// $table-even-row-bg: #f9f9f9;
+$table-bg: lighten($body-bg, 1%);
+$table-even-row-bg: darken($body-bg, 1%);
 
 // Table cell border style
 
 // $table-border-style: solid;
 // $table-border-size: 1px;
-// $table-border-color: #ddd;
+$table-border-color: darken($body-bg, 3%);
 
 // Table head styles
 
 // $table-head-bg: #f5f5f5;
 // $table-head-font-size: emCalc(14px);
-// $table-head-font-color: #222;
+$table-head-font-color: lighten($body-font-color, 5%);
 // $table-head-font-weight: bold;
 // $table-head-padding: emCalc(8px) emCalc(10px) emCalc(10px);
 
@@ -1102,7 +1107,7 @@ $em-base: 16px !default;
 
 // $table-row-padding: emCalc(9px) emCalc(10px);
 // $table-row-font-size: emCalc(14px);
-// $table-row-font-color: #222;
+$table-row-font-color: lighten($body-font-color, 10%);
 // $table-line-height: emCalc(18px);
 
 // Display and margin of tables
@@ -1117,8 +1122,8 @@ $em-base: 16px !default;
 // Border styles
 
 // $thumb-border-style: solid;
-// $thumb-border-width: 4px;
-// $thumb-border-color: #fff;
+$thumb-border-width: 0;
+$thumb-border-color: #fff;
 // $thumb-box-shadow: 0 0 0 1px rgba(#000,.2);
 // $thumb-box-shadow-hover: 0 0 6px 1px rgba($primary-color,0.5);
 
@@ -1131,19 +1136,19 @@ $em-base: 16px !default;
 // Tooltip Variables
 //
 
-// $has-tip-border-bottom: dotted 1px #ccc;
+$has-tip-border-bottom: dotted 1px lighten($body-font-color, 10%);
 // $has-tip-font-weight: bold;
 // $has-tip-font-color: #333;
 // $has-tip-border-bottom-hover: dotted 1px darken($primary-color, 20%);
 // $has-tip-font-color-hover: $primary-color;
 // $has-tip-cursor-type: help;
 
-// $tooltip-padding: emCalc(8px);
-// $tooltip-bg: #000;
-// $tooltip-font-size: emCalc(15px);
-// $tooltip-font-weight: bold;
-// $tooltip-font-color: #fff;
-// $tooltip-line-height: 1.3;
+$tooltip-padding: emCalc(4px);
+$tooltip-bg: $body-bg;
+$tooltip-font-size: emCalc(13px);
+$tooltip-font-weight: bold;
+$tooltip-font-color: $body-font-color;
+$tooltip-line-height: 1.1;
 // $tooltip-close-font-size: emCalc(10px);
 // $tooltip-close-font-weight: normal;
 // $tooltip-close-font-color: #888;
@@ -1157,12 +1162,12 @@ $em-base: 16px !default;
 
 // Background color for the top bar
 
-// $topbar-bg: #111;
+$topbar-bg: $body-bg;
 
 // Height and margin
 
 // $topbar-height: 45px;
-// $topbar-margin-bottom: emCalc(30px);
+$topbar-margin-bottom: emCalc(10px);
 
 // Input height for top bar
 
@@ -1175,14 +1180,14 @@ $em-base: 16px !default;
 
 // Link colors and styles for top-level nav
 
-// $topbar-link-color: #fff;
-// $topbar-link-weight: bold;
+$topbar-link-color: $body-font-color;
+$topbar-link-weight: bold;
 // $topbar-link-font-size: emCalc(13px);
-// $topbar-link-hover-lightness: -30% !default; // Darken by 30%
+$topbar-link-hover-lightness: -5%;
 
 // Top bar dropdown elements
 
-// $topbar-dropdown-bg: #333;
+$topbar-dropdown-bg: $body-bg;
 // $topbar-dropdown-link-color: #fff;
 // $topbar-dropdown-toggle-size: 5px;
 // $topbar-dropdown-toggle-color: #fff;
@@ -1194,10 +1199,10 @@ $em-base: 16px !default;
 // $topbar-menu-link-transform: uppercase;
 // $topbar-menu-link-font-size: emCalc(13px);
 // $topbar-menu-link-weight: bold;
-// $topbar-menu-link-color: #fff;
-// $topbar-menu-icon-color: #fff;
-// $topbar-menu-link-color-toggled: #888;
-// $topbar-menu-icon-color-toggled: #888;
+$topbar-menu-link-color: $body-font-color;
+$topbar-menu-icon-color: $body-font-color;
+$topbar-menu-link-color-toggled: lighten($body-font-color, 10%);
+$topbar-menu-icon-color-toggled: lighten($body-font-color, 10%);
 
 // Transitions and breakpoint styles
 
