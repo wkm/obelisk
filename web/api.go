@@ -43,6 +43,7 @@ func timeHandler(rw http.ResponseWriter, req *http.Request) {
 	obj["stop"] = stop
 	obj["rate"] = rate
 
+	// get all data points from the
 	res, err := QueryTime(q, start/1000, stop/1000)
 	if err != nil {
 		respondError(rw, err.Error())
@@ -50,25 +51,27 @@ func timeHandler(rw http.ResponseWriter, req *http.Request) {
 	}
 
 	// FIXME extract into a function
-	var last = math.MaxFloat64
+	// FIXME we should be able to the rate thing in-place
+	var last = util.DSPoint{0, math.MaxFloat64}
 	dps := make([]*util.DataPoint, len(res))
 	for i, v := range res {
 		val := v.Value
 		if rate {
-			if last > v.Value {
+			if last.Value() > v.Value {
 				val = 0
 			} else {
-				val = v.Value - last
+				val = (v.Value - last.V) / float64(v.Time-last.T)
 			}
-			last = v.Value
+
+			last.T = v.Time
+			last.V = v.Value
 		}
 
 		dsp := util.DataPoint(util.DSPoint{v.Time, val})
 		dps[i] = &dsp
 	}
 
-	sampled := util.DownSample(uint(resolution), dps)
-
+	sampled := util.DownSample(start/1000, stop/1000, uint(resolution), dps)
 	points := make([][]interface{}, len(sampled))
 	for i, v := range sampled {
 		points[i] = make([]interface{}, 3)

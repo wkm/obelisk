@@ -60,20 +60,23 @@ var baseOptions = {
 
 var overlayPlotStyles = [
 	{ // primary data
-		drawPoints: true
+		// drawPoints: true
 	},
 	{ // first overlay
-		drawPoints: false,
+		// drawPoints: false,
+		pointSize: 1.5,
 		strokePattern: Dygraph.DOTTED_LINE,
 		strokeWidth: 1
 	},
 	{ // second overlay
-		drawPoints: false,
+		// drawPoints: false,
+		pointSize: 1.5,
 		strokePattern: Dygraph.DOTTED_LINE,
 		strokeWidth: 1
 	},
 	{ // third overlay
-		drawPoints: false,
+		// drawPoints: false,
+		pointSize: 1.5,
 		strokePattern: Dygraph.DOTTED_LINE,
 		strokeWidth: 1
 	}
@@ -132,12 +135,18 @@ function chart(options) {
 			if (max == 0)
 				max = 1
 
+			// initialize chart object
 			if (charts[options['query']] == undefined) {
-				// initialize chart object
 				charts[options['query']] = {
 					options: options,
 					graph: null
 				}
+			}
+
+			// hide data points when we're showing a lot of them
+			var showPoints = true
+			if (resolution > 100) {
+				showPoints = false
 			}
 
 			var labels = ['time']
@@ -145,15 +154,17 @@ function chart(options) {
 				var chartOptions = $.extend({}, baseOptions, {
 					labelsDiv: 'labels-'+options['query'],
 					valueRange: [0, 1.2*max],
-					dateWindow: [plotstart, stop]
+					dateWindow: [plotstart, stop],
+					drawPoints: showPoints
 				})
 
 				// add plot styles for each overlay
 				for (var i = 0; i < overlay; i++) {
-					var label = options['labels'][0]
-					if (i > 0) {
-						label = label+" "+i+"th gen"
-					}
+					var label = options['labels'][0]+'s'
+					if (options['rate'] == true )
+						label +='/sec'
+					if (i > 0)
+						label += " "+i+"th gen"
 					labels.push(label)
 					chartOptions[label] = overlayPlotStyles[i]
 				}
@@ -169,6 +180,7 @@ function chart(options) {
 			} else {
 				charts[options['query']].graph.updateOptions({
 					file: overlayed,
+					drawPoints: showPoints,
 					valueRange: [0, 1.2*max],
 					dateWindow: [plotstart, stop]
 				})
@@ -198,7 +210,7 @@ function setColumns(columns) {
 	$('.metric-layout').addClass('large-block-grid-'+columns)
 	$('.metric-layout').removeClass('large-block-grid-'+settings.columns)
 	settings.columns = columns
-	redraw(false)
+	redraw(true)
 }
 
 function redraw(destroy) {
