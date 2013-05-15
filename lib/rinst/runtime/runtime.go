@@ -13,6 +13,13 @@ func str(r uint64) string {
 	return fmt.Sprintf("%d", r)
 }
 
+func boolstr(b bool) string {
+	if b {
+		return "1"
+	}
+	return "0"
+}
+
 var statsGauge = rinst.GaugeValue{
 	// MeasureFn
 	func(n string, b rinst.MeasurementBuffer) {
@@ -43,6 +50,12 @@ var statsGauge = rinst.GaugeValue{
 		b <- rinst.Measurement{n + "buckhashsys", now, str(r.BuckHashSys)}
 
 		b <- rinst.Measurement{n + "gc.num", now, str(uint64(r.NumGC))}
+		b <- rinst.Measurement{n + "gc.date", now, str(r.LastGC)}
+
+		b <- rinst.Measurement{n + "gc.pause", now, str(r.PauseTotalNs)}
+
+		b <- rinst.Measurement{n + "gc.enabled", now, boolstr(r.EnableGC)}
+		b <- rinst.Measurement{n + "gc.debugenabled", now, boolstr(r.DebugGC)}
 	},
 
 	// SchemaFn
@@ -73,5 +86,10 @@ var statsGauge = rinst.GaugeValue{
 		b <- rinst.Schema{n + "buckhashsys", rinst.TypeIntValue, "byte", "profiling bucket hash table bytes obtained from system"}
 
 		b <- rinst.Schema{n + "gc.num", rinst.TypeCounter, "gc", "number of garbage collections"}
+		b <- rinst.Schema{n + "gc.date", rinst.TypeDateValue, "", "last run in absolute time"}
+		b <- rinst.Schema{n + "gc.pause", rinst.TypeCounter, "ns", "running run time in garbage collection"}
+
+		b <- rinst.Schema{n + "gc.enabled", rinst.TypeBoolValue, "", "garbage collection enabled"}
+		b <- rinst.Schema{n + "gc.debugenabled", rinst.TypeBoolValue, "", "debug garbage collection enabled"}
 	},
 }
