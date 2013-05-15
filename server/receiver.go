@@ -21,7 +21,6 @@ func (app *ServerApp) RegisterWorker(addr circuit.Addr) {
 }
 
 func (app *ServerApp) ReceiveStats(worker string, buffer rinst.MeasurementBuffer) error {
-	log.Printf("receiving stats from %s", worker)
 	for {
 		measure, ok := <-buffer
 		if !ok {

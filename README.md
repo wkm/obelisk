@@ -15,6 +15,7 @@ Obelisk is a management interface for Gocircuit deployments.
     * `logs`: utility for remotely reading logs from workers
 
 * `/lib` -- backbone libraries for obelisk
+    * **`dmdhist`**: a library implementing Thaper et.al.'s multi-dimensional histograms
     * **`rinst`**: a library for instrumenting code with metrics
     * **`rlog`**: a logging utility library for workers that exposes a `remote-log` service
 
