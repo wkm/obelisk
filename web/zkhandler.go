@@ -5,7 +5,6 @@ import (
 	"circuit/kit/zookeeper/zutil"
 	"circuit/load/config"
 	"circuit/sys/zanchorfs"
-	"fmt"
 	"net/http"
 	"path"
 	"strings"
@@ -53,38 +52,6 @@ func zkHandler(rw http.ResponseWriter, req *http.Request) {
 	}
 
 	switch req.URL.RawQuery {
-	case "delete":
-		log.Printf("Deleting node %s", root)
-		err := zk.Delete(root, -1)
-		if err != nil {
-			respondError(rw, err.Error())
-			return
-		}
-
-		setFlash(rw, fmt.Sprintf("deleted node %s", root))
-		redirectTo(rw, req, path.Join(req.URL.Path, ".."))
-
-	case "deletechildren":
-		log.Printf("Delete children of node %s", root)
-		children, _, err := zk.Children(root)
-		if err != nil {
-			respondError(rw, err.Error())
-			return
-		}
-
-		for _, child := range children {
-			childnode := path.Join(root, child)
-			log.Printf(" -- deleting %s", childnode)
-			err := zk.Delete(childnode, -1)
-			if err != nil {
-				respondError(rw, err.Error())
-				return
-			}
-		}
-
-		setFlash(rw, fmt.Sprintf("deleted %d children of node %s", len(children), root))
-		redirectTo(rw, req, req.URL.Path)
-
 	default:
 		zkr := new(zkResponse)
 

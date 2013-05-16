@@ -10,11 +10,11 @@ import (
 var (
 	header = func() map[string]string {
 		return map[string]string{
-			"Pools":    "/pool",
-			"Hosts":    "/host",
-			"Services": "/service",
-			"Workers":  "/worker",
-			"ZK":       "/zk",
+			// "Pools":    "/pool",
+			"Hosts": "/host",
+			// "Services": "/service",
+			"Workers": "/worker",
+			"ZK":      "/zk",
 		}
 	}
 

@@ -115,6 +115,7 @@ body {
 
 	.button-group {
 		display: inline-block;
+		height: 35px;
 
 		.name {
 			float: none;
@@ -151,7 +152,8 @@ body {
 
 .inverse {
 	border: 1px solid darken($body-font-color, 10%);
-	margin-top: -30px;
+	border-width: 0 1px 1px 0;
+	margin-top: -10px;
 	margin-left: -15px;
 	padding-top: 10px;
 	padding-left: 25px;

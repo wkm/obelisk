@@ -991,7 +991,7 @@ $panel-border-color: darken($panel-bg, $panel-function-factor);
 
 // Padding
 
-// $side-nav-padding: emCalc(14px) 0;
+$side-nav-padding: emCalc(10px) 0; 
 
 // List styles
 
@@ -1018,7 +1018,7 @@ $panel-border-color: darken($panel-bg, $panel-function-factor);
 
 // Margin and padding
 
-// $sub-nav-list-margin: emCalc(-4px) 0 emCalc(18px);
+// $sub-nav-list-margin: emCalc(-4px) 0 emCalc(5px);
 // $sub-nav-list-padding-top: emCalc(4px);
 
 // Definition
@@ -1167,7 +1167,7 @@ $topbar-bg: $body-bg;
 // Height and margin
 
 // $topbar-height: 45px;
-// $topbar-margin-bottom: emCalc(30px);
+$topbar-margin-bottom: emCalc(10px);
 
 // Input height for top bar
 
