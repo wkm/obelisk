@@ -1,8 +1,8 @@
 # Obelisk
-Obelisk is a management interface for Gocircuit deployments.
 
-## Features
-* 
+Obelisk is a plug-and-play, end-to-end service for measuring, storing,
+querying, and visualizing general time-series data for Go programs,
+and especially Go programs which run on Go Circuit.
 
 ## Components
 * `/web` -- a web interface to obelisk
