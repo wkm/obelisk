@@ -10,7 +10,7 @@
 	<ul class="small-block-grid-2 large-block-grid-6">
 	{{range .Object}}
 		<li>
-			<a href="/worker/{{urlquery .}}">
+			<a href="/worker/{{urlquery .}}?instrumentation">
 				<div class='panel'><tt>{{html .}}</tt></div>
 			</a>
 		</li>

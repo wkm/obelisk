@@ -10,7 +10,7 @@
 	<div class='row'>
 		<div class='12 columns'>
 			{{if .Anchor}}
-				<a href="/worker/{{urlquery .Anchor.Addr.WorkerID}}">
+				<a href="/worker/{{urlquery .Anchor.Addr.WorkerID}}?instrumentation">
 					<div class='panel callout radius'>
 						Worker: <strong>{{html .Anchor.Addr.WorkerID}}</strong>
 						<i class='icon-angle-right'></i>
