@@ -2,7 +2,7 @@
 <html>
 	<head>
 		<title>{{ page.title }}</title>
-		<link rel='stylesheet' href='./stylesheets/app.css'></link>
+		<link rel='stylesheet' href='/stylesheets/app.css'></link>
 		<link rel='stylesheet' href='//cdnjs.cloudflare.com/ajax/libs/font-awesome/3.1.0/css/font-awesome.min.css'></link>
 	</head>
 	<body>
@@ -13,15 +13,7 @@
 				</div>
 				<div class='small-8 large-10 columns'>
 					<div class='page-nav-bar right end'>
-						<ul class='button-group'>
-							<li><a class='small button' href='./about.html'>About</a></li>
-							<li><a class='small button' href='./blog.html'>Blog</a></li>
-							<li><a class='small button' href='./features.html'>Features</a></li>
-							<li><a class='small button' href=''>Documentation</a></li>
-							<li><a class='small button' href='http://github.com/wkm/obelisk'>
-								Source Code <i class='icon-github-sign'></i>
-							</a></li>
-						</ul>
+						{% include _header.html %}
 					</div>
 				</div>
 			</div>
