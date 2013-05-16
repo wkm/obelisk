@@ -1,4 +1,378 @@
 @import url("http://fonts.googleapis.com/css?family=Titillium+Web:400,600,700,200,300");
+/* line 1, ../sass/syntax.scss */
+.highlight {
+  background: #ffffff;
+}
+
+/* line 2, ../sass/syntax.scss */
+.highlight .c {
+  color: #999988;
+  font-style: italic;
+}
+
+/* Comment */
+/* line 3, ../sass/syntax.scss */
+.highlight .err {
+  color: #a61717;
+  background-color: #e3d2d2;
+}
+
+/* Error */
+/* line 4, ../sass/syntax.scss */
+.highlight .k {
+  font-weight: bold;
+}
+
+/* Keyword */
+/* line 5, ../sass/syntax.scss */
+.highlight .o {
+  font-weight: bold;
+}
+
+/* Operator */
+/* line 6, ../sass/syntax.scss */
+.highlight .cm {
+  color: #999988;
+  font-style: italic;
+}
+
+/* Comment.Multiline */
+/* line 7, ../sass/syntax.scss */
+.highlight .cp {
+  color: #999999;
+  font-weight: bold;
+}
+
+/* Comment.Preproc */
+/* line 8, ../sass/syntax.scss */
+.highlight .c1 {
+  color: #999988;
+  font-style: italic;
+}
+
+/* Comment.Single */
+/* line 9, ../sass/syntax.scss */
+.highlight .cs {
+  color: #999999;
+  font-weight: bold;
+  font-style: italic;
+}
+
+/* Comment.Special */
+/* line 10, ../sass/syntax.scss */
+.highlight .gd {
+  color: #000000;
+  background-color: #ffdddd;
+}
+
+/* Generic.Deleted */
+/* line 11, ../sass/syntax.scss */
+.highlight .gd .x {
+  color: #000000;
+  background-color: #ffaaaa;
+}
+
+/* Generic.Deleted.Specific */
+/* line 12, ../sass/syntax.scss */
+.highlight .ge {
+  font-style: italic;
+}
+
+/* Generic.Emph */
+/* line 13, ../sass/syntax.scss */
+.highlight .gr {
+  color: #aa0000;
+}
+
+/* Generic.Error */
+/* line 14, ../sass/syntax.scss */
+.highlight .gh {
+  color: #999999;
+}
+
+/* Generic.Heading */
+/* line 15, ../sass/syntax.scss */
+.highlight .gi {
+  color: #000000;
+  background-color: #ddffdd;
+}
+
+/* Generic.Inserted */
+/* line 16, ../sass/syntax.scss */
+.highlight .gi .x {
+  color: #000000;
+  background-color: #aaffaa;
+}
+
+/* Generic.Inserted.Specific */
+/* line 17, ../sass/syntax.scss */
+.highlight .go {
+  color: #888888;
+}
+
+/* Generic.Output */
+/* line 18, ../sass/syntax.scss */
+.highlight .gp {
+  color: #555555;
+}
+
+/* Generic.Prompt */
+/* line 19, ../sass/syntax.scss */
+.highlight .gs {
+  font-weight: bold;
+}
+
+/* Generic.Strong */
+/* line 20, ../sass/syntax.scss */
+.highlight .gu {
+  color: #aaaaaa;
+}
+
+/* Generic.Subheading */
+/* line 21, ../sass/syntax.scss */
+.highlight .gt {
+  color: #aa0000;
+}
+
+/* Generic.Traceback */
+/* line 22, ../sass/syntax.scss */
+.highlight .kc {
+  font-weight: bold;
+}
+
+/* Keyword.Constant */
+/* line 23, ../sass/syntax.scss */
+.highlight .kd {
+  font-weight: bold;
+}
+
+/* Keyword.Declaration */
+/* line 24, ../sass/syntax.scss */
+.highlight .kp {
+  font-weight: bold;
+}
+
+/* Keyword.Pseudo */
+/* line 25, ../sass/syntax.scss */
+.highlight .kr {
+  font-weight: bold;
+}
+
+/* Keyword.Reserved */
+/* line 26, ../sass/syntax.scss */
+.highlight .kt {
+  color: #445588;
+  font-weight: bold;
+}
+
+/* Keyword.Type */
+/* line 27, ../sass/syntax.scss */
+.highlight .m {
+  color: #009999;
+}
+
+/* Literal.Number */
+/* line 28, ../sass/syntax.scss */
+.highlight .s {
+  color: #dd1144;
+}
+
+/* Literal.String */
+/* line 29, ../sass/syntax.scss */
+.highlight .na {
+  color: teal;
+}
+
+/* Name.Attribute */
+/* line 30, ../sass/syntax.scss */
+.highlight .nb {
+  color: #0086b3;
+}
+
+/* Name.Builtin */
+/* line 31, ../sass/syntax.scss */
+.highlight .nc {
+  color: #445588;
+  font-weight: bold;
+}
+
+/* Name.Class */
+/* line 32, ../sass/syntax.scss */
+.highlight .no {
+  color: teal;
+}
+
+/* Name.Constant */
+/* line 33, ../sass/syntax.scss */
+.highlight .ni {
+  color: purple;
+}
+
+/* Name.Entity */
+/* line 34, ../sass/syntax.scss */
+.highlight .ne {
+  color: #990000;
+  font-weight: bold;
+}
+
+/* Name.Exception */
+/* line 35, ../sass/syntax.scss */
+.highlight .nf {
+  color: #990000;
+  font-weight: bold;
+}
+
+/* Name.Function */
+/* line 36, ../sass/syntax.scss */
+.highlight .nn {
+  color: #555555;
+}
+
+/* Name.Namespace */
+/* line 37, ../sass/syntax.scss */
+.highlight .nt {
+  color: navy;
+}
+
+/* Name.Tag */
+/* line 38, ../sass/syntax.scss */
+.highlight .nv {
+  color: teal;
+}
+
+/* Name.Variable */
+/* line 39, ../sass/syntax.scss */
+.highlight .ow {
+  font-weight: bold;
+}
+
+/* Operator.Word */
+/* line 40, ../sass/syntax.scss */
+.highlight .w {
+  color: #bbbbbb;
+}
+
+/* Text.Whitespace */
+/* line 41, ../sass/syntax.scss */
+.highlight .mf {
+  color: #009999;
+}
+
+/* Literal.Number.Float */
+/* line 42, ../sass/syntax.scss */
+.highlight .mh {
+  color: #009999;
+}
+
+/* Literal.Number.Hex */
+/* line 43, ../sass/syntax.scss */
+.highlight .mi {
+  color: #009999;
+}
+
+/* Literal.Number.Integer */
+/* line 44, ../sass/syntax.scss */
+.highlight .mo {
+  color: #009999;
+}
+
+/* Literal.Number.Oct */
+/* line 45, ../sass/syntax.scss */
+.highlight .sb {
+  color: #dd1144;
+}
+
+/* Literal.String.Backtick */
+/* line 46, ../sass/syntax.scss */
+.highlight .sc {
+  color: #dd1144;
+}
+
+/* Literal.String.Char */
+/* line 47, ../sass/syntax.scss */
+.highlight .sd {
+  color: #dd1144;
+}
+
+/* Literal.String.Doc */
+/* line 48, ../sass/syntax.scss */
+.highlight .s2 {
+  color: #dd1144;
+}
+
+/* Literal.String.Double */
+/* line 49, ../sass/syntax.scss */
+.highlight .se {
+  color: #dd1144;
+}
+
+/* Literal.String.Escape */
+/* line 50, ../sass/syntax.scss */
+.highlight .sh {
+  color: #dd1144;
+}
+
+/* Literal.String.Heredoc */
+/* line 51, ../sass/syntax.scss */
+.highlight .si {
+  color: #dd1144;
+}
+
+/* Literal.String.Interpol */
+/* line 52, ../sass/syntax.scss */
+.highlight .sx {
+  color: #dd1144;
+}
+
+/* Literal.String.Other */
+/* line 53, ../sass/syntax.scss */
+.highlight .sr {
+  color: #009926;
+}
+
+/* Literal.String.Regex */
+/* line 54, ../sass/syntax.scss */
+.highlight .s1 {
+  color: #dd1144;
+}
+
+/* Literal.String.Single */
+/* line 55, ../sass/syntax.scss */
+.highlight .ss {
+  color: #990073;
+}
+
+/* Literal.String.Symbol */
+/* line 56, ../sass/syntax.scss */
+.highlight .bp {
+  color: #999999;
+}
+
+/* Name.Builtin.Pseudo */
+/* line 57, ../sass/syntax.scss */
+.highlight .vc {
+  color: teal;
+}
+
+/* Name.Variable.Class */
+/* line 58, ../sass/syntax.scss */
+.highlight .vg {
+  color: teal;
+}
+
+/* Name.Variable.Global */
+/* line 59, ../sass/syntax.scss */
+.highlight .vi {
+  color: teal;
+}
+
+/* Name.Variable.Instance */
+/* line 60, ../sass/syntax.scss */
+.highlight .il {
+  color: #009999;
+}
+
+/* Literal.Number.Integer.Long */
 /* normalize.css v2.1.1 | MIT License | git.io/normalize */
 /* ==========================================================================
    HTML5 display definitions
@@ -6528,113 +6902,119 @@ a.th {
   max-width: 800px;
 }
 
-/* line 12, ../sass/app.scss */
+/* line 15, ../sass/app.scss */
 body, html {
   background: #f2efee;
-  background-image: url("./noise-200-200-1-monochrome.png");
+  background-image: url("/noise-200-200-1-monochrome.png");
   -webkit-font-smoothing: antialiased;
 }
 
-/* line 18, ../sass/app.scss */
+/* line 21, ../sass/app.scss */
 html {
   height: 100%;
   padding: 10px;
   margin: 0;
-  box-shadow: inset 0 0 0 9px #4a495a;
+  /*box-shadow:
+  	inset 0 0 0 9px lighten($body-font-color, 10%);*/
 }
 
-/* line 27, ../sass/app.scss */
+/* line 29, ../sass/app.scss */
+body {
+  padding-bottom: 10em;
+}
+
+/* line 34, ../sass/app.scss */
 h1 a, h2 a, h3 a {
   color: #33323e;
 }
 
-/* line 32, ../sass/app.scss */
+/* line 39, ../sass/app.scss */
 .body {
   max-width: 720px;
   min-height: 100%;
 }
 
-/* line 37, ../sass/app.scss */
+/* line 44, ../sass/app.scss */
 h1 {
   letter-spacing: -2px;
 }
 
-/* line 41, ../sass/app.scss */
+/* line 48, ../sass/app.scss */
 .landing {
   padding-top: 4em !important;
   /*font-size: 48px !important;*/
 }
-/* line 43, ../sass/app.scss */
+/* line 50, ../sass/app.scss */
 .landing h1 {
   margin-top: 0;
   font-size: 36pt;
   letter-spacing: -3px;
 }
 
-/* line 51, ../sass/app.scss */
+/* line 58, ../sass/app.scss */
 .error {
   margin-top: 2em;
 }
 
-/* line 55, ../sass/app.scss */
+/* line 62, ../sass/app.scss */
 tt {
   font-family: consolas,menlo,courier,monospace;
 }
 
-/* line 59, ../sass/app.scss */
+/* line 66, ../sass/app.scss */
 table th {
   text-align: left;
 }
 
-/* line 63, ../sass/app.scss */
+/* line 70, ../sass/app.scss */
 code {
   font-weight: light !important;
   font-family: consolas,menlo,courier,monospace;
   font-size: 9pt;
 }
 
-/* line 69, ../sass/app.scss */
+/* line 76, ../sass/app.scss */
 a .callout {
   color: #eee;
 }
 
-/* line 73, ../sass/app.scss */
+/* line 80, ../sass/app.scss */
 body {
   margin-bottom: 15em;
 }
 
-/* line 77, ../sass/app.scss */
+/* line 84, ../sass/app.scss */
 .copy {
   font-size: 16pt;
   font-weight: 300 !important;
 }
 
-/* line 82, ../sass/app.scss */
+/* line 89, ../sass/app.scss */
 .page-nav-bar {
   margin-top: 20px;
 }
-/* line 85, ../sass/app.scss */
+/* line 92, ../sass/app.scss */
 .page-nav-bar .button {
   color: #4a495a;
   border: 1.5px solid #b1b0bf;
   background: none;
   font-weight: bold;
 }
-/* line 91, ../sass/app.scss */
+/* line 98, ../sass/app.scss */
 .page-nav-bar .button:hover {
   background: #dcd4d1;
 }
-/* line 95, ../sass/app.scss */
+/* line 102, ../sass/app.scss */
 .page-nav-bar .button.active {
   background: #6d6b85;
   color: #f2efee;
 }
-/* line 101, ../sass/app.scss */
+/* line 108, ../sass/app.scss */
 .page-nav-bar .button-group {
   display: inline-block;
   height: 35px;
 }
-/* line 105, ../sass/app.scss */
+/* line 112, ../sass/app.scss */
 .page-nav-bar .button-group .name {
   float: none;
   clear: both;
@@ -6645,37 +7025,37 @@ body {
   width: 100%;
 }
 
-/* line 117, ../sass/app.scss */
+/* line 124, ../sass/app.scss */
 .tooltip {
   border: 1px solid #dcd4d1;
 }
-/* line 120, ../sass/app.scss */
+/* line 127, ../sass/app.scss */
 .tooltip .nub {
   border-color: transparent transparent #dcd4d1 transparent;
 }
 
-/* line 125, ../sass/app.scss */
+/* line 132, ../sass/app.scss */
 .labels {
   text-align: center;
   font-size: 75%;
 }
 
-/* line 130, ../sass/app.scss */
+/* line 137, ../sass/app.scss */
 .sub-nav {
   margin-bottom: 0;
 }
 
-/* line 134, ../sass/app.scss */
+/* line 141, ../sass/app.scss */
 .fat-row {
   padding: 0 15px;
 }
 
-/* line 138, ../sass/app.scss */
+/* line 145, ../sass/app.scss */
 hr.compact {
   margin: -5px 0 2px !important;
 }
 
-/* line 142, ../sass/app.scss */
+/* line 149, ../sass/app.scss */
 .inverse {
   border: 1px solid #1c1b22;
   border-width: 0 1px 1px 0;
@@ -6687,12 +7067,12 @@ hr.compact {
   color: #f2efee;
   background: #33323e;
 }
-/* line 152, ../sass/app.scss */
+/* line 159, ../sass/app.scss */
 .inverse a, .inverse h1, .inverse h2, .inverse h3, .inverse h4, .inverse h5, .inverse h6, .inverse dt, .inverse .has-tip {
   color: #f2efee !important;
 }
 
-/* line 156, ../sass/app.scss */
+/* line 163, ../sass/app.scss */
 .verticalheader {
   display: inline-block;
   line-height: 0px;
@@ -6701,13 +7081,32 @@ hr.compact {
   -webkit-transform: rotate(-90deg);
   font-size: 45%;
 }
-/* line 163, ../sass/app.scss */
+/* line 170, ../sass/app.scss */
 .verticalheader.light {
   font-weight: bold;
   font-size: 30%;
 }
 
-/* line 169, ../sass/app.scss */
+/* line 176, ../sass/app.scss */
+ul {
+  list-style-type: square;
+  font-weight: 400;
+}
+
+/* line 181, ../sass/app.scss */
+.sample pre {
+  font-size: 10pt;
+  line-height: 130%;
+  font-family: menlo,courier,monospace;
+  font-weight: normal !important;
+  color: #3f3d4c;
+  padding: 15px 5px;
+  border: 1px solid #e7e1e0;
+  border-width: 1px 0;
+  background: #f6f4f4;
+}
+
+/* line 193, ../sass/app.scss */
 #footer {
   border-top: 1px solid #dcd4d1;
   color: #4a495a;

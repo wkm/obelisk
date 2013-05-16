@@ -4,9 +4,104 @@ title: Documentation | Obelisk
 ---
 <div class='row'>
 	<div class='large-12 columns'>
-		<dl>
-			<dt><a href="./rinst.html">rinst</a></dt>
-			<dd>hi</dd>
-		</dl>
+		<h3>Documentation</h3>
+		<hr/>
+	</div>
+</div>
+<div class='row'>
+	<div class='large-4 columns'>
+		<h4>Statistics</h4>
+		<p>
+			This creates a <a href='http://godoc.org/github.com/wkm/obelisk/lib/rinst#Collection'>Collection</a>
+			that lets you create more instruments
+		</p>
+	</div>
+	<div class='large-8 columns sample'>
+{% highlight go %}
+import "obelisk/lib/rinst"
+
+var Stats = rinst.NewCollection
+{% endhighlight %}
+	</div>
+</div>
+
+<div class='row'>
+	<hr/>
+</div>
+
+<div class='row'>
+	<div class='large-4 columns'>
+		<h4>Counters</h4>
+		<p>
+			Counters are monotonically increasing.
+		</p>
+	</div>
+	<div class='large-8 columns sample'>
+{% highlight go %}
+var (
+	statsHits = Stats.Counter("hits", "hit", "requests received by the server")
+	statsBytes = Stats.Counter("response.bytes", "byte", "bytes sent as responses")
+)
+{% endhighlight %}
+	</div>
+</div>
+<div class='row'>
+	<div class='large-4 columns'>
+		<p>
+			They can be incremented or increased by an arbitrary amount.
+		</p>
+	</div>
+	<div class='large-8 columns sample'>
+{% highlight go %}
+func responseHandler() {
+	statHits.Incr()
+	// ...
+	statBytes.Add(len(response))
+}
+{% endhighlight %}
+	</div>
+</div>
+<div class='row'>
+	<div class='large-4 columns'>
+		<p>
+			The user interface will automatically derive from counters
+			the equivalent rate. (the first derivative)
+		</p>
+	</div>
+	<div class='large-8 columns sample'>
+		<img src='/images/rate.png' />
+	</div>
+</div>
+<div class='row'>
+	<hr/>
+</div>
+
+
+
+<div class='row'>
+	<div class='large-4 columns'>
+		<h4>Values</h4>
+		<p>
+			Values are organized into <tt>IntValue</tt>, <tt>FloatValue</tt>, and <tt>BoolValue</tt>.
+		</p>
+	</div>
+	<div class='large-8 columns sample'>
+{% highlight go %}
+var (
+	statsKeys = Stats.IntValue("sz", "key", "number of keys in the keyspace")
+)
+
+	//...
+	statsKeys.Set(len(mapping))
+	//...
+{% endhighlight %}
+	</div>
+</div>
+<div class='row'>
+	<div class='large-4 columns'>
+		&nbsp;
+	</div>
+	<div class='large-8 columns sample'>
+		<img src='/images/value.png' />
 	</div>
 </div>

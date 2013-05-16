@@ -1,6 +1,9 @@
 // Global Foundation Settings
 @import "settings";
 
+// syntax styles
+@import "syntax";
+
 // Comment out this import if you don't want to use normalize
 @import "normalize";
 
@@ -11,7 +14,7 @@
 
 body,html { 
 	background: $body-bg;
-	background-image: url("./noise-200-200-1-monochrome.png");
+	background-image: url("/noise-200-200-1-monochrome.png");
 	-webkit-font-smoothing: antialiased;
 }
 
@@ -19,8 +22,12 @@ html {
 	height: 100%;
 	padding: 10px;
 	margin: 0;
-	box-shadow:
-		inset 0 0 0 9px lighten($body-font-color, 10%);
+	/*box-shadow:
+		inset 0 0 0 9px lighten($body-font-color, 10%);*/
+}
+
+body {
+	padding-bottom: 10em;
 }
 
 h1,h2,h3 {
@@ -164,6 +171,23 @@ hr.compact {
 		font-weight: bold;
 		font-size: 30%;
 	}
+}
+
+ul {
+	list-style-type: square;
+	font-weight: 400;
+}
+
+.sample pre {
+	font-size: 10pt;
+	line-height: 130%;
+	font-family: menlo,courier,monospace;
+	font-weight: normal !important;
+	color: lighten($body-font-color, 5%);
+	padding: 15px 5px;
+	border: 1px solid darken($body-bg, 5%);
+	border-width: 1px 0;
+	background: lighten($body-bg, 2%);
 }
 
 #footer {

@@ -4,12 +4,26 @@ title: Features | Obelisk
 ---
 <br>
 <div class='row'>
-	<div class='large-6 columns'>
+	<div class='large-12 columns'>
 		<h3>Features</h3>
+		<hr/>
 	</div>
 </div>
 <div class='row'>
-	<p class='large-8 columns copy'>
-		hi.
-	</p>
+	<ul class='large-10 columns copy'>
+		<li>gocircuit worker discovery through zookeeper</li>
+		<li>counter and value metrics</li>
+		<li>worker inspection through stacktraces</li>
+		<li>simplistic in-memory timeseries store (will be replaced with Vena, see below)</li>
+	</ul>
+</div>
+<div class='row'>
+	<div class='large-12 columns'>
+		<h4>Near Future</h4>
+		<ul>
+			<li>LevelDB-backed timestore based on GoCircuit's Vena</li>
+			<li>timeseries aggregation across multiple workers</li>
+			<li>remote log streaming (a'la Scribe)</li>
+		</ul>
+	</div>
 </div>
