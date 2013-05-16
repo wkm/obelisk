@@ -67,9 +67,8 @@
 								Error: {{html .Error}}
 							{{end}}
 
-							{{if .GobData}}
+ 							{{if .GobData}}
 								<span class='radius secondary label'>GOB</span>
-								<tt>{{html .GobData}}</tt><br/>
 							{{else}}
 								{{if .Data}}
 									<tt>{{html .Data}}</tt><br/>
