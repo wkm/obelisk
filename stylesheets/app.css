@@ -6531,7 +6531,7 @@ a.th {
 /* line 12, ../sass/app.scss */
 body, html {
   background: #f2efee;
-  /*background-image: url("/assets/noise-200-200-1-monochrome.png");*/
+  background-image: url("./noise-200-200-1-monochrome.png");
   -webkit-font-smoothing: antialiased;
 }
 
@@ -6539,85 +6539,102 @@ body, html {
 html {
   height: 100%;
   padding: 10px;
+  margin: 0;
   box-shadow: inset 0 0 0 9px #4a495a;
 }
 
-/* line 25, ../sass/app.scss */
+/* line 27, ../sass/app.scss */
+h1 a, h2 a, h3 a {
+  color: #33323e;
+}
+
+/* line 32, ../sass/app.scss */
 .body {
   max-width: 720px;
   min-height: 100%;
 }
 
-/* line 31, ../sass/app.scss */
-.landing h1 {
-  margin-top: 2em !important;
-  /*font-size: 48px !important;*/
+/* line 37, ../sass/app.scss */
+h1 {
+  letter-spacing: -2px;
 }
 
-/* line 37, ../sass/app.scss */
+/* line 41, ../sass/app.scss */
+.landing {
+  padding-top: 4em !important;
+  /*font-size: 48px !important;*/
+}
+/* line 43, ../sass/app.scss */
+.landing h1 {
+  margin-top: 0;
+  font-size: 36pt;
+  letter-spacing: -3px;
+}
+
+/* line 51, ../sass/app.scss */
 .error {
   margin-top: 2em;
 }
 
-/* line 41, ../sass/app.scss */
+/* line 55, ../sass/app.scss */
 tt {
   font-family: consolas,menlo,courier,monospace;
 }
 
-/* line 45, ../sass/app.scss */
+/* line 59, ../sass/app.scss */
 table th {
   text-align: left;
 }
 
-/* line 49, ../sass/app.scss */
+/* line 63, ../sass/app.scss */
 code {
   font-weight: light !important;
   font-family: consolas,menlo,courier,monospace;
   font-size: 9pt;
 }
 
-/* line 55, ../sass/app.scss */
+/* line 69, ../sass/app.scss */
 a .callout {
   color: #eee;
 }
 
-/* line 59, ../sass/app.scss */
+/* line 73, ../sass/app.scss */
 body {
   margin-bottom: 15em;
 }
 
-/* line 63, ../sass/app.scss */
+/* line 77, ../sass/app.scss */
 .copy {
   font-size: 16pt;
   font-weight: 300 !important;
 }
 
-/* line 68, ../sass/app.scss */
+/* line 82, ../sass/app.scss */
 .page-nav-bar {
   margin-top: 20px;
 }
-/* line 71, ../sass/app.scss */
+/* line 85, ../sass/app.scss */
 .page-nav-bar .button {
-  color: #33323e;
-  border: 1.5px solid #616076;
+  color: #4a495a;
+  border: 1.5px solid #b1b0bf;
   background: none;
   font-weight: bold;
 }
-/* line 77, ../sass/app.scss */
+/* line 91, ../sass/app.scss */
 .page-nav-bar .button:hover {
   background: #dcd4d1;
 }
-/* line 81, ../sass/app.scss */
+/* line 95, ../sass/app.scss */
 .page-nav-bar .button.active {
   background: #6d6b85;
   color: #f2efee;
 }
-/* line 87, ../sass/app.scss */
+/* line 101, ../sass/app.scss */
 .page-nav-bar .button-group {
   display: inline-block;
   height: 35px;
 }
-/* line 91, ../sass/app.scss */
+/* line 105, ../sass/app.scss */
 .page-nav-bar .button-group .name {
   float: none;
   clear: both;
@@ -6628,37 +6645,37 @@ body {
   width: 100%;
 }
 
-/* line 103, ../sass/app.scss */
+/* line 117, ../sass/app.scss */
 .tooltip {
   border: 1px solid #dcd4d1;
 }
-/* line 106, ../sass/app.scss */
+/* line 120, ../sass/app.scss */
 .tooltip .nub {
   border-color: transparent transparent #dcd4d1 transparent;
 }
 
-/* line 111, ../sass/app.scss */
+/* line 125, ../sass/app.scss */
 .labels {
   text-align: center;
   font-size: 75%;
 }
 
-/* line 116, ../sass/app.scss */
+/* line 130, ../sass/app.scss */
 .sub-nav {
   margin-bottom: 0;
 }
 
-/* line 120, ../sass/app.scss */
+/* line 134, ../sass/app.scss */
 .fat-row {
   padding: 0 15px;
 }
 
-/* line 124, ../sass/app.scss */
+/* line 138, ../sass/app.scss */
 hr.compact {
   margin: -5px 0 2px !important;
 }
 
-/* line 128, ../sass/app.scss */
+/* line 142, ../sass/app.scss */
 .inverse {
   border: 1px solid #1c1b22;
   border-width: 0 1px 1px 0;
@@ -6670,12 +6687,12 @@ hr.compact {
   color: #f2efee;
   background: #33323e;
 }
-/* line 138, ../sass/app.scss */
+/* line 152, ../sass/app.scss */
 .inverse a, .inverse h1, .inverse h2, .inverse h3, .inverse h4, .inverse h5, .inverse h6, .inverse dt, .inverse .has-tip {
   color: #f2efee !important;
 }
 
-/* line 142, ../sass/app.scss */
+/* line 156, ../sass/app.scss */
 .verticalheader {
   display: inline-block;
   line-height: 0px;
@@ -6684,8 +6701,43 @@ hr.compact {
   -webkit-transform: rotate(-90deg);
   font-size: 45%;
 }
-/* line 149, ../sass/app.scss */
+/* line 163, ../sass/app.scss */
 .verticalheader.light {
   font-weight: bold;
   font-size: 30%;
+}
+
+/* line 169, ../sass/app.scss */
+#footer {
+  border-top: 1px solid #dcd4d1;
+  color: #4a495a;
+  padding: 5px 10px;
+  margin: 0 10px;
+  font-weight: 400;
+  font-size: 10pt;
+}
+
+/* line 10, ../../../.rvm/gems/ruby-1.9.3-p0/gems/compass-0.12.2/frameworks/compass/stylesheets/compass/layout/_sticky-footer.scss */
+html, body {
+  height: 100%;
+}
+
+/* line 12, ../../../.rvm/gems/ruby-1.9.3-p0/gems/compass-0.12.2/frameworks/compass/stylesheets/compass/layout/_sticky-footer.scss */
+#layout {
+  clear: both;
+  min-height: 100%;
+  height: auto !important;
+  height: 100%;
+  margin-bottom: -25px;
+}
+/* line 18, ../../../.rvm/gems/ruby-1.9.3-p0/gems/compass-0.12.2/frameworks/compass/stylesheets/compass/layout/_sticky-footer.scss */
+#layout #layout_footer {
+  height: 25px;
+}
+
+/* line 20, ../../../.rvm/gems/ruby-1.9.3-p0/gems/compass-0.12.2/frameworks/compass/stylesheets/compass/layout/_sticky-footer.scss */
+#footer {
+  clear: both;
+  position: relative;
+  height: 25px;
 }

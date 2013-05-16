@@ -2,23 +2,35 @@
 <html>
 	<head>
 		<title>{{ page.title }}</title>
-		<link rel='stylesheet' href='./stylesheets/app.css' ></link>
+		<link rel='stylesheet' href='./stylesheets/app.css'></link>
+		<link rel='stylesheet' href='//cdnjs.cloudflare.com/ajax/libs/font-awesome/3.1.0/css/font-awesome.min.css'></link>
 	</head>
 	<body>
-		<div class='row'>
-			<div class='large-2 columns'>
-				<h1><a href='/'>obelisk</a></h1>
-			</div>
-			<div class='large-10 columns'>
-				<div class='page-nav-bar right end'>
-					<ul class='button-group'>
-						<li><a class='small button' href=''>About</a></li>
-						<li><a class='small button' href=''>Documentation</a></li>
-						<li><a class='small button' href='http://github.com/wkm/obelisk'>Source Code</a></li>
-					</ul>
+		<div id='layout'>
+			<div class='row'>
+				<div class='large-2 columns'>
+					<h2><a href='/'>obelisk</a></h2>
+				</div>
+				<div class='large-10 columns'>
+					<div class='page-nav-bar right end'>
+						<ul class='button-group'>
+							<li><a class='small button' href='./about.html'>About</a></li>
+							<li><a class='small button' href='./blog.html'>Blog</a></li>
+							<li><a class='small button' href='./features.html'>Features</a></li>
+							<li><a class='small button' href=''>Documentation</a></li>
+							<li><a class='small button' href='http://github.com/wkm/obelisk'>
+								Source Code <i class='icon-github-sign'></i>
+							</a></li>
+						</ul>
+					</div>
 				</div>
 			</div>
+			{{content}}
+
+			<div id='layout_footer'></div>
 		</div>
-		{{content}}
+		<div id='footer'>
+			Obelisk is open source software released under the <a href='http://www.apache.org/licenses/LICENSE-2.0.html'>Apache 2.0 License</a>.
+		</div>
 	</body>
 </html>
