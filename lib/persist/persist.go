@@ -2,6 +2,7 @@ package persist
 
 import (
 	"circuit/kit/lockfile"
+	"compress/gzip"
 	"io"
 	"obelisk/lib/errors"
 	"obelisk/lib/rlog"
@@ -51,9 +52,10 @@ func CleanupSnapshot(flushes int, dir, key string) error {
 	return nil
 }
 
+// dump a persistable object into a snapshot on disk
 func FlushSnapshot(p Persistable, dir, key string) error {
 	ts := time.Now().Format(time.RFC3339)
-	fname := filepath.Join(dir, key+"-"+ts)
+	fname := filepath.Join(dir, key+"-"+ts+".gz")
 
 	// write to a temp file initially
 	tmp := fname + ".tmp"
@@ -66,7 +68,10 @@ func FlushSnapshot(p Persistable, dir, key string) error {
 	}
 	defer f.Close()
 
-	err = p.Dump(f)
+	gz := gzip.NewWriter(f)
+	defer gz.Close()
+
+	err = p.Dump(gz)
 	if err != nil {
 		log.Printf("error flushing %s", err.Error())
 		return err
@@ -78,6 +83,7 @@ func FlushSnapshot(p Persistable, dir, key string) error {
 	return nil
 }
 
+// read the last available snapshot from a persistence directory
 func RestoreSnapshot(p Persistable, dir, key string) error {
 	searchpath := filepath.Join(dir, key+"-*")
 
@@ -102,20 +108,35 @@ func RestoreSnapshot(p Persistable, dir, key string) error {
 
 		log.Printf("attempting restore from %s", restoreFile)
 
+		var r io.Reader
 		f, err := os.Open(restoreFile)
 		if err != nil {
-			log.Printf("  err: %s", err)
+			log.Printf("err: %s", err)
 			continue
 		}
 		defer f.Close()
 
-		err = p.Load(f)
+		// are we reading a gzip?
+		if strings.HasSuffix(restoreFile, ".gz") {
+			gz, err := gzip.NewReader(f)
+			if err != nil {
+				log.Printf("gz-err: %s", err)
+				continue
+			}
+			defer gz.Close()
+			r = gz
+		} else {
+			// read from the file directly
+			r = f
+		}
+
+		err = p.Load(r)
 		if err != nil {
-			log.Printf("  err: %s", err)
+			log.Printf("err: %s", err)
 			continue
 		}
 
-		log.Printf("  restored")
+		log.Printf("restored")
 		return nil
 	}
 
