@@ -6909,20 +6909,18 @@ body, html {
   -webkit-font-smoothing: antialiased;
 }
 
-/* line 21, ../sass/app.scss */
-html {
-  height: 100%;
-  padding: 10px;
-  margin: 0;
-  /*box-shadow:
-  	inset 0 0 0 9px lighten($body-font-color, 10%);*/
-}
-
-/* line 29, ../sass/app.scss */
+/*html {
+	height: 100%;
+	padding: 10px;
+	margin: 0;
+	box-shadow:
+		inset 0 0 0 9px lighten($body-font-color, 10%);
+}*/
+/*
 body {
-  padding-bottom: 10em;
+	padding-bottom: 10em;
 }
-
+*/
 /* line 34, ../sass/app.scss */
 h1 a, h2 a, h3 a {
   color: #33323e;
@@ -6931,90 +6929,89 @@ h1 a, h2 a, h3 a {
 /* line 39, ../sass/app.scss */
 .body {
   max-width: 720px;
-  min-height: 100%;
 }
 
-/* line 44, ../sass/app.scss */
+/* line 43, ../sass/app.scss */
 h1 {
   letter-spacing: -2px;
 }
 
-/* line 48, ../sass/app.scss */
+/* line 47, ../sass/app.scss */
 .landing {
   padding-top: 4em !important;
   /*font-size: 48px !important;*/
 }
-/* line 50, ../sass/app.scss */
+/* line 49, ../sass/app.scss */
 .landing h1 {
   margin-top: 0;
   font-size: 36pt;
   letter-spacing: -3px;
 }
 
-/* line 58, ../sass/app.scss */
+/* line 57, ../sass/app.scss */
 .error {
   margin-top: 2em;
 }
 
-/* line 62, ../sass/app.scss */
+/* line 61, ../sass/app.scss */
 tt {
   font-family: consolas,menlo,courier,monospace;
 }
 
-/* line 66, ../sass/app.scss */
+/* line 65, ../sass/app.scss */
 table th {
   text-align: left;
 }
 
-/* line 70, ../sass/app.scss */
+/* line 69, ../sass/app.scss */
 code {
   font-weight: light !important;
   font-family: consolas,menlo,courier,monospace;
   font-size: 9pt;
 }
 
-/* line 76, ../sass/app.scss */
+/* line 75, ../sass/app.scss */
 a .callout {
   color: #eee;
 }
 
-/* line 80, ../sass/app.scss */
+/* line 79, ../sass/app.scss */
 body {
   margin-bottom: 15em;
 }
 
-/* line 84, ../sass/app.scss */
+/* line 83, ../sass/app.scss */
 .copy {
   font-size: 16pt;
   font-weight: 300 !important;
 }
 
-/* line 89, ../sass/app.scss */
+/* line 88, ../sass/app.scss */
 .page-nav-bar {
   margin-top: 20px;
 }
-/* line 92, ../sass/app.scss */
+/* line 91, ../sass/app.scss */
 .page-nav-bar .button {
   color: #4a495a;
   border: 1.5px solid #b1b0bf;
   background: none;
   font-weight: bold;
 }
-/* line 98, ../sass/app.scss */
+/* line 97, ../sass/app.scss */
 .page-nav-bar .button:hover {
   background: #dcd4d1;
 }
-/* line 102, ../sass/app.scss */
+/* line 101, ../sass/app.scss */
 .page-nav-bar .button.active {
   background: #6d6b85;
   color: #f2efee;
 }
-/* line 108, ../sass/app.scss */
+/* line 107, ../sass/app.scss */
 .page-nav-bar .button-group {
   display: inline-block;
   height: 35px;
 }
-/* line 112, ../sass/app.scss */
+/* line 111, ../sass/app.scss */
 .page-nav-bar .button-group .name {
   float: none;
   clear: both;
@@ -7025,37 +7022,37 @@ body {
   width: 100%;
 }
 
-/* line 124, ../sass/app.scss */
+/* line 123, ../sass/app.scss */
 .tooltip {
   border: 1px solid #dcd4d1;
 }
-/* line 127, ../sass/app.scss */
+/* line 126, ../sass/app.scss */
 .tooltip .nub {
   border-color: transparent transparent #dcd4d1 transparent;
 }
 
-/* line 132, ../sass/app.scss */
+/* line 131, ../sass/app.scss */
 .labels {
   text-align: center;
   font-size: 75%;
 }
 
-/* line 137, ../sass/app.scss */
+/* line 136, ../sass/app.scss */
 .sub-nav {
   margin-bottom: 0;
 }
 
-/* line 141, ../sass/app.scss */
+/* line 140, ../sass/app.scss */
 .fat-row {
   padding: 0 15px;
 }
 
-/* line 145, ../sass/app.scss */
+/* line 144, ../sass/app.scss */
 hr.compact {
   margin: -5px 0 2px !important;
 }
 
-/* line 149, ../sass/app.scss */
+/* line 148, ../sass/app.scss */
 .inverse {
   border: 1px solid #1c1b22;
   border-width: 0 1px 1px 0;
@@ -7067,12 +7064,12 @@ hr.compact {
   color: #f2efee;
   background: #33323e;
 }
-/* line 159, ../sass/app.scss */
+/* line 158, ../sass/app.scss */
 .inverse a, .inverse h1, .inverse h2, .inverse h3, .inverse h4, .inverse h5, .inverse h6, .inverse dt, .inverse .has-tip {
   color: #f2efee !important;
 }
 
-/* line 163, ../sass/app.scss */
+/* line 162, ../sass/app.scss */
 .verticalheader {
   display: inline-block;
   line-height: 0px;
@@ -7081,19 +7078,19 @@ hr.compact {
   -webkit-transform: rotate(-90deg);
   font-size: 45%;
 }
-/* line 170, ../sass/app.scss */
+/* line 169, ../sass/app.scss */
 .verticalheader.light {
   font-weight: bold;
   font-size: 30%;
 }
 
-/* line 176, ../sass/app.scss */
+/* line 175, ../sass/app.scss */
 ul {
   list-style-type: square;
   font-weight: 400;
 }
 
-/* line 181, ../sass/app.scss */
+/* line 180, ../sass/app.scss */
 .sample pre {
   font-size: 10pt;
   line-height: 130%;
@@ -7106,7 +7103,7 @@ ul {
   background: #f6f4f4;
 }
 
-/* line 193, ../sass/app.scss */
+/* line 192, ../sass/app.scss */
 #footer {
   border-top: 1px solid #dcd4d1;
   color: #4a495a;

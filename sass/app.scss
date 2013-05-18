@@ -18,18 +18,18 @@ body,html {
 	-webkit-font-smoothing: antialiased;
 }
 
-html {
+/*html {
 	height: 100%;
 	padding: 10px;
 	margin: 0;
-	/*box-shadow:
-		inset 0 0 0 9px lighten($body-font-color, 10%);*/
-}
-
+	box-shadow:
+		inset 0 0 0 9px lighten($body-font-color, 10%);
+}*/
+/*
 body {
 	padding-bottom: 10em;
 }
-
+*/
 h1,h2,h3 {
 	a {
 		color: $body-font-color;
@@ -38,7 +38,6 @@ h1,h2,h3 {
 
 .body {
 	max-width: 720px;
-	min-height: 100%;
 }
 
 h1 {
@@ -194,7 +193,6 @@ ul {
 	border-top: 1px solid darken($body-bg, 10%);
 	color: lighten($body-font-color, 10%);
 	padding: 5px 10px;
-	margin: 0 10px;
 	font-weight: 400;
 	font-size: 10pt;
 }
