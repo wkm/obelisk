@@ -8,6 +8,7 @@ import (
 	"os"
 	"path/filepath"
 	"sort"
+	"strings"
 	"time"
 )
 
@@ -53,9 +54,12 @@ func CleanupSnapshot(flushes int, dir, key string) error {
 func FlushSnapshot(p Persistable, dir, key string) error {
 	ts := time.Now().Format(time.RFC3339)
 	fname := filepath.Join(dir, key+"-"+ts)
+
+	// write to a temp file initially
+	tmp := fname + ".tmp"
 	log.Printf("creating flush %s", fname)
 
-	f, err := os.Create(fname)
+	f, err := os.Create(tmp)
 	if err != nil {
 		log.Printf("could not flush %s", err.Error())
 		return err
@@ -68,6 +72,8 @@ func FlushSnapshot(p Persistable, dir, key string) error {
 		return err
 	}
 
+	// save this flush
+	os.Rename(tmp, fname)
 	log.Printf("flushed")
 	return nil
 }
@@ -88,6 +94,12 @@ func RestoreSnapshot(p Persistable, dir, key string) error {
 
 	for i := len(matches) - 1; i >= 0; i-- {
 		restoreFile := matches[i]
+
+		// skip temporary files
+		if strings.HasSuffix(restoreFile, ".tmp") {
+			continue
+		}
+
 		log.Printf("attempting restore from %s", restoreFile)
 
 		f, err := os.Open(restoreFile)
