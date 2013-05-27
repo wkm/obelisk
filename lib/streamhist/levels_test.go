@@ -1,51 +1,150 @@
 package streamhist
 
 import (
+	"fmt"
 	"math"
 	"testing"
 )
 
-func TestMerge(t *testing.T) {
-	l1 := []float64{0, 1, 2, 3}
-	r1 := []float64{}
-	ret := merge(l1, r1)
-	switch {
-	case len(ret) != 4:
-		t.Errorf("expected len=4; received %#v", ret)
+func e(v ...float64) []elem {
+	arr := make([]elem, len(v))
+	for i, e := range v {
+		arr[i] = elem{e, uint64(i + 1), uint64(i + 1)}
+	}
+	return arr
+}
+
+func TestSorter(t *testing.T) {
+	e := []elem{
+		elem{3, 1, 2},
+		elem{4, 2, 1},
+		elem{1, 1, 2},
+		elem{5, 1, 2},
 	}
 
-	l2 := []float64{}
-	r2 := []float64{0, 1, 2, 3}
-	ret = merge(l2, r2)
-	switch {
-	case len(ret) != 4:
-		t.Errorf("expected len=4; received %#v", ret)
+	sortElem(e)
+	if len(e) != 4 {
+		t.Errorf("exected len=4, got %d", len(e))
 	}
 
-	l3 := []float64{0, 1, 5, 7}
-	r3 := []float64{1, 1, 2, 9}
-	ret = merge(l3, r3)
-	switch {
-	case len(ret) != 8:
-		t.Errorf("expected len=8; received %#v", ret)
+	if e[0].val != 1 {
+		t.Errorf("expected e{1} first, got %#v", e[0])
+	}
+	if e[1].val != 3 {
+		t.Errorf("expected e{3} second, got %#v}", e[1])
 	}
 }
 
+func rankTest(t *testing.T, e elem, v float64, min, max uint64) {
+	if e.rmin != min || e.rmax != max {
+		t.Errorf("expected elem{%2.1f,%d,%d} to be [%2.1f,%d,%d]", e.val, e.rmin, e.rmax, v, min, max)
+	}
+}
+
+func TestMerge(t *testing.T) {
+	l1 := e(0, 1, 2, 3)
+	r1 := e()
+	ret := merge(l1, r1)
+	if len(ret) != 4 {
+		t.Errorf("expected len=4; received %#v", ret)
+	}
+	rankTest(t, ret[0], 0, 1, 1)
+	rankTest(t, ret[1], 1, 2, 2)
+	rankTest(t, ret[2], 2, 3, 3)
+	rankTest(t, ret[3], 3, 4, 4)
+
+	l2 := e()
+	r2 := e(0, 1, 2, 3)
+	ret = merge(l2, r2)
+	if len(ret) != 4 {
+		t.Errorf("expected len=4; received %#v", ret)
+	}
+	rankTest(t, ret[0], 0, 1, 1)
+	rankTest(t, ret[1], 1, 2, 2)
+	rankTest(t, ret[2], 2, 3, 3)
+	rankTest(t, ret[3], 3, 4, 4)
+
+	l3 := e(0, 1, 5, 7)
+	r3 := e(1, 1, 2, 9, 11, 15)
+	ret = merge(l3, r3)
+	if len(ret) != 10 {
+		t.Errorf("expected len=8; received %#v", ret)
+	}
+	rankTest(t, ret[0], 0, 1, 1)
+	rankTest(t, ret[1], 1, 2, 2)
+	rankTest(t, ret[2], 1, 3, 3)
+	rankTest(t, ret[3], 1, 4, 4)
+	rankTest(t, ret[4], 2, 5, 5)
+	rankTest(t, ret[5], 5, 6, 6)
+	rankTest(t, ret[6], 7, 7, 7)
+	rankTest(t, ret[7], 9, 8, 8)
+	rankTest(t, ret[8], 11, 9, 9)
+	rankTest(t, ret[9], 15, 10, 10)
+
+	l4 := []elem{elem{0, 1, 5}, elem{2, 6, 10}}
+	r4 := []elem{elem{1, 1, 5}, elem{3, 6, 8}}
+	ret = merge(l4, r4)
+	if len(ret) != 4 {
+		t.Errorf("expected len=3; received %#v", ret)
+	}
+	rankTest(t, ret[0], 0, 1, 5)
+	rankTest(t, ret[1], 1, 6, 10)
+	rankTest(t, ret[2], 2, 11, 15)
+	rankTest(t, ret[3], 3, 16, 18)
+}
+
+func TestCompress(t *testing.T) {
+	s := e(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20)
+	c := compress(s, 20, 0.1)
+
+	if len(c) != 11 {
+		t.Error("expected len=%d, was %d", 11, len(c))
+	}
+	rankTest(t, c[0], 1, 1, 1)
+	rankTest(t, c[1], 2, 2, 2)
+	rankTest(t, c[2], 4, 4, 4)
+}
+
 func TestSummaryStructure(t *testing.T) {
-	testSz := 100000
-	testErr := 0.001
+	return
+	testSz := 1000
+	testErr := 0.1
 
 	// test increasing numbers
-	s := NewSummaryStructure(testSz, testErr)
+	s := NewSummaryStructure(uint64(testSz), testErr)
 	for i := 0; i < testSz; i++ {
-		s.Update(i)
+		s.Update(float64(20 * i))
 	}
 
 	// get each increasing number
-	for i := 0; i < testSz; i++ {
-		quant := s.Quantile(i)
-		if math.Abs(quant-i) > testErr {
-			t.Errorf("expected %d; received %f, exceeding allowable error of %f", i, quant, testERr)
+	h := s.Histogram()
+	for i, e := range h.S {
+		fmt.Printf("%d: %f [%d,%d]\n", i, e.val, e.rmin, e.rmax)
+	}
+	errSpan := float64(testSz) * testErr
+	for i := 1; i <= testSz; i++ {
+		quant := h.Quantile(uint64(i))
+		expect := float64(20 * i)
+		print(".")
+		if math.Abs(quant-expect) > errSpan {
+			print("e")
+			t.Errorf("expected %f; received %2.1f, exceeding allowable error of %2.3f [%d]", expect, quant, testErr, int(errSpan))
 		}
+	}
+}
+
+func BenchmarkSummaryStructure(b *testing.B) {
+	testSz := b.N
+	testErr := 0.001
+	s := NewSummaryStructure(uint64(testSz), testErr)
+
+	println(testSz)
+	if testSz < 1000 {
+		return
+	}
+
+	b.ResetTimer()
+	for i := 0; i < testSz; i++ {
+		s.Update(float64(i))
 	}
 }
