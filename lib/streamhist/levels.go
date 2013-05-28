@@ -11,7 +11,7 @@ import (
 
 // the multi-level summary structure described by the paper
 type SummaryStructure struct {
-	Width uint64
+	Width int
 	Err   float64
 	S     [][]elem
 
@@ -23,13 +23,17 @@ type SummaryStructure struct {
 type Histogram struct {
 	Err  float64
 	S    []elem
-	Rank uint64
+	Rank int
 }
 
 // elem roughly corresponds to a bin in a PDF summary
 type elem struct {
 	val        float64 // the height of the bin
-	rmin, rmax uint64  // roughly, the boundaries of the histogram bin
+	rmin, rmax int     // roughly, the boundaries of the histogram bin
+}
+
+func (e elem) String() string {
+	return fmt.Sprintf("e{%2.1f, [%d,%d]}", e.val, e.rmin, e.rmax)
 }
 
 type elemSorter struct {
@@ -52,28 +56,28 @@ func sortElem(e []elem) {
 
 // compute the size blocks we need to cover a fixed amount of data
 // with the given error
-func computeBlockSize(dataSize uint64, err float64) int {
+func computeBlockSize(dataSize int, err float64) int {
+	if float64(dataSize)*err < 1 {
+		return int(dataSize)
+	}
+
 	// \lfloor \log(err * dataSize) / err \rfloor
 	sz := int(math.Log2(err*float64(dataSize)) / err)
-	if sz < 1 {
-		return 1
-	} else {
-		return sz
-	}
+	return sz
 }
 
-func computeLevels(dataSize uint64, blockSize int) int {
+func computeLevels(dataSize int, blockSize int) int {
+	if float64(dataSize)/float64(blockSize) <= 1 {
+		return 1
+	}
+
 	levels := int(math.Ceil(math.Log2(float64(dataSize) / float64(blockSize))))
-	if levels < 1 {
-		return 1
-	} else {
-		return levels
-	}
+	return levels
 }
 
-func NewSummaryStructure(width uint64, err float64) *SummaryStructure {
+func NewSummaryStructure(width int, err float64) *SummaryStructure {
 	blockSize := computeBlockSize(width, err)
-	levelCount := computeLevels(width, blockSize)
+	levelCount := computeLevels(width, blockSize) + 1 // we incrememt by one to include s0
 
 	// each level_i in the summary
 	summarySplay := make([][]elem, levelCount)
@@ -85,35 +89,32 @@ func NewSummaryStructure(width uint64, err float64) *SummaryStructure {
 }
 
 func (s *SummaryStructure) Update(value float64) {
-	s0 := append(s.S[0], elem{value, 0, 0})
-	s.S[0] = s0
-
 	var sc []elem
 	if len(s.S[0]) == cap(s.S[0]) {
 		sortElem(s.S[0])
 
 		// we need to assign ranks now
 		for i, _ := range s.S[0] {
-			s.S[0][i].rmin = uint64(i + 1)
-			s.S[0][i].rmax = uint64(i + 1)
+			s.S[0][i].rmin = i + 1
+			s.S[0][i].rmax = i + 1
 		}
 
 		sc = compress(s.S[0], s.blockSize, s.Err)
 		empty(&s.S[0])
-	} else {
-		// no problems, just insert
-		return
-	}
 
-	for i := 1; i < s.levelCount; i++ {
-		if len(s.S[i]) == 0 {
-			s.S[i] = sc
-			break
-		} else {
-			sc = compress(merge(s.S[i], sc), s.blockSize, s.Err)
-			empty(&s.S[i])
+		for i := 1; i < s.levelCount; i++ {
+			if len(s.S[i]) == 0 {
+				s.S[i] = sc
+				break
+			} else {
+				sc = compress(merge(s.S[i], sc), s.blockSize, s.Err)
+				empty(&s.S[i])
+			}
 		}
 	}
+
+	s0 := append(s.S[0], elem{value, 0, 0})
+	s.S[0] = s0
 }
 
 // EMPTY() in the paper
@@ -126,25 +127,25 @@ func empty(e *[]elem) {
 // COMPRESS() in the paper; but instead of 1/b we use b directly;
 // note that the summary is assumed sorted
 func compress(data []elem, width int, err float64) []elem {
-	totalwidth := len(data)
+	totalwidth := data[len(data)-1].rmax
 	count := int(math.Ceil(float64(width)/2) + 1)
 	newdata := make([]elem, count)
 
 	i := 0
 	for i < count {
-		rank := uint64(i * (2 * totalwidth / width))
-		println("rank: ", rank)
+		rank := int(i * (2.0 * totalwidth / width))
 		if rank < 1 {
 			newdata[i] = quantile(data, 1, err)
 			i++
 			continue
 		}
-		if rank > uint64(totalwidth) {
-			newdata[i] = quantile(data, uint64(totalwidth), err)
+		if rank > totalwidth {
+			newdata[i] = quantile(data, totalwidth, err)
 			break
 		}
 
 		e := quantile(data, rank, err)
+
 		newdata[i] = e
 		i++
 	}
@@ -154,8 +155,7 @@ func compress(data []elem, width int, err float64) []elem {
 }
 
 // quantile() in the paper; give the elem for the given rank
-func quantile(data []elem, rank uint64, err float64) elem {
-	count := 0
+func quantile(data []elem, rank int, err float64) elem {
 	if len(data) == 0 {
 		return elem{}
 	}
@@ -164,34 +164,52 @@ func quantile(data []elem, rank uint64, err float64) elem {
 	lo := 0
 	hi := len(data)
 
-	rankErr := uint64(err * float64(len(data)))
+	rankErr := int(err * float64(len(data)))
 	rankLo := rank - rankErr
 	rankHi := rank + rankErr
-	if rankErr > rank {
-		rankLo = 1
-	}
 
-	// look around
+	bestElem := elem{}
+	bestDist := math.MaxInt64
+
+	// FIXME
+	// we can skip looking around completly because rank-width is
+	// fixed within a range
 	for {
 		cursor := lo + (hi-lo)/2
+		if lo == hi {
+			return bestElem
+		}
+
 		if cursor < 0 {
 			panic("negative cursor")
 		}
 		if cursor >= len(data) {
-			panic("out of bounds cursor: ")
+			panic("out of bounds cursor")
 		}
 
-		if data[cursor].rmin >= rankLo && data[cursor].rmax <= rankHi {
-			return data[cursor]
+		elem := data[cursor]
+		dist := rank - elem.rmin + (elem.rmax-elem.rmin)/2
+
+		if lo == len(data) {
+			panic("couldn't find entry")
 		}
 
-		if data[cursor].rmin < rankLo {
-			lo = cursor
-		} else if data[cursor].rmax > rankHi {
+		if dist > 0 {
+			lo = cursor + 1
+		} else if dist <= 0 {
 			hi = cursor
 		}
 
-		count++
+		if data[cursor].rmin >= rankLo && data[cursor].rmax <= rankHi {
+			if dist < 0 {
+				dist = -dist
+			}
+
+			if dist < bestDist {
+				bestElem = elem
+				bestDist = dist
+			}
+		}
 	}
 
 	panic("quantile() panic")
@@ -255,24 +273,20 @@ func (s *SummaryStructure) Histogram() *Histogram {
 	h.Err = s.Err
 	sortElem(s.S[0])
 	for i := range s.S[0] {
-		s.S[0][i].rmin = uint64(i)
-		s.S[0][i].rmax = uint64(i)
+		s.S[0][i].rmin = i + 1
+		s.S[0][i].rmax = i + 1
 	}
 
 	for _, summary := range s.S {
 		h.S = merge(h.S, summary)
-		println("M:", len(h.S))
-		for i, e := range summary {
-			fmt.Printf("  %d: %f [%d,%d]\n", i, e.val, e.rmin, e.rmax)
-		}
 	}
 
-	h.Rank = h.S[len(h.S)-1].rmax
+	h.Rank = h.S[len(h.S)-1].rmax + int(s.Err*float64(len(h.S)))
 	return &h
 }
 
 // extract a quantile from the histogram
-func (h *Histogram) Quantile(rank uint64) float64 {
+func (h *Histogram) Quantile(rank int) float64 {
 	if rank <= 0 || rank > h.Rank {
 		panic("given rank is out of range")
 	}
