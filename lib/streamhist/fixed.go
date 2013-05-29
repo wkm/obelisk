@@ -8,22 +8,24 @@ import (
 
 // FUTURE
 // - s0 does not need rank information
+// - quantile() is doing a binary search unnecessarily
 
-// the multi-level summary structure described by the paper
+// A multi-level summary structure of fixed length
 type SummaryStructure struct {
-	Width int
-	Err   float64
+	Width int     // the max width of the structure
+	Count int     // the number of elements in the structure
+	Err   float64 // the allowable error
 	S     [][]elem
 
 	blockSize  int // `b` in the paper
 	levelCount int // `L` in the paper
 }
 
-// a frozen summary structure
+// The queryable form of a summary structure
 type Histogram struct {
-	Err  float64
-	S    []elem
-	Rank int
+	Err  float64 // allowable error
+	S    []elem  // a summary sketch
+	Rank int     // the maximum rank encoded by the histogram
 }
 
 // elem roughly corresponds to a bin in a PDF summary
@@ -36,6 +38,8 @@ func (e elem) String() string {
 	return fmt.Sprintf("e{%2.1f, [%d,%d]}", e.val, e.rmin, e.rmax)
 }
 
+// a utility structure to sort a list of elements by their value
+// (irrespective of element rank)
 type elemSorter struct {
 	e []elem
 }
@@ -50,6 +54,7 @@ func (e *elemSorter) Less(i, j int) bool {
 	return e.e[i].val < e.e[j].val
 }
 
+// sort a slice of elements in place
 func sortElem(e []elem) {
 	sort.Sort(&elemSorter{e})
 }
@@ -57,7 +62,7 @@ func sortElem(e []elem) {
 // compute the size blocks we need to cover a fixed amount of data
 // with the given error
 func computeBlockSize(dataSize int, err float64) int {
-	if float64(dataSize)*err < 1 {
+	if float64(dataSize)*err <= 1 {
 		return int(dataSize)
 	}
 
@@ -66,6 +71,7 @@ func computeBlockSize(dataSize int, err float64) int {
 	return sz
 }
 
+// compute the number of levels needed
 func computeLevels(dataSize int, blockSize int) int {
 	if float64(dataSize)/float64(blockSize) <= 1 {
 		return 1
@@ -79,16 +85,21 @@ func NewSummaryStructure(width int, err float64) *SummaryStructure {
 	blockSize := computeBlockSize(width, err)
 	levelCount := computeLevels(width, blockSize) + 1 // we incrememt by one to include s0
 
+	println("width ", width, " err ", err)
+	println("blockSz ", blockSize, " levelCount", levelCount)
+
 	// each level_i in the summary
 	summarySplay := make([][]elem, levelCount)
 	for i := 0; i < levelCount; i++ {
 		summarySplay[i] = make([]elem, 0, blockSize)
 	}
 
-	return &SummaryStructure{width, err, summarySplay, blockSize, levelCount}
+	return &SummaryStructure{width, 0, err, summarySplay, blockSize, levelCount}
 }
 
 func (s *SummaryStructure) Update(value float64) {
+	s.Count++
+
 	var sc []elem
 	if len(s.S[0]) == cap(s.S[0]) {
 		sortElem(s.S[0])

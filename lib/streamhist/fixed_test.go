@@ -113,7 +113,7 @@ func TestCompress(t *testing.T) {
 	rankTest(t, c[10], 20, 20, 20)
 }
 
-// test a precise summary
+// test a summary where we end up storing every element
 func TestPreciseSummaryStructure(t *testing.T) {
 	testSz := 100
 	testErr := 0.001
