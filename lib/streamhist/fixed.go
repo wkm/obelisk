@@ -21,13 +21,6 @@ type SummaryStructure struct {
 	levelCount int // `L` in the paper
 }
 
-// The queryable form of a summary structure
-type Histogram struct {
-	Err  float64 // allowable error
-	S    []elem  // a summary sketch
-	Rank int     // the maximum rank encoded by the histogram
-}
-
 // elem roughly corresponds to a bin in a PDF summary
 type elem struct {
 	val        float64 // the height of the bin
@@ -85,8 +78,8 @@ func NewSummaryStructure(width int, err float64) *SummaryStructure {
 	blockSize := computeBlockSize(width, err)
 	levelCount := computeLevels(width, blockSize) + 1 // we incrememt by one to include s0
 
-	println("width ", width, " err ", err)
-	println("blockSz ", blockSize, " levelCount", levelCount)
+	// println("width ", width, " err ", err)
+	// println("blockSz ", blockSize, " levelCount", levelCount)
 
 	// each level_i in the summary
 	summarySplay := make([][]elem, levelCount)
@@ -97,6 +90,7 @@ func NewSummaryStructure(width int, err float64) *SummaryStructure {
 	return &SummaryStructure{width, 0, err, summarySplay, blockSize, levelCount}
 }
 
+// insert a new value into the sketch
 func (s *SummaryStructure) Update(value float64) {
 	s.Count++
 
@@ -142,40 +136,41 @@ func compress(data []elem, width int, err float64) []elem {
 	count := int(math.Ceil(float64(width)/2) + 1)
 	newdata := make([]elem, count)
 
+	// take every other element, with special attention to the first
+	// (min) and last (max) elements
 	i := 0
 	for i < count {
 		rank := int(i * (2.0 * totalwidth / width))
 		if rank < 1 {
-			newdata[i] = quantile(data, 1, err)
+			newdata[i] = fixedQuantile(data, 1, err)
 			i++
 			continue
 		}
 		if rank > totalwidth {
-			newdata[i] = quantile(data, totalwidth, err)
+			newdata[i] = fixedQuantile(data, totalwidth, err)
 			break
 		}
 
-		e := quantile(data, rank, err)
+		e := fixedQuantile(data, rank, err)
 
 		newdata[i] = e
 		i++
 	}
 
-	// a little ugly...
 	return newdata
 }
 
 // quantile() in the paper; give the elem for the given rank
 func quantile(data []elem, rank int, err float64) elem {
 	if len(data) == 0 {
-		return elem{}
+		panic("empty dataset has no quantile")
 	}
 
 	// pick where to start
 	lo := 0
 	hi := len(data)
 
-	rankErr := int(err * float64(len(data)))
+	rankErr := int(math.Ceil(err * float64(data[len(data)-1].rmax)))
 	rankLo := rank - rankErr
 	rankHi := rank + rankErr
 
@@ -184,12 +179,9 @@ func quantile(data []elem, rank int, err float64) elem {
 
 	// FIXME
 	// we can skip looking around completly because rank-width is
-	// fixed within a range
+	// fixed within a range (this is only true for fixed histograms)
 	for {
 		cursor := lo + (hi-lo)/2
-		if lo == hi {
-			return bestElem
-		}
 
 		if cursor < 0 {
 			panic("negative cursor")
@@ -201,7 +193,7 @@ func quantile(data []elem, rank int, err float64) elem {
 		elem := data[cursor]
 		dist := rank - elem.rmin + (elem.rmax-elem.rmin)/2
 
-		if lo == len(data) {
+		if lo == len(data) || hi == 0 {
 			panic("couldn't find entry")
 		}
 
@@ -221,12 +213,43 @@ func quantile(data []elem, rank int, err float64) elem {
 				bestDist = dist
 			}
 		}
+
+		if lo == hi {
+			// fmt.Printf("for %d, allowedErr=%d from [%d]: (del=%d) (elem=%s) %s\n", rank, rankErr, lo, bestDist, data[lo].String(), bestElem.String())
+			return bestElem
+		}
 	}
 
 	panic("quantile() panic")
 }
 
-// merge two summaries, compressing their
+// a faster quantile() when all elements are of fixed rank width
+func fixedQuantile(data []elem, rank int, err float64) elem {
+	if len(data) == 0 {
+		panic("empty dataset has no quantile")
+	}
+
+	rankWidth := data[0].rmax + 1 - data[0].rmin
+	cursor := (rank - data[0].rmin) / rankWidth
+
+	rankErr := int(math.Ceil(err * float64(data[len(data)-1].rmax)))
+	rankLo := rank - rankErr
+	rankHi := rank + rankErr
+
+	if data[cursor].rmin >= rankLo && data[cursor].rmax <= rankHi {
+		print(".")
+		return data[cursor]
+	} else {
+		fmt.Printf(" rank=%d width=%d cursor=%d lo=%d hi=%d -- fixedq: %s\n", rank, rankWidth, cursor, rankLo, rankHi, data[cursor].String())
+		for _, e := range data {
+			fmt.Printf("  %s\n", e.String())
+		}
+	}
+
+	panic(fmt.Sprintf("couldn't find %d quantile within dataset", rank))
+}
+
+// merge two sorted summaries together, adjusting ranks
 func merge(left, right []elem) []elem {
 	result := make([]elem, len(left)+len(right))
 	var lastLeft, lastRight elem
@@ -269,10 +292,10 @@ func merge(left, right []elem) []elem {
 			k++
 		}
 
-		// if applicable, adjust the previous element
-		// if i+k > 2 {
-		// 	result[i+k-2].rmax = result[i+k-1].rmax - 1
-		// }
+		// adjust the preceeding element's max to reach to this element
+		if i+k > 0 {
+			result[i+k-1].rmax = result[i+k].rmin - 1
+		}
 	}
 
 	return result
@@ -294,13 +317,4 @@ func (s *SummaryStructure) Histogram() *Histogram {
 
 	h.Rank = h.S[len(h.S)-1].rmax + int(s.Err*float64(len(h.S)))
 	return &h
-}
-
-// extract a quantile from the histogram
-func (h *Histogram) Quantile(rank int) float64 {
-	if rank <= 0 || rank > h.Rank {
-		panic("given rank is out of range")
-	}
-
-	return quantile(h.S, rank, h.Err).val
 }

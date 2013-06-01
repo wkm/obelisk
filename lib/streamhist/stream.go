@@ -12,11 +12,7 @@ type StreamSummaryStructure struct {
 func NewStreamSummaryStructure(err float64) *StreamSummaryStructure {
 	s := StreamSummaryStructure{}
 	s.Err = err
-	s.baseSize = 1000
-
-	// silly to have a summary smaller than 1000
-	// a capacity of 20 gives us space for 1000*2^20 = 1 billion
-	// before having to rescale on array
+	s.baseSize = 10
 	s.summaries = make([]*[]elem, 0, 20)
 	s.head = NewSummaryStructure(s.baseSize, err)
 	return &s
@@ -27,7 +23,7 @@ func (s *StreamSummaryStructure) Update(v float64) {
 
 	// if the head is now full
 	if s.head.Count == s.head.Width {
-		println("stream compress")
+		// println("stream compress")
 		summary := compress(s.head.Histogram().S, s.head.Width, s.head.Err/2)
 		s.summaries = append(s.summaries, &summary)
 
@@ -45,10 +41,17 @@ func (s *StreamSummaryStructure) Histogram() *Histogram {
 
 	h := Histogram{}
 	h.S = summary
-	h.Rank = summary[len(summary)-1].rmax + int(s.Err*float64(len(summary)))
+	maxrank := summary[len(summary)-1].rmax
+	println("initial maxrank = ", maxrank)
+	h.Rank = maxrank + int(s.Err*float64(maxrank))
+	println("  with error = ", maxrank)
 	h.Err = s.Err
 
-	println("Histogram has max rank ", h.Rank, " and ", len(h.S), " datapoints")
+	println("Histogram has max rank", h.Rank, "and", len(h.S), "datapoints")
+
+	// for _, p := range h.S {
+	// 	println("  ", p.String())
+	// }
 
 	return &h
 }
