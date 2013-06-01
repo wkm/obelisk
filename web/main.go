@@ -8,6 +8,7 @@ import (
 	"net/http"
 	"obelisk/lib/rlog"
 	"obelisk/server"
+	"obelisk/server/util"
 	"runtime"
 )
 
@@ -18,33 +19,7 @@ func main() {
 	log.Printf("setting maxprocs to %d", runtime.NumCPU())
 	runtime.GOMAXPROCS(runtime.NumCPU())
 
-	nodes, err := anchorfs.OpenDir("/obelisk-server")
-	if err != nil {
-		log.Printf("could not find /obelisk-server %s", err.Error())
-		return
-	}
-	_, workers, err := nodes.Files()
-	if err != nil {
-		log.Printf("could not list workers %s", err.Error())
-		return
-	}
-	if len(workers) < 1 {
-		log.Printf("could not find an obelisk-server worker")
-		return
-	}
-
-	log.Printf("found obelisk-server workers: %#v", workers)
-	for id, file := range workers {
-		xServer, err = circuit.TryDial(file.Owner(), server.ServiceName)
-		if err != nil {
-			log.Printf("  error dialing %v:%v with %s", id, file, err.Error())
-		} else {
-			// only need one connection
-			break
-		}
-	}
-
-	log.Printf("connected to %v", xServer)
+	xServer, err = util.DiscoverObeliskServer()
 	hosts, err := ChildrenTags("host")
 	if err != nil {
 		log.Printf("could not retrieve list of hosts %s", err.Error())
