@@ -6,9 +6,9 @@ const (
 	TypeIntValue = iota
 	TypeBoolValue
 	TypeFloatValue
-	TypeDateValue
-	TypeCounter // a monotonic counter
-
+	TypeDateValue // an int representing a date value
+	TypeCounter   // a monotonic counter
+	TypeAllocation
 )
 
 type SchemaBuffer chan Schema
