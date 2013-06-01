@@ -29,11 +29,3 @@ func (WorkerApp) Main() {
 func init() {
 	circuit.RegisterFunc(WorkerApp{})
 }
-
-func (WorkerInterface) CurrentSystemStatus() (SystemStatus, error) {
-	return CurrentSystemStatus()
-}
-
-func (WorkerInterface) CurrentProcessStatus() ([]ProcessStatus, error) {
-	return CurrentProcessStatus()
-}
