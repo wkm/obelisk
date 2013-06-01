@@ -31,8 +31,7 @@ A simple service
 ## Code Organization
 * `/web` a web interface to obelisk
 * `/obelisk-cli` a command line utility for 
-* `/obelisk-agent` a small worker which is intended to run on every host; provides
-  system level monitoring (memory usage, network traffic, disk space, etc.)
+* `/obelisk-agent` a small worker which is intended to run on every host; provides system level monitoring (memory usage, network traffic, disk space, etc.)
 * `/server` -- the obelisk server
 * `/cmd` -- obelisk utilities
     * `logs`: utility for remotely reading logs from workers

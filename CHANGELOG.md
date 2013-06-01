@@ -8,8 +8,6 @@ TODO * instrument collection description
 Components:
 	runtime: golang runtime
 
-
-
 ### 0.0.1 / 2013-05-16
 * initial public release; a rough sketch of the concept
 * gocircuit worker discovery through zookeeper
