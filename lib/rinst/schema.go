@@ -9,6 +9,8 @@ const (
 	TypeDateValue // an int representing a date value
 	TypeCounter   // a monotonic counter
 	TypeAllocation
+
+	TypeFloatStream
 )
 
 type SchemaBuffer chan Schema
