@@ -2,12 +2,9 @@ package main
 
 import (
 	_ "circuit/load/cmd"
-	"circuit/use/anchorfs"
-	"circuit/use/circuit"
 	"fmt"
 	"net/http"
 	"obelisk/lib/rlog"
-	"obelisk/server"
 	"obelisk/server/util"
 	"runtime"
 )

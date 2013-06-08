@@ -236,11 +236,12 @@ func fixedQuantile(data []elem, rank int, err float64) elem {
 	rankLo := rank - rankErr
 	rankHi := rank + rankErr
 
+	fmt.Printf(" rank=%d width=%d cursor=%d lo=%d hi=%d -- fixedq: %s\n", rank, rankWidth, cursor, rankLo, rankHi, data[cursor].String())
 	if data[cursor].rmin >= rankLo && data[cursor].rmax <= rankHi {
-		print(".")
+		fmt.Printf("hit\n")
 		return data[cursor]
 	} else {
-		fmt.Printf(" rank=%d width=%d cursor=%d lo=%d hi=%d -- fixedq: %s\n", rank, rankWidth, cursor, rankLo, rankHi, data[cursor].String())
+		fmt.Printf("miss; data:\n")
 		for _, e := range data {
 			fmt.Printf("  %s\n", e.String())
 		}
@@ -293,8 +294,9 @@ func merge(left, right []elem) []elem {
 		}
 
 		// adjust the preceeding element's max to reach to this element
-		if i+k > 0 {
-			result[i+k-1].rmax = result[i+k].rmin - 1
+		if i+k > 1 {
+			fmt.Printf("adjusting %s to preceed %s\n", result[i+k-2], result[i+k-1])
+			result[i+k-2].rmax = result[i+k-1].rmin - 1
 		}
 	}
 
