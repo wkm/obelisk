@@ -23,7 +23,6 @@ func (s *StreamSummaryStructure) Update(v float64) {
 
 	// if the head is now full
 	if s.head.Count == s.head.Width {
-		// println("stream compress")
 		summary := compress(s.head.Histogram().S, s.head.Width, s.head.Err/2)
 		s.summaries = append(s.summaries, &summary)
 
@@ -48,10 +47,6 @@ func (s *StreamSummaryStructure) Histogram() *Histogram {
 	h.Err = s.Err
 
 	println("Histogram has max rank", h.Rank, "and", len(h.S), "datapoints")
-
-	// for _, p := range h.S {
-	// 	println("  ", p.String())
-	// }
 
 	return &h
 }

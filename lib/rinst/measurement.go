@@ -2,7 +2,7 @@ package rinst
 
 type MeasurementBuffer chan Measurement
 
-// represents a single value measured by an instrument
+// A single value measured by an instrument
 type Measurement struct {
 	Name  string
 	Time  uint64

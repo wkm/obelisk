@@ -178,9 +178,7 @@ func BenchmarkSummaryStructure(b *testing.B) {
 	testErr := 0.001
 	s := NewSummaryStructure(testSz, testErr)
 
-	if testSz < 1000 {
-		return
-	}
+	println("Size: ", b.N)
 
 	b.ResetTimer()
 	for i := 0; i < testSz; i++ {

@@ -17,8 +17,8 @@ type SchemaBuffer chan Schema
 
 // a schema describes a particular kind of measurement
 type Schema struct {
-	Name        string     // the name of an instrument
-	Type        SchemaType // the kind of instrument
-	Unit        string     // a description of the unit
-	Description string     // a human readable description
+	Name        string     // name of instrument
+	Type        SchemaType // kind of instrument
+	Unit        string     // description of the unit
+	Description string     // human readable description
 }

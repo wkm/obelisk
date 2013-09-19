@@ -28,7 +28,7 @@ type elem struct {
 }
 
 func (e elem) String() string {
-	return fmt.Sprintf("e{%2.1f, [%d,%d]}", e.val, e.rmin, e.rmax)
+	return fmt.Sprintf("e{rank=[%d, %d], val=%2.1f}", e.rmin, e.rmax, e.val)
 }
 
 // a utility structure to sort a list of elements by their value
@@ -177,9 +177,6 @@ func quantile(data []elem, rank int, err float64) elem {
 	bestElem := elem{}
 	bestDist := math.MaxInt64
 
-	// FIXME
-	// we can skip looking around completly because rank-width is
-	// fixed within a range (this is only true for fixed histograms)
 	for {
 		cursor := lo + (hi-lo)/2
 
@@ -229,21 +226,29 @@ func fixedQuantile(data []elem, rank int, err float64) elem {
 		panic("empty dataset has no quantile")
 	}
 
-	rankWidth := data[0].rmax + 1 - data[0].rmin
-	cursor := (rank - data[0].rmin) / rankWidth
+	// fmt.Printf("-- fixed quantile --\n")
+
+	rankWidth := data[len(data)-1].rmax + 1 - data[len(data)-1].rmin
+	cursor := rank/rankWidth - 1
 
 	rankErr := int(math.Ceil(err * float64(data[len(data)-1].rmax)))
 	rankLo := rank - rankErr
 	rankHi := rank + rankErr
 
-	fmt.Printf(" rank=%d width=%d cursor=%d lo=%d hi=%d -- fixedq: %s\n", rank, rankWidth, cursor, rankLo, rankHi, data[cursor].String())
-	if data[cursor].rmin >= rankLo && data[cursor].rmax <= rankHi {
-		fmt.Printf("hit\n")
-		return data[cursor]
-	} else {
-		fmt.Printf("miss; data:\n")
-		for _, e := range data {
-			fmt.Printf("  %s\n", e.String())
+	if cursor >= len(data) {
+		cursor = len(data) - 1
+	}
+
+	for {
+		if data[cursor].rmin >= rankLo && data[cursor].rmax <= rankHi {
+			return data[cursor]
+		} else {
+			// need to look at the next slot
+			if data[cursor].rmin < rankLo {
+				cursor++
+			} else {
+				cursor--
+			}
 		}
 	}
 
@@ -295,7 +300,7 @@ func merge(left, right []elem) []elem {
 
 		// adjust the preceeding element's max to reach to this element
 		if i+k > 1 {
-			fmt.Printf("adjusting %s to preceed %s\n", result[i+k-2], result[i+k-1])
+			// fmt.Printf("adjusting %s to preceed %s\n", result[i+k-2], result[i+k-1])
 			result[i+k-2].rmax = result[i+k-1].rmin - 1
 		}
 	}

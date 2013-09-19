@@ -1,3 +1,6 @@
+/*
+ * Utility package for encoding errors
+ */
 package errors
 
 import (
