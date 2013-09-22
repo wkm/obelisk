@@ -75,6 +75,7 @@ func computeLevels(dataSize int, blockSize int) int {
 }
 
 func NewSummaryStructure(width int, err float64) *SummaryStructure {
+	fmt.Printf("Creating sumary of width %d and err %f\n", width, err)
 	blockSize := computeBlockSize(width, err)
 	levelCount := computeLevels(width, blockSize) + 1 // we incrememt by one to include s0
 
@@ -141,11 +142,13 @@ func compress(data []elem, width int, err float64) []elem {
 	i := 0
 	for i < count {
 		rank := int(i * (2.0 * totalwidth / width))
+
 		if rank < 1 {
 			newdata[i] = fixedQuantile(data, 1, err)
 			i++
 			continue
 		}
+
 		if rank > totalwidth {
 			newdata[i] = fixedQuantile(data, totalwidth, err)
 			break

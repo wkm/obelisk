@@ -7,11 +7,9 @@
 // Comment out this import if you are customizing you imports below
 @import "foundation";
 
-@import url("http://fonts.googleapis.com/css?family=Roboto:400,100,500,700,900,300");
-
 body,html { 
 	background: $body-bg;
-	background-image: url("/assets/noise-200-200-1-monochrome.png");
+	/*background-image: url("/assets/noise-200-200-1-monochrome.png");*/
 	-webkit-font-smoothing: antialiased;
 	padding-bottom: 5em;
 }

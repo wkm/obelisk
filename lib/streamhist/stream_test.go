@@ -6,7 +6,6 @@ import (
 )
 
 func TestStreamSummary(t *testing.T) {
-	return
 	testSz := 1000
 	testErr := 0.001
 

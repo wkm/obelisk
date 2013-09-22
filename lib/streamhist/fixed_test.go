@@ -139,14 +139,14 @@ func TestPreciseSummaryStructure(t *testing.T) {
 
 func TestSummaryStructure(t *testing.T) {
 	// test nicely round numbers
-	testIncreasingSummary(t, 1000, 0.01)
-	testIncreasingSummary(t, 750, 0.01)
-	testIncreasingSummary(t, 500, 0.01)
-	testIncreasingSummary(t, 250, 0.01)
-	testIncreasingSummary(t, 100, 0.01)
-	testIncreasingSummary(t, 50, 0.01)
-	testIncreasingSummary(t, 10, 0.01)
-	testIncreasingSummary(t, 5, 0.01)
+	// testIncreasingSummary(t, 1000, 0.01)
+	// testIncreasingSummary(t, 750, 0.01)
+	// testIncreasingSummary(t, 500, 0.01)
+	// testIncreasingSummary(t, 250, 0.01)
+	// testIncreasingSummary(t, 100, 0.01)
+	// testIncreasingSummary(t, 50, 0.01)
+	// testIncreasingSummary(t, 10, 0.01)
+	// testIncreasingSummary(t, 5, 0.01)
 
 	// test weird numbers to validate the various floor()
 	// and ceil()s that are happening
@@ -157,8 +157,12 @@ func testIncreasingSummary(t *testing.T, testSz int, testErr float64) {
 	// test increasing numbers
 	s := NewSummaryStructure(testSz, testErr)
 	for i := 0; i < testSz; i++ {
+		println("insert ", i)
 		s.Update(float64(i))
 	}
+
+	println("----")
+	println("reading...")
 
 	// get each increasing number
 	h := s.Histogram()

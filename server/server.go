@@ -14,9 +14,9 @@ import (
 )
 
 type ServerApp struct {
-	timedb *storetime.DB
-	tagdb  *storetag.DB
-	kvdb   *storekv.DB
+	timedb *storetime.DB // time series database
+	tagdb  *storetag.DB  // hierarchy database
+	kvdb   *storekv.DB   // key-value database
 }
 
 const ObeliskDirectory = "/var/run/obelisk"
@@ -94,6 +94,7 @@ func (app *ServerApp) ChildrenTags(node string) ([]string, error) {
 	return app.tagdb.Store.Children(node)
 }
 
+// query a time series between start and stop
 func (app *ServerApp) QueryTime(node string, start, stop uint64) ([]storetime.Point, error) {
 	id, err := app.tagdb.Store.Id(node)
 	if err != nil {

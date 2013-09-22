@@ -4,7 +4,7 @@ import (
 	"fmt"
 )
 
-// Frozen, queryable form of a summary structure
+// Frozen, queryable summary structure
 type Histogram struct {
 	Err  float64 // allowed error
 	S    []elem  // a summary sketch

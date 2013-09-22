@@ -1,8 +1,8 @@
 package agent
 
 import (
-	_ "circuit/load/cmd"
 	"circuit/use/circuit"
+	"fmt"
 	"obelisk/lib/rlog"
 	"obelisk/server/util"
 )
@@ -14,14 +14,33 @@ const ServiceName = "obelisk-agent"
 type start struct{}
 
 func init() {
+	println("registering...")
 	circuit.RegisterFunc(start{})
+	println("registered")
 }
 
 func (start) Start() {
-	xServer, err := util.DiscoverObeliskServer()
+	_, err := util.DiscoverObeliskServer()
+	if err != nil {
+		log.Printf("Error discovering obelisk server: %s", err)
+		return
+	}
 	periodic()
 }
 
 func periodic() {
-	// fixme
+	// FIXME should report to server stats
+	fmt.Printf("obelisk/agent ping")
+}
+
+// spawn an agent
+func Spawn() (circuit.Addr, error) {
+	_, addr, err := circuit.Spawn(
+		"localhost",
+		[]string{"/obelisk-agent"},
+		start{},
+	)
+
+	log.Printf("spawned at %v %v", addr, err)
+	return addr, err
 }

@@ -10,15 +10,10 @@ import (
 // spawn an obelisk agent worker on the local machine
 func main() {
 	log.Printf("Starting obelisk-agent")
-
-	_, addr, err := circuit.Spawn(
-		"localhost",
-		[]string{"/obelisk-agent"},
-		agent.WorkerApp{},
-	)
+	addr, err := agent.Spawn()
 	if err != nil {
 		log.Fatalf(err.Error())
 	}
-
-	log.Printf("obelisk-agent started %s", addr.String())
+	log.Printf("obelisk-agent started %s %s", addr.String(), err)
+	circuit.Hang()
 }

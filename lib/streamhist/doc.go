@@ -1,5 +1,5 @@
 /*
-	A library for computing approximate percentiles from streaming data.
+	A library for computing approxiate biased percentiles from streaming data.
 	Based on the algorithms presented in A Fast Algorithm for Approximate
 	Quantiles in High Speed Data Streams, Q. Zhang, et.al (2007) and
 	Space-Efficient Online Computation of Quantile Summaries, M. Greenwald, et.al

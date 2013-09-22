@@ -1,5 +1,9 @@
 package streamhist
 
+import (
+	"fmt"
+)
+
 type StreamSummaryStructure struct {
 	Err   float64
 	Count int
@@ -32,10 +36,11 @@ func (s *StreamSummaryStructure) Update(v float64) {
 
 func (s *StreamSummaryStructure) Histogram() *Histogram {
 	summary := compress(s.head.Histogram().S, s.head.Width, s.head.Err/2)
+	fmt.Printf("merging all sketches")
 	for _, sum := range s.summaries {
-		println("merging: ", len(*sum), (*sum)[0].String(), (*sum)[len(*sum)-1].String())
+		fmt.Printf("   len=%d start=%s end=%s", len(*sum), (*sum)[0].String(), (*sum)[len(*sum)-1].String())
 		summary = merge(summary, *sum)
-		println("  -- ", len(summary))
+		fmt.Printf("   --> summary has length %d\n", len(summary))
 	}
 
 	h := Histogram{}

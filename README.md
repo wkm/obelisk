@@ -11,18 +11,15 @@ Obelisk is divided into the following component services:
 The store service 
 
 ### `obelisk-web`
-The web service is (mostly) stateless and can be horizontally scaled to run on
-as many machines as desired.
+The web service is (mostly) stateless and can be horizontally scaled to run on as many machines as desired.
 
-### `obelisk-proxy`
-The proxy service is a simple (but sufficient) HTTP proxy to the `obelisk-web`
-and `obelisk-aggregator` services.
+### `obelisk-proxy` (future)
+The proxy service is a simple (but sufficient) HTTP proxy to the `obelisk-web` and `obelisk-aggregator` services.
 
 ### `obelisk-aggregator` (future)
 The aggregator service acts as a front end for receiving and aggregating metrics
 
 ### `obelisk-broadcast` (future)
-A simple service 
 
 
 

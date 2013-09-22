@@ -30,9 +30,10 @@ $em-base: 16px !default;
 
 // $default-float: left;
 
-$body-bg: #f2efee;
+/*$body-bg: #f2efee;*/
+$body-bg: #fff;
 $body-font-color: #33323e;
-$body-font-family: "Roboto", "Helvetica Neue", "Helvetica", Helvetica, Arial, sans-serif;
+$body-font-family: "Helvetica Neue", "Helvetica", Helvetica, Arial, sans-serif;
 $body-font-weight: normal;
 $body-font-style: normal;
 
@@ -149,7 +150,7 @@ $header-font-color: $body-font-color;
 // Subheaders
 
 // $subheader-line-height: 1.4;
-// $subheader-font-color: lighten($header-font-color, 30%);
+$subheader-font-color: lighten($header-font-color, 20%);
 // $subheader-font-weight: 300;
 // $subheader-top-margin: .2em;
 // $subheader-bottom-margin: .5em;
@@ -157,7 +158,7 @@ $header-font-color: $body-font-color;
 // <small> styling
 
 // $small-font-size: 60%;
-// $small-font-color: lighten($header-font-color, 30%);
+$small-font-color: lighten($header-font-color, 20%);
 
 // Paragraphs
 
