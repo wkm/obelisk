@@ -2,9 +2,10 @@ package agent
 
 import (
 	"circuit/use/circuit"
-	"fmt"
+	"obelisk/lib/rinst"
 	"obelisk/lib/rlog"
 	"obelisk/server/util"
+	"time"
 )
 
 var log = rlog.LogConfig.Logger("obelisk-agent")
@@ -14,23 +15,34 @@ const ServiceName = "obelisk-agent"
 type start struct{}
 
 func init() {
-	println("registering...")
 	circuit.RegisterFunc(start{})
-	println("registered")
 }
 
 func (start) Start() {
-	_, err := util.DiscoverObeliskServer()
+	xServer, err := util.DiscoverObeliskServer()
 	if err != nil {
 		log.Printf("Error discovering obelisk server: %s", err)
 		return
 	}
-	periodic()
+
+	log.Printf("registering agent")
+	xServer.Call("RegisterWorker", circuit.WorkerAddr())
+
+	log.Printf("flushing agent schema")
+	schema := rinst.FlushSchema(&StatsGauge, 10) // FIXME magic number
+	xServer.Call("DeclareSchemaBuffered", circuit.WorkerAddr().WorkerID().String(), schema)
+
+	log.Printf("starting periodic")
+	circuit.RunInBack(func() { periodic(xServer) })
 }
 
-func periodic() {
-	// FIXME should report to server stats
-	fmt.Printf("obelisk/agent ping")
+func periodic(x circuit.X) {
+	ticker := time.Tick(1 * time.Second)
+	for {
+		<-ticker
+		measurements := rinst.FlushMeasurements(&StatsGauge, 10) // FIXME magic number
+		x.Call("ReceiveStatsBuffered", circuit.WorkerAddr().WorkerID().String(), measurements)
+	}
 }
 
 // spawn an agent
@@ -41,6 +53,6 @@ func Spawn() (circuit.Addr, error) {
 		start{},
 	)
 
-	log.Printf("spawned at %v %v", addr, err)
+	log.Printf("spawned at %v [err=%v]", addr, err)
 	return addr, err
 }

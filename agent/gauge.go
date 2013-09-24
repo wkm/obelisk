@@ -10,7 +10,7 @@ import (
 func fstr(f float64) string { return fmt.Sprintf("%f", f) }
 func istr(i uint64) string  { return fmt.Sprintf("%d", i) }
 
-var statsGauge = rinst.GaugeValue{
+var StatsGauge = rinst.GaugeValue{
 	// measure function
 	func(n string, b rinst.MeasurementBuffer) {
 		uptime := sigar.Uptime{}

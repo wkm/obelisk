@@ -7,6 +7,12 @@ and especially Go programs which run on GoCircuit.
 ## Service Organization
 Obelisk is divided into the following component services:
 
+### `obelisk-server`
+The data and query server for Obelisk.
+
+### `obelisk-agent`
+A minor utility that collects data from 
+
 ### `obelisk-store`
 The store service 
 
