@@ -15,5 +15,4 @@ func main() {
 		log.Fatalf(err.Error())
 	}
 	log.Printf("obelisk-agent started %s %s", addr.String(), err)
-	circuit.Hang()
 }
