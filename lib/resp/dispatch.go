@@ -77,14 +77,17 @@ func (d *dispatch) Call(line string) (res string, err error) {
 
 	// Methods which return null
 	if len(outs) == 0 {
-		writeOk(&bb)
+		_, err = writeOk(&bb)
 		res = bb.String()
 		return
 	}
 
 	for i := range outs {
 		o := outs[i]
-		write(&bb, method.Type.Out(i).Kind(), o)
+		_, err = write(&bb, method.Type.Out(i).Kind(), o)
+		if err != nil {
+			return
+		}
 	}
 
 	res = bb.String()

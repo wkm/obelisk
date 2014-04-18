@@ -13,11 +13,11 @@ func TestWrites(t *testing.T) {
 		val  interface{}
 		out  string
 	}{
-		{reflect.Int, 45, ":45\n\r"},
+		{reflect.Int, 45, ":45\r\n"},
 		{reflect.Int, nil, "$-1\r\n"},
 
-		{reflect.String, "", "$0\n\r\n\r"},
-		{reflect.String, "oh hai", "$6\n\roh hai\n\r"},
+		{reflect.String, "", "$0\r\n\r\n"},
+		{reflect.String, "oh hai", "$6\r\noh hai\r\n"},
 	}
 
 	for _, tc := range testcases {

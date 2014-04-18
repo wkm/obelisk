@@ -18,13 +18,23 @@ func write(w io.Writer, kind reflect.Kind, val reflect.Value) (nn int, err error
 
 	case reflect.String:
 		return writeBulkString(w, val)
+
+	case reflect.Interface:
+		errorMeth := val.MethodByName("Error")
+		if errorMeth.Type().NumIn() == 0 && errorMeth.Type().NumOut() == 1 {
+			out := errorMeth.Call([]reflect.Value{})
+			return writeError(w, &out[0])
+		}
+
+	case reflect.Slice, reflect.Array:
+		return writeArray(w, val)
 	}
 
 	return 0, errors.New(fmt.Sprintf("Unsupported kind %q", val.Kind()))
 }
 
 func writeInt(w io.Writer, val reflect.Value) (nn int, err error) {
-	return fmt.Fprintf(w, ":%d\n\r", val.Int())
+	return fmt.Fprintf(w, ":%d\r\n", val.Int())
 }
 
 func writeOk(w io.Writer) (nn int, err error) {
@@ -32,7 +42,7 @@ func writeOk(w io.Writer) (nn int, err error) {
 }
 
 func writeSimpleString(w io.Writer, val reflect.Value) (nn int, err error) {
-	return fmt.Fprintf(w, "+%s\n\r", val.String())
+	return fmt.Fprintf(w, "+%s\r\n", val.String())
 }
 
 func writeNil(w io.Writer) (nn int, err error) {
@@ -41,7 +51,7 @@ func writeNil(w io.Writer) (nn int, err error) {
 
 func writeBulkString(w io.Writer, val reflect.Value) (nn int, err error) {
 	str := val.String()
-	return fmt.Fprintf(w, "$%d\n\r%s\n\r", len(str), str)
+	return fmt.Fprintf(w, "$%d\r\n%s\r\n", len(str), str)
 }
 
 func writeArray(w io.Writer, val reflect.Value) (nn int, err error) {
@@ -52,7 +62,7 @@ func writeArray(w io.Writer, val reflect.Value) (nn int, err error) {
 
 	for i := 0; i < val.Len(); i++ {
 		i := val.Index(i)
-		cnn, err := write(w, val.Kind(), i)
+		cnn, err := write(w, i.Kind(), i)
 		nn += cnn
 		if err != nil {
 			return nn, err
@@ -63,5 +73,5 @@ func writeArray(w io.Writer, val reflect.Value) (nn int, err error) {
 }
 
 func writeError(w io.Writer, val *reflect.Value) (nn int, err error) {
-	return fmt.Fprintf(w, "-%s\n\r", val.String())
+	return fmt.Fprintf(w, "-%s\r\n", val.String())
 }
