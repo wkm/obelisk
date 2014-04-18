@@ -2,42 +2,31 @@ package resp
 
 import (
 	"bytes"
+	"github.com/bmizerany/assert"
 	"reflect"
 	"testing"
 )
 
-func TestWriteInt(t *testing.T) {
-	var bb bytes.Buffer
-	val := reflect.ValueOf(45)
+func TestWrites(t *testing.T) {
+	testcases := []struct {
+		kind reflect.Kind
+		val  interface{}
+		out  string
+	}{
+		{reflect.Int, 45, ":45\n\r"},
+		{reflect.Int, nil, "$-1\r\n"},
 
-	nn, err := writeInt(&bb, &val)
-	if err != nil {
-		t.Errorf("error: %s", err.Error())
+		{reflect.String, "", "$0\n\r\n\r"},
+		{reflect.String, "oh hai", "$6\n\roh hai\n\r"},
 	}
 
-	if bb.String() != ":45\n\r" {
-		t.Errorf("wrong string %s", bb.String())
-	}
+	for _, tc := range testcases {
+		t.Logf("testcase:%q", tc)
+		var bb bytes.Buffer
 
-	if nn != 5 {
-		t.Errorf("wrong length written: %v", nn)
-	}
-}
-
-func TestWriteString(t *testing.T) {
-	var bb bytes.Buffer
-	val := reflect.ValueOf("oh hai")
-
-	nn, err := writeString(&bb, &val)
-	if err != nil {
-		t.Errorf("error: %s", err.Error())
-	}
-
-	if bb.String() != "+oh hai\n\r" {
-		t.Errorf("wrong string %s", bb.String())
-	}
-
-	if nn != 9 {
-		t.Errorf("wrong length written: %v", nn)
+		val := reflect.ValueOf(tc.val)
+		_, err := write(&bb, tc.kind, val)
+		assert.Equal(t, nil, err)
+		assert.Equal(t, tc.out, bb.String())
 	}
 }

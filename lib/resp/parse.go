@@ -2,6 +2,7 @@ package resp
 
 import (
 	"errors"
+	"fmt"
 	"reflect"
 	"strconv"
 )
@@ -12,8 +13,14 @@ func parse(t reflect.Kind, line string) (remaining string, value reflect.Value, 
 	case reflect.Int:
 		return parseInt(line)
 
+	case reflect.Float64:
+		return parseFloat(line)
+
+	case reflect.String:
+		return parseString(line)
+
 	default:
-		err = errors.New("unsupported kind")
+		err = errors.New(fmt.Sprintf("unsupported kind: %v", t))
 		return
 	}
 }
@@ -69,5 +76,16 @@ func parseFloat(line string) (rem string, val reflect.Value, err error) {
 	}
 
 	val = reflect.ValueOf(floatval)
+	return
+}
+
+func parseString(line string) (rem string, val reflect.Value, err error) {
+	var tok string
+	tok, rem, err = nextToken(line)
+	if err != nil {
+		return
+	}
+
+	val = reflect.ValueOf(tok)
 	return
 }
