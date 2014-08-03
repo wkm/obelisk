@@ -34,7 +34,7 @@ func (kv *keyval) Err() error {
 	return errors.New("Testing error")
 }
 
-func TestDispatch(t *testing.T) {
+func TestStringDispatch(t *testing.T) {
 	k := newKeyval()
 	d, err := newDispatch(k)
 	if err != nil {

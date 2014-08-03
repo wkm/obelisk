@@ -7,7 +7,7 @@ import (
 )
 
 func TestDB(t *testing.T) {
-	c := NewConfig()
+	c := Config{}
 	c.DiskStore = filepath.Join(os.TempDir(), "obelisk-storekv")
 	defer os.RemoveAll(c.DiskStore)
 
@@ -17,11 +17,17 @@ func TestDB(t *testing.T) {
 	}
 
 	// shove some data in
-	db.Store.Set("a", []byte("1"))
-	db.Store.Set("a", []byte("1.1"))
-	db.Store.Set("b", []byte("3"))
+	db.Set("a", []byte("1"))
+	db.Set("a", []byte("1.1"))
+	db.Set("b", []byte("3"))
 
-	db.Flush()
+	// test a value
+	bb, err := db.Get("a")
+	if string(bb) != "1.1" {
+		t.Errorf("Expected %s, got %s", "1", bb)
+	}
+
+	// Test for locking
 	db2, err := NewDB(c)
 	if err == nil {
 		t.Error("second DB created")
@@ -34,7 +40,7 @@ func TestDB(t *testing.T) {
 		t.Fatal(err.Error())
 	}
 
-	actual, err := db.Store.Get("a")
+	actual, err := db2.Get("a")
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -43,7 +49,7 @@ func TestDB(t *testing.T) {
 		t.Errorf("expected 1.1, got %v", actual)
 	}
 
-	actual, err = db.Store.Get("b")
+	actual, err = db2.Get("b")
 	if err != nil {
 		t.Fatal(err)
 	}

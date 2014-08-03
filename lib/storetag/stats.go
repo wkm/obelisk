@@ -11,9 +11,4 @@ var (
 	statNew      = Stats.Counter("new", "op", "new commands received")
 	statChildren = Stats.Counter("children", "op", "children commands received")
 	statDelete   = Stats.Counter("delete", "op", "delete commands received")
-
-	statLoad    = Stats.Counter("load", "op", "load commands received")
-	statDump    = Stats.Counter("dump", "op", "dump commands received")
-	statFlush   = Stats.Counter("flush", "op", "flush commands received")
-	statCleanup = Stats.Counter("cleanup", "op", "cleanup commands received")
 )

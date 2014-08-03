@@ -1,166 +1,130 @@
-/*
-	dead simple in-memory store for tags
-
-	tags are used to encode hierarchies, ensuring that every
-	node has a unique, persistent ID
-*/
-
 package storetag
 
 import (
-	"obelisk/lib/errors"
-	"obelisk/lib/rlog"
+	"encoding/binary"
+	"github.com/jmhodges/levigo"
+	"math"
+	"math/rand"
 	"path/filepath"
 	"strings"
 	"sync"
+
+	"github.com/wkm/obelisk/lib/ldb"
+	"github.com/wkm/obelisk/lib/rlog"
 )
 
 var log = rlog.LogConfig.Logger("storetag")
 
-type Store struct {
-	sync.Mutex
-	ids   map[uint64]*Tag
-	maxId uint64
-
-	root *Tag
+type Config struct {
+	DiskStore string
+	CacheSize int
 }
 
-type Tag struct {
-	id       uint64
-	name     string
-	parent   *Tag
-	children map[string]*Tag
+var DefaultConfig = Config{
+	CacheSize: 1024 * 1024 * 24,
 }
 
-func NewStore() *Store {
-	s := new(Store)
-	s.ids = make(map[uint64]*Tag)
-	s.maxId = 0
+type DB struct {
+	rw sync.RWMutex
 
-	// create the root node
-	s.root = s.newTag("")
+	config Config
 
-	return s
+	maxId *uint64
+	Store *ldb.Store
 }
 
-// give the largest id generated (one less than the number of tags)
-func (s *Store) MaxId() uint64 {
-	s.Lock()
-	defer s.Unlock()
-
-	return s.maxId
+func NewDB(config Config) (db *DB, err error) {
+	db = new(DB)
+	db.config = config
+	db.Store, err = ldb.NewStore(ldb.Config{Dir: config.DiskStore, CacheSize: config.CacheSize})
+	return
 }
 
-// not threadsafe
-func (s *Store) newTag(name string) *Tag {
-	var tag Tag
-	tag.id = s.maxId
-	s.maxId++
-	s.ids[tag.id] = &tag
-
-	tag.name = name
-	tag.children = make(map[string]*Tag)
-
-	return &tag
+// Safely close the datastore
+func (db *DB) Shutdown() {
+	db.Store.DB.Close()
+	db.Store = nil
 }
 
-func createPath(name ...string) []string {
-	return strings.Split("/"+filepath.Join(name...), "/")
-}
-
-// get the id of a tag, if it exists
-func (s *Store) Id(name ...string) (uint64, error) {
+// Id gives the id of a tag, if it exists
+func (db *DB) Id(name ...string) (id uint64, err error) {
 	statId.Incr()
-	components := createPath(name...)
+	path := createPath(name...)
 
-	s.Lock()
-	defer s.Unlock()
-
-	cursor := s.root
-	for _, part := range components[1:] {
-		child, ok := cursor.children[part]
-		if !ok {
-			return 0, errors.N("unknown node %s of %s", part, strings.Join(components, "/"))
-		}
-		cursor = child
+	bb, err := db.Store.CacheGet([]byte(path))
+	if err == nil {
+		id = binary.LittleEndian.Uint64(bb)
 	}
 
-	return cursor.id, nil
+	return
 }
 
-// get the id of a tag, creating it and the hierarchy to if it doesn't exist
-func (s *Store) NewTag(name ...string) (uint64, error) {
+// get the id of a tag, creating it and the hierarchy to it if it doesn't exist
+func (db *DB) NewTag(name ...string) (id uint64, err error) {
 	statNew.Incr()
-	components := createPath(name...)
+	path := createPath(name...)
 
-	s.Lock()
-	defer s.Unlock()
+	id = nextId()
+	bb := make([]byte, 8)
+	binary.LittleEndian.PutUint64(bb, id)
+	err = db.Store.PutAsync([]byte(path), bb)
 
-	cursor := s.root
-	for _, part := range components[1:] {
-		child, ok := cursor.children[part]
-		if !ok {
-			tag := s.newTag(part)
-			tag.parent = cursor
-			cursor.children[part] = tag
-			s.ids[tag.id] = tag
-			child = tag
-		}
-
-		cursor = child
-	}
-
-	return cursor.id, nil
+	return
 }
 
-// get the children of a tag
-func (s *Store) Children(name ...string) ([]string, error) {
+func nextId() uint64 {
+	i := rand.Int63()
+	if i < 0 {
+		return uint64(math.MaxInt64) + uint64(i*-1)
+	} else {
+		return uint64(i)
+	}
+}
+
+// Get the entirety of the tree under a tag
+func (db *DB) Children(name ...string) (children []string, err error) {
 	statChildren.Incr()
-	components := createPath(name...)
+	path := createPath(name...)
 
-	s.Lock()
-	defer s.Unlock()
+	children = make([]string, 0, 10)
 
-	cursor := s.root
-	for _, part := range components[1:] {
-		child, ok := cursor.children[part]
-		if !ok {
-			return nil, errors.N("unknown node " + part + " of " + strings.Join(components, "/"))
+	iter := db.Store.Iterator()
+	defer iter.Close()
+
+	for iter.Seek([]byte(path)); iter.Valid(); iter.Next() {
+		child := string(iter.Key())
+		if strings.HasPrefix(child, path) {
+			children = append(children, child)
+		} else {
+			break
 		}
-
-		cursor = child
 	}
 
-	childrenNames := make([]string, len(cursor.children))
-	i := 0
-	for _, c := range cursor.children {
-		childrenNames[i] = c.name
-		i++
-	}
-
-	return childrenNames, nil
+	err = iter.GetError()
+	return
 }
 
-// delete a node
-func (s *Store) Delete(name ...string) error {
+// Delete removes a node and all of its children
+func (db *DB) Delete(name ...string) (children []string, err error) {
 	statDelete.Incr()
-	components := createPath(name...)
 
-	s.Lock()
-	defer s.Unlock()
-
-	cursor := s.root
-	for _, part := range components[1:] {
-		child, ok := cursor.children[part]
-		if !ok {
-			return errors.N("unknown node " + part + " of " + strings.Join(components, "/"))
-		}
-
-		cursor = child
+	children, err = db.Children(name...)
+	if err != nil {
+		return
 	}
 
-	delete(cursor.parent.children, cursor.name)
-	cursor.parent = nil
+	wb := levigo.NewWriteBatch()
+	defer wb.Close()
 
-	return nil
+	for _, c := range children {
+		wb.Delete([]byte(c))
+	}
+
+	err = db.Store.WriteAsync(wb)
+
+	return
+}
+
+func createPath(name ...string) string {
+	return filepath.Join(name...)
 }
