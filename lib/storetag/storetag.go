@@ -25,12 +25,8 @@ var DefaultConfig = Config{
 }
 
 type DB struct {
-	rw sync.RWMutex
-
 	config Config
-
-	maxId *uint64
-	Store *ldb.Store
+	Store  *ldb.Store
 }
 
 func NewDB(config Config) (db *DB, err error) {

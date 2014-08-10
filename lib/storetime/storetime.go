@@ -1,107 +1,103 @@
-/*
-	dead simple in-memory store for timeseries, thread safe with a
-	global lock; flushes to disk on a regular basis
-*/
-
 package storetime
 
 import (
-	"github.com/petar/GoLLRB/llrb"
-	"sync"
+	"bytes"
+	"encoding/binary"
+	"fmt"
+	"math"
+
+	"github.com/wkm/obelisk/lib/ldb"
+	"github.com/wkm/obelisk/lib/rlog"
 )
 
-// a store of named timeseries
-type Store struct {
-	sync.Mutex
-	values map[uint64]*llrb.LLRB
+var log = rlog.LogConfig.Logger("storetime")
+
+type Config struct {
+	DiskStore string
+	CacheSize int
 }
 
-// a <time,value> pair
+type DB struct {
+	config Config
+	Store  *ldb.Store
+}
+
 type Point struct {
 	Time  uint64
 	Value float64
 }
 
-// sort Point by their time
-func (this Point) Less(than llrb.Item) bool {
-	return this.Time < than.(Point).Time
+func NewDB(config Config) (db *DB, err error) {
+	db = new(DB)
+	db.config = config
+	db.Store, err = ldb.NewStore(ldb.Config{Dir: config.DiskStore, CacheSize: config.CacheSize})
+	return
 }
 
-// create a new in-memory timeseries store
-func NewStore() *Store {
-	s := new(Store)
-	s.values = make(map[uint64]*llrb.LLRB)
-	return s
+// Safely close the datastore
+func (db *DB) Shutdown() {
+	db.Store.DB.Close()
+	db.Store = nil
 }
 
-// inserts the given time and value under the key
-func (s *Store) Insert(key, time uint64, value float64) *Store {
+func createKey(id, time uint64) []byte {
+	return []byte(fmt.Sprintf("%d•%d", id, time))
+}
+
+func getTime(key []byte) uint64 {
+	var id, time uint64
+	fmt.Sscanf(string(key), "%d•%d", &id, &time)
+	return time
+}
+
+func (db *DB) Insert(key, time uint64, value float64) {
 	statInsert.Incr()
-
-	s.Lock()
-	defer s.Unlock()
-
-	// create a timeseries if we need to
-	if _, ok := s.values[key]; !ok {
-		s.values[key] = newTree()
-	}
-
-	s.values[key].ReplaceOrInsert(Point{time, value})
-	return s
+	b := make([]byte, 8)
+	binary.LittleEndian.PutUint64(b, math.Float64bits(value))
+	db.Store.PutAsync(createKey(key, time), b)
 }
 
-func newTree() *llrb.LLRB {
-	return llrb.New()
-}
-
-// return all points from key with time in [start,stop]
-func (s *Store) Query(key, start, stop uint64) ([]Point, error) {
+// Query gives all tuples of <time,value> from key with time in [start,stop]
+func (db *DB) Query(key, start, stop uint64) (points []Point, err error) {
 	statQuery.Incr()
 
-	s.Lock()
-	defer s.Unlock()
+	iter := db.Store.CacheIterator()
+	end := []byte(createKey(key, stop))
 
-	var ary []Point
-	iterfn := func(i llrb.Item) bool {
+	points = make([]Point, 0, 10)
+	for iter.Seek(createKey(key, start)); iter.Valid(); iter.Next() {
 		statIter.Incr()
-
-		p := i.(Point)
-		if p.Time <= stop {
-			ary = append(ary, p)
-			return true
+		if bytes.Compare(iter.Key(), end) > 0 {
+			break
 		}
-		return false
+
+		p := Point{
+			Time:  getTime(iter.Key()),
+			Value: math.Float64frombits(binary.LittleEndian.Uint64(iter.Value())),
+		}
+		points = append(points, p)
 	}
 
-	if ts, ok := s.values[key]; ok {
-		ts.AscendGreaterOrEqual(Point{start, 0}, iterfn)
-	}
-
-	return ary, nil
+	return
 }
 
-// return all values from key with time [start,stop]
-func (s *Store) FlatQuery(key, start, stop uint64) ([]float64, error) {
+// FlatQuery gives all values from key with time in [start, stop]
+func (db *DB) FlatQuery(key, start, stop uint64) (values []float64, err error) {
 	statQuery.Incr()
 
-	s.Lock()
-	defer s.Unlock()
+	iter := db.Store.CacheIterator()
+	end := []byte(createKey(key, stop))
 
-	var ary []float64
-	iterfn := func(i llrb.Item) bool {
+	values = make([]float64, 0, 10)
+	for iter.Seek(createKey(key, start)); iter.Valid(); iter.Next() {
 		statIter.Incr()
-
-		p := i.(Point)
-		if p.Time <= stop {
-			ary = append(ary, p.Value)
-			return true
+		if bytes.Compare(iter.Key(), end) > 0 {
+			break
 		}
-		return false
+
+		p := math.Float64frombits(binary.LittleEndian.Uint64(iter.Value()))
+		values = append(values, p)
 	}
 
-	if ts, ok := s.values[key]; ok {
-		ts.AscendGreaterOrEqual(Point{start, 0}, iterfn)
-	}
-
-	return ary, nil
+	return
 }
