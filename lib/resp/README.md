@@ -18,5 +18,12 @@ For example:
         return nil
     }
 
-The commands available are derived from public methods in the backing interface.
+The commands available are derived from the public methods of the backing interface, enabling queries of the form:
+
+    > PUT key1 123
+    + OK
+    > PUT key2 345
+    + OK
+    > GET key1
+    123
 

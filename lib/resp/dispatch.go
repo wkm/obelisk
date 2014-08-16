@@ -19,6 +19,7 @@ func normalizeMethodName(name string) string {
 	return strings.ToLower(name)
 }
 
+// newDispatch creates a dispatcher against an interface
 func newDispatch(receiver interface{}) (d *dispatch, err error) {
 	d = new(dispatch)
 	d.recv = receiver
@@ -45,6 +46,7 @@ func validateMethod(method *reflect.Method) (err error) {
 	return
 }
 
+// Call parses and executes the line against
 func (d *dispatch) Call(line string) (res string, err error) {
 	var methodName string
 	methodName, line, err = nextToken(line)

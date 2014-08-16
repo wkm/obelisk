@@ -11,7 +11,7 @@ Obelisk is divided into the following component services:
 The data and query server for Obelisk.
 
 ### `obelisk-agent`
-A minor utility that collects data from 
+A minor utility that use sigar to collect instrumentation data on hosts (CPU usage, memory, network, etc.)
 
 ### `obelisk-store`
 The store service 
