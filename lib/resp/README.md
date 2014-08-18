@@ -20,10 +20,11 @@ For example:
 
 The commands available are derived from the public methods of the backing interface, enabling queries of the form:
 
-    > PUT key1 123
-    + OK
-    > PUT key2 345
-    + OK
-    > GET key1
+    PUT key1 123
+    +OK
+    PUT key2 345
+    +OK
+    GET key1
+    $3
     123
 

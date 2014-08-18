@@ -2,9 +2,39 @@ package resp
 
 import (
 	"bufio"
+	"bytes"
 	"net"
+	"strings"
 	"testing"
 )
+
+func TestWriteRequest(t *testing.T) {
+	testcases := []struct {
+		q   []interface{}
+		out string
+	}{
+		{[]interface{}{"LLEN", "mylist"}, "*2\r\n$4\r\nLLEN\r\n$6\r\nmylist\r\n"},
+	}
+
+	for _, tc := range testcases {
+		t.Logf("q:%v out:%#v", tc.q, tc.out)
+
+		var bb bytes.Buffer
+		nn, err := WriteRequest(&bb, tc.q...)
+		out := bb.String()
+		if err != nil {
+			t.Errorf("unexpected error %#v", err)
+		}
+
+		if nn != len(tc.out) {
+			t.Errorf("invalid number of bytes written")
+		}
+
+		if out != tc.out {
+			t.Errorf("expected %#v; got %#v", tc.out, out)
+		}
+	}
+}
 
 func TestListen(t *testing.T) {
 	k := newKeyval() // use keyval from dispatch_test.go
@@ -26,7 +56,6 @@ func TestListen(t *testing.T) {
 			}
 
 			t.Logf("Accepted a connected: %v", conn)
-
 			Listen(k, conn, conn)
 		}
 	}()
@@ -42,19 +71,34 @@ func TestListen(t *testing.T) {
 	cw := bufio.NewWriter(conn)
 	cr := bufio.NewReader(conn)
 
+	// Test textual commands
 	testcases := []struct{ in, out string }{
-		{"put k1 12\n", "+OK\r\n"},
-		{"put k2 14\n", "+OK\r\n"},
+		{"put k1 12", "+OK\r\n"},
+		{"put k2 14", "+OK\r\n"},
+		{"get k1", "$2\r\n12\r\n"},
+		{"get k2", "$2\r\n14\r\n"},
+		{"get unknown", "$0\r\n"},
 	}
 	for _, tc := range testcases {
-		t.Logf("in> %s", tc.in)
+		t.Logf("in> %#v", tc.in)
 		cw.WriteString(tc.in)
+		cw.WriteString("\n")
 		cw.Flush()
 
-		t.Logf("out> %s", tc.out)
-		out, err := cr.ReadString('\n')
-		if err != nil || out != tc.out {
-			t.Errorf("expected out=%v; but got out=%v and err=%v", tc.out, out, err)
+		// Consume lines over the connection
+		t.Logf("out> %#v", tc.out)
+		lineCount := strings.Count(tc.out, "\r\n")
+		var bb bytes.Buffer
+		for i := 0; i < lineCount; i++ {
+			out, err := cr.ReadString('\n')
+			if err != nil {
+				t.Errorf("Unexpected error=%v", err)
+			}
+			bb.WriteString(out)
+		}
+
+		if bb.String() != tc.out {
+			t.Errorf("expected out=%#v; but got out=%#v and err=%#v", tc.out, bb.String(), err)
 		}
 	}
 }

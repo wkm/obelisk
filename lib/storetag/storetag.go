@@ -7,7 +7,6 @@ import (
 	"math/rand"
 	"path/filepath"
 	"strings"
-	"sync"
 
 	"github.com/wkm/obelisk/lib/ldb"
 	"github.com/wkm/obelisk/lib/rlog"
