@@ -1,13 +1,11 @@
 package main
 
 import (
-	"circuit/use/circuit"
+	"path/filepath"
+
 	"github.com/wkm/obelisk/lib/rinst"
 	"github.com/wkm/obelisk/lib/storetime"
-	"path/filepath"
 )
-
-var xServer circuit.X
 
 func ChildrenTags(node ...string) ([]string, error) {
 	retrn := xServer.Call("ChildrenTags", filepath.Join(node...))

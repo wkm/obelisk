@@ -18,7 +18,7 @@ func TestKey(t *testing.T) {
 
 func TestDB(t *testing.T) {
 	c := Config{}
-	c.DiskStore = filepath.Join(os.TempDir(), "github.com/wkm/obelisk-storetime")
+	c.DiskStore = filepath.Join(os.TempDir(), "obelisk-storetime")
 	defer os.RemoveAll(c.DiskStore)
 
 	db, err := NewDB(c)

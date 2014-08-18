@@ -1,14 +1,13 @@
 package main
 
 import (
-	"circuit/sys/acid"
-	"circuit/use/circuit"
 	"net/http"
+	"strings"
+	"time"
+
 	// "github.com/wkm/obelisk/lib/rinst"
 	// rinstService "github.com/wkm/obelisk/lib/rinst/service"
 	rlogService "github.com/wkm/obelisk/lib/rlog/service"
-	"strings"
-	"time"
 )
 
 type WorkerInfo struct {

@@ -1,10 +1,11 @@
 package resp
 
 import (
-	"github.com/bmizerany/assert"
 	"reflect"
 	"strings"
 	"testing"
+
+	"github.com/bmizerany/assert"
 )
 
 // Validate the fast size compute function

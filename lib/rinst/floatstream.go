@@ -2,8 +2,9 @@ package rinst
 
 import (
 	"fmt"
-	"github.com/wkm/obelisk/lib/streamhist"
 	"time"
+
+	"github.com/wkm/obelisk/lib/streamhist"
 )
 
 var DefaultPercentiles = []float64{

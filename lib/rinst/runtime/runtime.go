@@ -2,9 +2,10 @@ package runtime
 
 import (
 	"fmt"
-	"github.com/wkm/obelisk/lib/rinst"
 	"runtime"
 	"time"
+
+	"github.com/wkm/obelisk/lib/rinst"
 )
 
 var Stats = &statsGauge

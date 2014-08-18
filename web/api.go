@@ -2,10 +2,11 @@ package main
 
 import (
 	"encoding/json"
-	"github.com/wkm/obelisk/web/util"
 	"math"
 	"net/http"
 	"strconv"
+
+	"github.com/wkm/obelisk/web/util"
 )
 
 func timeHandler(rw http.ResponseWriter, req *http.Request) {

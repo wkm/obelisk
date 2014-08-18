@@ -2,12 +2,12 @@ package storetag
 
 import (
 	"encoding/binary"
-	"github.com/jmhodges/levigo"
 	"math"
 	"math/rand"
 	"path/filepath"
 	"strings"
 
+	"github.com/jmhodges/levigo"
 	"github.com/wkm/obelisk/lib/ldb"
 	"github.com/wkm/obelisk/lib/rlog"
 )

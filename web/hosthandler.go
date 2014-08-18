@@ -1,11 +1,12 @@
 package main
 
 import (
-	"github.com/wkm/obelisk/lib/rinst"
 	"net/http"
 	"path/filepath"
 	"sort"
 	"strings"
+
+	"github.com/wkm/obelisk/lib/rinst"
 )
 
 type HostInfo struct {

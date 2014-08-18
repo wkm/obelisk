@@ -1,11 +1,11 @@
 package main
 
 import (
-	_ "circuit/load/cmd"
-	// "log"
-	// "github.com/wkm/obelisk/agent"
-	// "github.com/wkm/obelisk/lib/rinst"
-	// "time"
+// "log"
+// "time"
+
+// "github.com/wkm/obelisk/agent"
+// "github.com/wkm/obelisk/lib/rinst"
 )
 
 func main() {

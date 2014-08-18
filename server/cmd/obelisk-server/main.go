@@ -1,8 +1,9 @@
 package main
 
 import (
-	"github.com/wkm/obelisk/server"
 	"log"
+
+	"github.com/wkm/obelisk/server"
 )
 
 func main() {
@@ -12,5 +13,5 @@ func main() {
 		log.Fatalf(err.Error())
 	}
 
-	log.Printf("github.com/wkm/obelisk-server spawned %s", addr.String())
+	log.Printf("obelisk-server spawned %s", addr.String())
 }

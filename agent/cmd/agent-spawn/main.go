@@ -1,10 +1,9 @@
 package main
 
 import (
-	_ "circuit/load/cmd"
-	"circuit/use/circuit"
-	"github.com/wkm/obelisk/agent"
 	"log"
+
+	"github.com/wkm/obelisk/agent"
 )
 
 // spawn an obelisk agent worker on the local machine
@@ -14,5 +13,5 @@ func main() {
 	if err != nil {
 		log.Fatalf(err.Error())
 	}
-	log.Printf("github.com/wkm/obelisk-agent started %s %s", addr.String(), err)
+	log.Printf("obelisk-agent started %s %s", addr.String(), err)
 }

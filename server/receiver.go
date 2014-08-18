@@ -7,7 +7,7 @@ import (
 	"github.com/wkm/obelisk/lib/rlog"
 )
 
-var log = rlog.LogConfig.Logger("github.com/wkm/obelisk-server")
+var log = rlog.LogConfig.Logger("obelisk-server")
 
 //
 func (app *ServerApp) ReceiveStats(worker string, buffer rinst.MeasurementBuffer) error {

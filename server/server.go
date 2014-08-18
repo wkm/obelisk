@@ -1,14 +1,15 @@
 package server
 
 import (
+	"path/filepath"
+	"time"
+
 	"github.com/wkm/obelisk/lib/errors"
 	"github.com/wkm/obelisk/lib/rinst"
 	"github.com/wkm/obelisk/lib/rinst/service"
 	"github.com/wkm/obelisk/lib/storekv"
 	"github.com/wkm/obelisk/lib/storetag"
 	"github.com/wkm/obelisk/lib/storetime"
-	"path/filepath"
-	"time"
 )
 
 type ServerApp struct {

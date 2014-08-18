@@ -7,9 +7,9 @@ import (
 	"github.com/wkm/obelisk/lib/rlog"
 )
 
-var log = rlog.LogConfig.Logger("github.com/wkm/obelisk-agent")
+var log = rlog.LogConfig.Logger("obelisk-agent")
 
-const ServiceName = "github.com/wkm/obelisk-agent"
+const ServiceName = "obelisk-agent"
 
 type start struct{}
 

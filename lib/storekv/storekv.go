@@ -3,9 +3,9 @@ package storekv
 import (
 	"bytes"
 	"encoding/gob"
-	"github.com/wkm/obelisk/lib/rinst"
 
 	"github.com/wkm/obelisk/lib/ldb"
+	"github.com/wkm/obelisk/lib/rinst"
 	"github.com/wkm/obelisk/lib/rlog"
 )
 

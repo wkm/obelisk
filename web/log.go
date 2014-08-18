@@ -1,9 +1,10 @@
 package main
 
 import (
-	"github.com/wkm/obelisk/lib/rlog"
 	"net/http"
 	// "time"
+
+	"github.com/wkm/obelisk/lib/rlog"
 )
 
 var accessLog = rlog.LogConfig.Logger("access")

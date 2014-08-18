@@ -2,9 +2,10 @@ package resp
 
 import (
 	"bytes"
-	"github.com/bmizerany/assert"
 	"reflect"
 	"testing"
+
+	"github.com/bmizerany/assert"
 )
 
 func TestWrites(t *testing.T) {
