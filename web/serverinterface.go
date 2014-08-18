@@ -2,8 +2,8 @@ package main
 
 import (
 	"circuit/use/circuit"
-	"obelisk/lib/rinst"
-	"obelisk/lib/storetime"
+	"github.com/wkm/obelisk/lib/rinst"
+	"github.com/wkm/obelisk/lib/storetime"
 	"path/filepath"
 )
 

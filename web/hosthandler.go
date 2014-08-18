@@ -1,8 +1,8 @@
 package main
 
 import (
+	"github.com/wkm/obelisk/lib/rinst"
 	"net/http"
-	"obelisk/lib/rinst"
 	"path/filepath"
 	"sort"
 	"strings"

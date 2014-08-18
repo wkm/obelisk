@@ -10,7 +10,7 @@ import (
 
 func TestDB(t *testing.T) {
 	c := Config{}
-	c.DiskStore = filepath.Join(os.TempDir(), "obelisk-storetag")
+	c.DiskStore = filepath.Join(os.TempDir(), "github.com/wkm/obelisk-storetag")
 	defer os.RemoveAll(c.DiskStore)
 
 	db, err := NewDB(c)

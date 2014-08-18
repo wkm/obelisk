@@ -1,14 +1,12 @@
 package server
 
 import (
-	"circuit/sys/transport"
-	"circuit/use/circuit"
-	"obelisk/lib/errors"
-	"obelisk/lib/rinst"
-	"obelisk/lib/rinst/service"
-	"obelisk/lib/storekv"
-	"obelisk/lib/storetag"
-	"obelisk/lib/storetime"
+	"github.com/wkm/obelisk/lib/errors"
+	"github.com/wkm/obelisk/lib/rinst"
+	"github.com/wkm/obelisk/lib/rinst/service"
+	"github.com/wkm/obelisk/lib/storekv"
+	"github.com/wkm/obelisk/lib/storetag"
+	"github.com/wkm/obelisk/lib/storetime"
 	"path/filepath"
 	"time"
 )
@@ -36,9 +34,6 @@ func (app *ServerApp) Main() {
 		close(buffer)
 	}()
 
-	app.RegisterWorker(circuit.WorkerAddr())
-	app.DeclareSchema(circuit.WorkerAddr().WorkerID().String(), buffer)
-
 	go app.periodic()
 }
 
@@ -53,10 +48,6 @@ func (app *ServerApp) periodic() {
 			Stats.Measure("", buffer)
 			close(buffer)
 		}()
-
-		// report our own stats
-		worker := circuit.WorkerAddr().WorkerID().String()
-		app.ReceiveStats(worker, buffer)
 	}
 }
 
@@ -102,12 +93,6 @@ func (app *ServerApp) QueryTime(node string, start, stop uint64) ([]storetime.Po
 	}
 
 	return app.timedb.Store.Query(id, start, stop)
-}
-
-func (app *ServerApp) GetWorkerAddr(worker string) (circuit.Addr, error) {
-	var addr transport.Addr
-	err := app.kvdb.Store.GetGob("worker/"+worker+"/addr", &addr)
-	return &addr, errors.W(err)
 }
 
 func (app *ServerApp) GetMetricInfo(node string) (rinst.Schema, error) {

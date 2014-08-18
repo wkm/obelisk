@@ -6,12 +6,12 @@
 */
 package rinst
 
-// an instrumentation collection
+// Collection is a set of named instruments
 type Collection struct {
 	instruments map[string]Instrument
 }
 
-// create a new collection
+// NewCollection creates a new set of named instruments
 func NewCollection() *Collection {
 	c := new(Collection)
 	c.instruments = make(map[string]Instrument)
@@ -55,27 +55,27 @@ func (coll Collection) FloatValue(name, unit, desc string) *FloatValue {
 }
 
 // send the current values of all instruments in a layout to a buffer
-func (coll Collection) Snapshot(b MeasurementBuffer) {
-	coll.Measure("", b)
+func (coll Collection) Snapshot(r MeasurementReceiver) {
+	coll.Measure("", r)
 }
 
 // measure all instruments in this collection
-func (coll Collection) Measure(name string, buff MeasurementBuffer) {
+func (coll Collection) Measure(name string, r MeasurementReceiver) {
 	prefix := ""
 	if name != "" {
 		prefix = name + "."
 	}
 	for key, inst := range coll.instruments {
-		inst.Measure(prefix+key, buff)
+		inst.Measure(prefix+key, r)
 	}
 }
 
-func (coll Collection) Schema(name string, buff SchemaBuffer) {
+func (coll Collection) Schema(name string, r SchemaReceiver) {
 	prefix := ""
 	if name != "" {
 		prefix = name + "."
 	}
 	for key, inst := range coll.instruments {
-		inst.Schema(prefix+key, buff)
+		inst.Schema(prefix+key, r)
 	}
 }

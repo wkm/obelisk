@@ -1,7 +1,6 @@
 package rinst
 
 import (
-	"fmt"
 	"sync"
 	"sync/atomic"
 	"time"
@@ -35,13 +34,14 @@ func (v *BoolValue) NumSets() uint32 {
 	return atomic.LoadUint32(&v.changes)
 }
 
-func (v *BoolValue) Measure(n string, b MeasurementBuffer) {
+func (v *BoolValue) Measure(n string, b MeasurementReceiver) {
+	i := atomic.LoadInt32(&v.value)
 	now := uint64(time.Now().Unix())
-	b <- Measurement{n, now, fmt.Sprintf("%d", v.Get())}
-	b <- Measurement{n + ".sets", now, fmt.Sprintf("%d", v.NumSets())}
+	b.WriteInt(n, now, i)
+	b.WriteInt(n+".sets", now, v.NumSets())
 }
 
-func (v *BoolValue) Schema(name string, b SchemaBuffer) {
-	b <- Schema{name, TypeBoolValue, v.unit, v.desc}
-	b <- Schema{name + ".sets", TypeCounter, "set", "rate of changes to this value"}
+func (v *BoolValue) Schema(name string, b SchemaReceiver) {
+	b.WriteSchema(name, TypeBoolValue, unit, desc)
+	b.WriteSchema(name+".sets", TypeCounter, "set", "rate of change on this value")
 }

@@ -3,16 +3,16 @@ package main
 import (
 	_ "circuit/load/cmd"
 	"fmt"
+	"github.com/wkm/obelisk/lib/rlog"
+	"github.com/wkm/obelisk/server/util"
 	"net/http"
-	"obelisk/lib/rlog"
-	"obelisk/server/util"
 	"runtime"
 )
 
 var log = rlog.LogConfig.Logger("web")
 
 func main() {
-	log.Printf("obelisk/")
+	log.Printf("github.com/wkm/obelisk/")
 	log.Printf("setting maxprocs to %d", runtime.NumCPU())
 	runtime.GOMAXPROCS(runtime.NumCPU())
 

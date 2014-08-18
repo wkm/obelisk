@@ -2,9 +2,9 @@ package main
 
 import (
 	"encoding/json"
+	"github.com/wkm/obelisk/web/util"
 	"math"
 	"net/http"
-	"obelisk/web/util"
 	"strconv"
 )
 

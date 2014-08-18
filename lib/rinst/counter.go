@@ -1,7 +1,6 @@
 package rinst
 
 import (
-	"fmt"
 	"sync/atomic"
 	"time"
 )
@@ -28,12 +27,12 @@ func (c *Counter) Value() int64 {
 }
 
 // get a readable value for a counter
-func (c *Counter) Measure(name string, b MeasurementBuffer) {
+func (c *Counter) Measure(name string, r MeasurementReceiver) {
 	now := uint64(time.Now().Unix())
-	b <- Measurement{name, now, fmt.Sprintf("%d", c.Value())}
+	r.WriteInt(name, now, c.Value())
 }
 
 // the schema of this counter
-func (c *Counter) Schema(name string, b SchemaBuffer) {
-	b <- Schema{name, TypeCounter, c.unit, c.desc}
+func (c *Counter) Schema(name string, r SchemaReceiver) {
+	r.WriteSchema(name, TypeCounter, c.unit, c.desc)
 }

@@ -1,11 +1,11 @@
 package server
 
 import (
-	"obelisk/lib/rinst"
-	"obelisk/lib/rinst/runtime"
-	"obelisk/lib/storekv"
-	"obelisk/lib/storetag"
-	"obelisk/lib/storetime"
+	"github.com/wkm/obelisk/lib/rinst"
+	"github.com/wkm/obelisk/lib/rinst/runtime"
+	"github.com/wkm/obelisk/lib/storekv"
+	"github.com/wkm/obelisk/lib/storetag"
+	"github.com/wkm/obelisk/lib/storetime"
 )
 
 var Stats = rinst.NewCollection()

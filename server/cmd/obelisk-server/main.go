@@ -1,10 +1,8 @@
 package main
 
 import (
-	_ "circuit/load/cmd"
-	"circuit/use/circuit"
+	"github.com/wkm/obelisk/server"
 	"log"
-	"obelisk/server"
 )
 
 func main() {
@@ -14,6 +12,5 @@ func main() {
 		log.Fatalf(err.Error())
 	}
 
-	log.Printf("obelisk-server spawned %s", addr.String())
-	circuit.Hang()
+	log.Printf("github.com/wkm/obelisk-server spawned %s", addr.String())
 }

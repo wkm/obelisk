@@ -1,7 +1,7 @@
 package rlog
 
 import (
-	"obelisk/lib/rinst"
+	"github.com/wkm/obelisk/lib/rinst"
 )
 
 // a collection of rinst stats

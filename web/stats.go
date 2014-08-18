@@ -1,7 +1,7 @@
 package main
 
 import (
-	"obelisk/lib/rinst"
+	"github.com/wkm/obelisk/lib/rinst"
 )
 
 var (

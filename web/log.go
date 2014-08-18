@@ -1,8 +1,8 @@
 package main
 
 import (
+	"github.com/wkm/obelisk/lib/rlog"
 	"net/http"
-	"obelisk/lib/rlog"
 	// "time"
 )
 

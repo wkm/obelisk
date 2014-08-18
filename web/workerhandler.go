@@ -4,9 +4,9 @@ import (
 	"circuit/sys/acid"
 	"circuit/use/circuit"
 	"net/http"
-	// "obelisk/lib/rinst"
-	// rinstService "obelisk/lib/rinst/service"
-	rlogService "obelisk/lib/rlog/service"
+	// "github.com/wkm/obelisk/lib/rinst"
+	// rinstService "github.com/wkm/obelisk/lib/rinst/service"
+	rlogService "github.com/wkm/obelisk/lib/rlog/service"
 	"strings"
 	"time"
 )

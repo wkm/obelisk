@@ -2,7 +2,7 @@ package rinst
 
 import (
 	"fmt"
-	"obelisk/lib/streamhist"
+	"github.com/wkm/obelisk/lib/streamhist"
 	"time"
 )
 

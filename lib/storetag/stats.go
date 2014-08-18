@@ -1,7 +1,7 @@
 package storetag
 
 import (
-	"obelisk/lib/rinst"
+	"github.com/wkm/obelisk/lib/rinst"
 )
 
 var Stats = rinst.NewCollection()

@@ -51,16 +51,7 @@ func NewStore(c Config) (s *Store, err error) {
 	s.Opts.WAsync = levigo.NewWriteOptions()
 	s.Opts.WAsync.SetSync(false)
 
-	// s.Stats = &rinst.GaugeValue{
-	// 	MeasureFn: func(ns string, b rinst.MeasurementBuffer) {
-	// 		stats := s.DB.PropertyValue("leveldb.stats")
-	// 		println(ns)
-	// 		println(stats)
-	// 	},
-	// 	SchemaFn: func(ns string, b rinst.SchemaBuffer) {
-	// 		// ...
-	// 	},
-	// }
+	// Pull stats from LevelDB using s.DB.PropertyValue("leveldb.stats")
 
 	return
 }

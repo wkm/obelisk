@@ -2,7 +2,7 @@ package runtime
 
 import (
 	"fmt"
-	"obelisk/lib/rinst"
+	"github.com/wkm/obelisk/lib/rinst"
 	"runtime"
 	"time"
 )

@@ -31,14 +31,14 @@ func (v *DateValue) NumSets() uint32 {
 }
 
 // get a readable value for a counter
-func (v *DateValue) Measure(n string, b MeasurementBuffer) {
+func (v *DateValue) Measure(n string, r MeasurementReceiver) {
 	now := uint64(time.Now().Unix())
-	b <- Measurement{n, now, fmt.Sprintf("%d", v.Get())}
-	b <- Measurement{n + ".sets", now, fmt.Sprintf("%d", v.NumSets())}
+	r.WriteInt(n, now, v.Get())
+	r.WriteInt(n+".sets", now, v.NumSets())
 }
 
 // the schema of this value
-func (v *DateValue) Schema(name string, b SchemaBuffer) {
-	b <- Schema{name, TypeDateValue, "", v.desc}
-	b <- Schema{name + ".sets", TypeCounter, "set", "rate of changes to this value"}
+func (v *DateValue) Schema(name string, r SchemaReceiver) {
+	r.WriteSchema(name, TypeDateValue, "", v.desc)
+	r.WriteSchema(name+".sets", TypeCounter, "set", "rate of changes to this value")
 }

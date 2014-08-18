@@ -2,9 +2,10 @@ package agent
 
 import (
 	"fmt"
-	"github.com/cloudfoundry/gosigar"
-	"obelisk/lib/rinst"
 	"time"
+
+	"github.com/cloudfoundry/gosigar"
+	"github.com/wkm/obelisk/lib/rinst"
 )
 
 func fstr(f float64) string { return fmt.Sprintf("%f", f) }
@@ -12,7 +13,7 @@ func istr(i uint64) string  { return fmt.Sprintf("%d", i) }
 
 var StatsGauge = rinst.GaugeValue{
 	// measure function
-	func(n string, b rinst.MeasurementBuffer) {
+	func(n string, r rinst.MeasurementReceiver) {
 		uptime := sigar.Uptime{}
 
 		load := sigar.LoadAverage{}

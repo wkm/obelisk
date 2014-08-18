@@ -1,24 +1,13 @@
 package server
 
 import (
-	"circuit/use/circuit"
-	"encoding/gob"
-	"obelisk/lib/rinst"
-	"obelisk/lib/rlog"
 	"strconv"
+
+	"github.com/wkm/obelisk/lib/rinst"
+	"github.com/wkm/obelisk/lib/rlog"
 )
 
-var log = rlog.LogConfig.Logger("obelisk-server")
-
-func init() {
-	gob.Register(rinst.Schema{})
-}
-
-func (app *ServerApp) RegisterWorker(addr circuit.Addr) {
-	worker := addr.WorkerID().String()
-	app.kvdb.Store.SetGob("worker/"+worker+"/addr", addr)
-	app.tagdb.Store.NewTag("host/" + addr.Host() + "/workers/" + worker)
-}
+var log = rlog.LogConfig.Logger("github.com/wkm/obelisk-server")
 
 //
 func (app *ServerApp) ReceiveStats(worker string, buffer rinst.MeasurementBuffer) error {

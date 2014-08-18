@@ -3,8 +3,8 @@ package main
 import (
 	_ "circuit/load/cmd"
 	// "log"
-	// "obelisk/agent"
-	// "obelisk/lib/rinst"
+	// "github.com/wkm/obelisk/agent"
+	// "github.com/wkm/obelisk/lib/rinst"
 	// "time"
 )
 
