@@ -1,7 +1,6 @@
 package rinst
 
 import (
-	"fmt"
 	"sync"
 	"time"
 )
@@ -10,7 +9,6 @@ import (
 type FloatValue struct {
 	sync.Mutex
 	value      float64
-	changes    uint32
 	desc, unit string
 }
 
@@ -20,7 +18,6 @@ func (v *FloatValue) Set(value float64) *FloatValue {
 	defer v.Unlock()
 
 	v.value = value
-	v.changes++
 	return v
 }
 
@@ -31,25 +28,16 @@ func (v *FloatValue) Get() float64 {
 	return v.value
 }
 
-// atomically get the number of changes for this value
-func (v *FloatValue) NumSets() uint32 {
-	v.Lock()
-	defer v.Unlock()
-	return v.changes
-}
-
 // get a readable value for a counter
-func (v *FloatValue) Measure(n string, b MeasurementBuffer) {
+func (v *FloatValue) Measure(n string, r MeasurementReceiver) {
 	v.Lock()
 	defer v.Unlock()
 
-	now := uint64(time.Now().Unix())
-	b <- Measurement{n, now, fmt.Sprintf("%f", v.value)}
-	b <- Measurement{n + ".sets", now, fmt.Sprintf("%d", v.changes)}
+	now := time.Now().Unix()
+	r.WriteFloat(n, now, v.value)
 }
 
 // the schema of this value
-func (v *FloatValue) Schema(name string, b SchemaBuffer) {
-	b <- Schema{name, TypeFloatValue, v.unit, v.desc}
-	b <- Schema{name + ".sets", TypeCounter, "set", "rate of changes to this value"}
+func (v *FloatValue) Schema(name string, r SchemaReceiver) {
+	r.WriteSchema(name, TypeFloatValue, v.unit, v.desc)
 }

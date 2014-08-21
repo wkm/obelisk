@@ -6,7 +6,6 @@ import (
 	"runtime"
 
 	"github.com/wkm/obelisk/lib/rlog"
-	"github.com/wkm/obelisk/server/util"
 )
 
 var log = rlog.LogConfig.Logger("web")
@@ -16,28 +15,28 @@ func main() {
 	log.Printf("setting maxprocs to %d", runtime.NumCPU())
 	runtime.GOMAXPROCS(runtime.NumCPU())
 
-	xServer, err = util.DiscoverObeliskServer()
-	hosts, err := ChildrenTags("host")
-	if err != nil {
-		log.Printf("could not retrieve list of hosts %s", err.Error())
-	}
+	// xServer, err = util.DiscoverObeliskServer()
+	// hosts, err := ChildrenTags("host")
+	// if err != nil {
+	// 	log.Printf("could not retrieve list of hosts %s", err.Error())
+	// }
 
-	log.Printf("hosts: %v", hosts)
+	// log.Printf("hosts: %v", hosts)
 
-	http.HandleFunc("/zk/", zkHandler)
-	http.HandleFunc("/host/", hostHandler)
-	http.HandleFunc("/worker/", workerHandler)
-	http.HandleFunc("/service/", serviceHandler)
+	// http.HandleFunc("/zk/", zkHandler)
+	// http.HandleFunc("/host/", hostHandler)
+	// http.HandleFunc("/worker/", workerHandler)
+	// http.HandleFunc("/service/", serviceHandler)
 
-	http.HandleFunc("/api/time", timeHandler)
+	// http.HandleFunc("/api/time", timeHandler)
 
-	http.HandleFunc("/", indexHandler)
+	// http.HandleFunc("/", indexHandler)
 
-	log.Printf("starting HTTP")
-	err = http.ListenAndServe(":8080", LogAccess(http.DefaultServeMux))
-	if err != nil {
-		log.Printf("err: %s", err)
-	}
+	// log.Printf("starting HTTP")
+	// err = http.ListenAndServe(":8080", LogAccess(http.DefaultServeMux))
+	// if err != nil {
+	// 	log.Printf("err: %s", err)
+	// }
 }
 
 func respondError(rw http.ResponseWriter, msg string) {

@@ -1,69 +1,31 @@
 package rinst
 
-// extract the schema from an instrument
-func FlushSchema(i Instrument, flushSize int) []Schema {
-	cb := make(SchemaBuffer, flushSize)
-	go func() {
-		i.Schema("", cb)
-		close(cb)
-	}()
-
-	return FlushSchemaBuffer(cb, flushSize)
+type InstrumentSchema struct {
+	Name        string
+	Type        SchemaType
+	Unit        string
+	Description string
 }
 
-// extract the schema from a SchemaBuffer
-func FlushSchemaBuffer(sb SchemaBuffer, flushSize int) []Schema {
-	buff := make([]Schema, 0, flushSize)
-	smallbuff := make([]Schema, flushSize, flushSize)
-	i := 0
-	for {
-		s, ok := <-sb
-		if !ok {
-			break
-		}
+type SchemaBuffer []InstrumentSchema
 
-		smallbuff[i%flushSize] = s
-		i++
-
-		if i%flushSize == 0 {
-			buff = append(buff, smallbuff...)
-		}
-	}
-
-	buff = append(buff, smallbuff[:i%flushSize]...)
-
-	return buff
+func (sb *SchemaBuffer) WriteSchema(name string, ty SchemaType, unit, desc string) {
+	*sb = append(*sb, InstrumentSchema{name, ty, unit, desc})
 }
 
-func FlushMeasurements(i Instrument, flushSize int) []Measurement {
-	cb := make(MeasurementBuffer, flushSize)
-	go func() {
-		i.Measure("", cb)
-		close(cb)
-	}()
-
-	return FlushMeasurementsBuffer(cb, flushSize)
+type InstrumentMeasurement struct {
+	Name       string
+	Time       int64
+	IntValue   int64
+	FloatValue float64
 }
 
-func FlushMeasurementsBuffer(mb MeasurementBuffer, flushSize int) []Measurement {
-	buff := make([]Measurement, 0, flushSize)
-	smallbuff := make([]Measurement, flushSize, flushSize)
-	i := 0
-	for {
-		m, ok := <-mb
-		if !ok {
-			break
-		}
+type MeasurementBuffer []InstrumentMeasurement
 
-		smallbuff[i%flushSize] = m
-		i++
+func (mb *MeasurementBuffer) WriteInt(name string, time int64, value int64) {
+	*mb = append(*mb, InstrumentMeasurement{name, time, value, 0})
+}
 
-		if i%flushSize == 0 {
-			buff = append(buff, smallbuff...)
-		}
-	}
-
-	buff = append(buff, smallbuff[:i%flushSize]...)
-
-	return buff
+func (mb *MeasurementBuffer) WriteFloat(name string, time int64, value float64) {
+	*mb = append(*mb, InstrumentMeasurement{name, time, 0, value})
 }

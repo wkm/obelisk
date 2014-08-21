@@ -6,7 +6,6 @@ import (
 
 	"github.com/wkm/obelisk/lib/errors"
 	"github.com/wkm/obelisk/lib/rinst"
-	"github.com/wkm/obelisk/lib/rinst/service"
 	"github.com/wkm/obelisk/lib/storekv"
 	"github.com/wkm/obelisk/lib/storetag"
 	"github.com/wkm/obelisk/lib/storetime"
@@ -25,8 +24,6 @@ func (app *ServerApp) Main() {
 	app.startTimeStore()
 	app.startTagStore()
 	app.startKVStore()
-
-	service.Expose(Stats)
 
 	// FIXME all this probably should use the flush utilities
 	buffer := make(rinst.SchemaBuffer, 1000)

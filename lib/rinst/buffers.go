@@ -18,6 +18,6 @@ type SchemaReceiver interface {
 }
 
 type MeasurementReceiver interface {
-	WriteInt(name string, time uint64, value int64)
-	WriteFloat(name string, time uint64, value float64)
+	WriteInt(name string, time int64, value int64)
+	WriteFloat(name string, time int64, value float64)
 }

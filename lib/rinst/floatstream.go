@@ -32,16 +32,16 @@ func (s *FloatStream) Record(value float64) {
 	s.s.Update(value)
 }
 
-func (s *FloatStream) Measure(n string, b MeasurementBuffer) {
+func (s *FloatStream) Measure(n string, r MeasurementReceiver) {
 	histo := s.s.Histogram()
-	now := uint64(time.Now().Unix())
+	now := time.Now().Unix()
 	for _, p := range s.precentiles {
 		rank := float64(histo.Rank) * (p / 100.0)
 		val := histo.Quantile(int(rank))
-		b <- Measurement{fmt.Sprintf("%s_%f", n, p), now, fmt.Sprintf("%f", val)}
+		r.WriteFloat(fmt.Sprintf("%s_%f", n, p), now, val)
 	}
 }
 
-func (s *FloatStream) Schema(n string, b SchemaBuffer) {
-	b <- Schema{n, TypeFloatStream, s.unit, s.desc}
+func (s *FloatStream) Schema(n string, r SchemaReceiver) {
+	r.WriteSchema(n, TypeFloatStream, s.unit, s.desc)
 }

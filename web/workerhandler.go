@@ -4,10 +4,6 @@ import (
 	"net/http"
 	"strings"
 	"time"
-
-	// "github.com/wkm/obelisk/lib/rinst"
-	// rinstService "github.com/wkm/obelisk/lib/rinst/service"
-	rlogService "github.com/wkm/obelisk/lib/rlog/service"
 )
 
 type WorkerInfo struct {
@@ -143,20 +139,20 @@ func workerHandler(rw http.ResponseWriter, req *http.Request) {
 		renderTemplate(req, rw, "/worker/worker_profiling.html", workerInfo)
 
 	case "logging":
-		xRlog, err := circuit.TryDial(addr, rlogService.ServiceName)
-		if err != nil {
-			respondError(rw, err.Error())
-			return
-		}
+		// xRlog, err := circuit.TryDial(addr, rlogService.ServiceName)
+		// if err != nil {
+		// 	respondError(rw, err.Error())
+		// 	return
+		// }
 
-		if xRlog == nil {
-			respondError(rw, "No Log service responded")
-			return
-		}
+		// if xRlog == nil {
+		// 	respondError(rw, "No Log service responded")
+		// 	return
+		// }
 
-		retrn := xRlog.Call("FlushLog")
-		workerInfo.Log = string(retrn[0].([]byte))
-		renderTemplate(req, rw, "/worker/worker_logging.html", workerInfo)
+		// retrn := xRlog.Call("FlushLog")
+		// workerInfo.Log = string(retrn[0].([]byte))
+		// renderTemplate(req, rw, "/worker/worker_logging.html", workerInfo)
 
 	default:
 		renderTemplate(req, rw, "/worker.html", workerInfo)

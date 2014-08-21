@@ -14,15 +14,15 @@ func TestCounter(t *testing.T) {
 		t.Error("counter bad value")
 	}
 
-	b := make(MeasurementBuffer, 10)
-	c.Measure("fig", b)
+	b := make(MeasurementBuffer, 0)
+	c.Measure("fig", &b)
 
 	if len(b) != 1 {
 		t.Error("counter bad measure length")
 	}
 
-	recv := <-b
-	if recv.Name != "fig" || recv.Value != "2" {
+	recv := b[0]
+	if recv.Name != "fig" || recv.IntValue != 2 {
 		t.Error("counter bad measure: %#v", recv)
 	}
 }

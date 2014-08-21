@@ -14,23 +14,14 @@ func TestFloatValue(t *testing.T) {
 		t.Error("floatvalue bad value")
 	}
 
-	if v.NumSets() != 3 {
-		t.Error("floatvalue bad numchanges")
-	}
-
-	b := make(MeasurementBuffer, 10)
-	v.Measure("fig", b)
-	if len(b) != 2 {
+	b := make(MeasurementBuffer, 0)
+	v.Measure("fig", &b)
+	if len(b) != 1 {
 		t.Error("floatvalue bad measure length")
 	}
 
-	actual := <-b
-	if actual.Name != "fig" || actual.Value != "14.000000" {
+	actual := b[0]
+	if actual.Name != "fig" || actual.FloatValue != 14.0 {
 		t.Errorf("floatvalue bad measure value %v", actual)
-	}
-
-	actual = <-b
-	if actual.Name != "fig.sets" || actual.Value != "3" {
-		t.Error("floatvalue bad measure numsets %v", actual)
 	}
 }

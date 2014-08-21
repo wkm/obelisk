@@ -3,8 +3,8 @@ package rinst
 // an instrument can be measured
 type Instrument interface {
 	// write the instrument's measurement buffer
-	Measure(name string, buff MeasurementBuffer)
+	Measure(name string, r MeasurementReceiver)
 
 	// get the instrument's schema
-	Schema(name string, buff SchemaBuffer)
+	Schema(name string, r SchemaReceiver)
 }

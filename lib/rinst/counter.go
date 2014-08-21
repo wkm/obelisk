@@ -28,7 +28,7 @@ func (c *Counter) Value() int64 {
 
 // get a readable value for a counter
 func (c *Counter) Measure(name string, r MeasurementReceiver) {
-	now := uint64(time.Now().Unix())
+	now := time.Now().Unix()
 	r.WriteInt(name, now, c.Value())
 }
 
