@@ -40,17 +40,17 @@ func (db *DB) Shutdown() {
 	db.Store = nil
 }
 
-func createKey(id, time int64) []byte {
+func createKey(id, time uint64) []byte {
 	return []byte(fmt.Sprintf("%d•%d", id, time))
 }
 
 func getTime(key []byte) uint64 {
-	var id, time int64
+	var id, time uint64
 	fmt.Sscanf(string(key), "%d•%d", &id, &time)
 	return time
 }
 
-func (db *DB) Insert(key, time int64, value float64) {
+func (db *DB) Insert(key, time uint64, value float64) {
 	statInsert.Incr()
 	b := make([]byte, 8)
 	binary.LittleEndian.PutUint64(b, math.Float64bits(value))
