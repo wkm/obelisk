@@ -27,10 +27,7 @@ func (app *ServerApp) Main() {
 
 	// FIXME all this probably should use the flush utilities
 	buffer := make(rinst.SchemaBuffer, 1000)
-	go func() {
-		Stats.Schema("", buffer)
-		close(buffer)
-	}()
+	Stats.Schema("", &buffer)
 
 	go app.periodic()
 }
@@ -42,16 +39,13 @@ func (app *ServerApp) periodic() {
 
 		// FIXME expose magic number as config
 		buffer := make(rinst.MeasurementBuffer, 1000)
-		go func() {
-			Stats.Measure("", buffer)
-			close(buffer)
-		}()
+		Stats.Measure("", &buffer)
 	}
 }
 
 func (app *ServerApp) startTimeStore() {
 	var err error
-	c := storetime.NewConfig()
+	c := storetime.Config{}
 	c.DiskStore = filepath.Join(ObeliskDirectory, "store", "time")
 	app.timedb, err = storetime.NewDB(c)
 	if err != nil {
@@ -61,7 +55,7 @@ func (app *ServerApp) startTimeStore() {
 
 func (app *ServerApp) startTagStore() {
 	var err error
-	c := storetag.NewConfig()
+	c := storetag.Config{}
 	c.DiskStore = filepath.Join(ObeliskDirectory, "store", "tag")
 	app.tagdb, err = storetag.NewDB(c)
 	if err != nil {
@@ -71,7 +65,7 @@ func (app *ServerApp) startTagStore() {
 
 func (app *ServerApp) startKVStore() {
 	var err error
-	c := storekv.NewConfig()
+	c := storekv.Config{}
 	c.DiskStore = filepath.Join(ObeliskDirectory, "store", "kv")
 	app.kvdb, err = storekv.NewDB(c)
 	if err != nil {
@@ -80,21 +74,21 @@ func (app *ServerApp) startKVStore() {
 }
 
 func (app *ServerApp) ChildrenTags(node string) ([]string, error) {
-	return app.tagdb.Store.Children(node)
+	return app.tagdb.Children(node)
 }
 
 // query a time series between start and stop
 func (app *ServerApp) QueryTime(node string, start, stop uint64) ([]storetime.Point, error) {
-	id, err := app.tagdb.Store.Id(node)
+	id, err := app.tagdb.Id(node)
 	if err != nil {
 		return nil, errors.W(err)
 	}
 
-	return app.timedb.Store.Query(id, start, stop)
+	return app.timedb.Query(id, start, stop)
 }
 
-func (app *ServerApp) GetMetricInfo(node string) (rinst.Schema, error) {
-	var schema rinst.Schema
-	err := app.kvdb.Store.GetGob(node, &schema)
+func (app *ServerApp) GetMetricInfo(node string) (rinst.InstrumentSchema, error) {
+	var schema rinst.InstrumentSchema
+	err := app.kvdb.GetGob(node, &schema)
 	return schema, errors.W(err)
 }

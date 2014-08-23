@@ -1,9 +1,8 @@
 package agent
 
 import (
-	"time"
-
-	"github.com/wkm/obelisk/lib/rinst"
+	// "time"
+	// "github.com/wkm/obelisk/lib/rinst"
 	"github.com/wkm/obelisk/lib/rlog"
 )
 
@@ -31,7 +30,7 @@ func (start) Start() {
 	// circuit.RunInBack(func() { periodic(xServer) })
 }
 
-func periodic(x circuit.X) {
+func periodic() {
 	// Flush metrics periodically
 	// ticker := time.Tick(1 * time.Second)
 	// for {

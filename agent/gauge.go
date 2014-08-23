@@ -1,15 +1,11 @@
 package agent
 
 import (
-	"fmt"
 	"time"
 
 	"github.com/cloudfoundry/gosigar"
 	"github.com/wkm/obelisk/lib/rinst"
 )
-
-func fstr(f float64) string { return fmt.Sprintf("%f", f) }
-func istr(i uint64) string  { return fmt.Sprintf("%d", i) }
 
 var StatsGauge = rinst.GaugeValue{
 	// measure function
@@ -20,36 +16,36 @@ var StatsGauge = rinst.GaugeValue{
 		mem := sigar.Mem{}
 		swap := sigar.Swap{}
 
-		now := uint64(time.Now().Unix())
+		now := time.Now().Unix()
 		load.Get()
-		b <- rinst.Measurement{n + "load.1", now, fstr(load.One)}
-		b <- rinst.Measurement{n + "load.5", now, fstr(load.Five)}
-		b <- rinst.Measurement{n + "load.15", now, fstr(load.Fifteen)}
+
+		r.WriteFloat(n+"load.1", now, load.One)
+		r.WriteFloat(n+"load.5", now, load.Five)
+		r.WriteFloat(n+"load.15", now, load.Fifteen)
 
 		mem.Get()
-		b <- rinst.Measurement{n + "mem", now, istr(mem.Total)}
-		b <- rinst.Measurement{n + "mem.used", now, istr(mem.Used)}
-		b <- rinst.Measurement{n + "mem.actUsed", now, istr(mem.ActualUsed)}
+		r.WriteInt(n+"mem", now, int64(mem.Total))
+		r.WriteInt(n+"mem.used", now, int64(mem.Used))
+		r.WriteInt(n+"mem.actUsed", now, int64(mem.ActualUsed))
 
 		swap.Get()
-		b <- rinst.Measurement{n + "swap", now, istr(swap.Total)}
-		b <- rinst.Measurement{n + "swap.used", now, istr(swap.Used)}
+		r.WriteInt(n+"swap", now, int64(swap.Total))
+		r.WriteInt(n+"swap.used", now, int64(swap.Used))
 
 		uptime.Get()
-		b <- rinst.Measurement{n + "uptime", now, fstr(uptime.Length)}
+		r.WriteFloat(n+"uptime", now, uptime.Length)
 	},
 	// schema function
-	func(n string, b rinst.SchemaBuffer) {
-		b <- rinst.Schema{n + "load.1", rinst.TypeFloatValue, "proc", "one minute load"}
-		b <- rinst.Schema{n + "load.5", rinst.TypeFloatValue, "proc", "five minute load"}
-		b <- rinst.Schema{n + "load.15", rinst.TypeFloatValue, "proc", "fifteen minute load"}
+	func(n string, r rinst.SchemaReceiver) {
+		r.WriteSchema(n+"load.1", rinst.TypeFloatValue, "proc", "one minute load")
+		r.WriteSchema(n+"load.5", rinst.TypeFloatValue, "proc", "five minute load")
+		r.WriteSchema(n+"load.15", rinst.TypeFloatValue, "proc", "fifteen minute load")
 
-		b <- rinst.Schema{n + "mem", rinst.TypeAllocation, "byte", "system memory usage"}
-		b <- rinst.Schema{n + "mem.used", rinst.TypeFloatValue, "byte", "memory used"}
-		b <- rinst.Schema{n + "mem.actUsed", rinst.TypeFloatValue, "byte", "actual memory used"}
+		r.WriteSchema(n+"mem", rinst.TypeAllocation, "byte", "system memory usage")
+		r.WriteSchema(n+"mem.used", rinst.TypeFloatValue, "byte", "memory used")
+		r.WriteSchema(n+"mem.actUsed", rinst.TypeFloatValue, "byte", "actual memory used")
 
-		b <- rinst.Schema{n + "swap", rinst.TypeAllocation, "byte", "swap memory usage"}
-		b <- rinst.Schema{n + "swap.used", rinst.TypeFloatValue, "byte", "swap used"}
-
+		r.WriteSchema(n+"swap", rinst.TypeAllocation, "byte", "swap memory usage")
+		r.WriteSchema(n+"swap.used", rinst.TypeFloatValue, "byte", "swap used")
 	},
 }
