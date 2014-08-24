@@ -9,12 +9,21 @@ import (
 )
 
 var Stats = rinst.NewCollection()
+var CommandStats = rinst.NewCollection()
+
+var (
+	StatDeclare = CommandStats.Counter("declare", "op", "declare requests received")
+	StatSchema  = CommandStats.Counter("schema", "op", "schema requests received")
+	StatRecord  = CommandStats.Counter("record", "op", "record requests received")
+)
 
 func init() {
 	Stats.AddInstrument("runtime", runtime.Stats)
 
-	// include stats from dependencies
+	// Include stats from dependencies
 	Stats.AddInstrument("kv", storekv.Stats)
 	Stats.AddInstrument("tag", storetag.Stats)
 	Stats.AddInstrument("time", storetime.Stats)
+
+	//
 }

@@ -25,10 +25,11 @@ func Listen(reciever interface{}, r io.Reader, w io.Writer) (err error) {
 
 		out, callerr := d.Call(string(line))
 		if callerr != nil {
-			// ... hmm what to do?
+			writeError(bw, callerr.Error())
+		} else {
+			bw.WriteString(out)
 		}
 
-		bw.WriteString(out)
 		bw.Flush()
 	}
 }

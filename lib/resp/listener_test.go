@@ -45,7 +45,7 @@ func TestListen(t *testing.T) {
 	}
 	defer ln.Close()
 
-	// Start listenging
+	// Start listening
 	go func() {
 		t.Logf("Listening for connection")
 		for {
@@ -73,6 +73,7 @@ func TestListen(t *testing.T) {
 
 	// Test textual commands
 	testcases := []struct{ in, out string }{
+		{"gerald", "-Error: Unknown command \"gerald\"\r\n"},
 		{"put k1 12", "+OK\r\n"},
 		{"put k2 14", "+OK\r\n"},
 		{"get k1", "$2\r\n12\r\n"},

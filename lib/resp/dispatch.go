@@ -53,7 +53,7 @@ func (d *dispatch) Call(line string) (res string, err error) {
 
 	method, ok := d.commands[normalizeMethodName(methodName)]
 	if !ok {
-		err = errors.New(fmt.Sprintf("Unknown method %q", methodName))
+		err = errors.New(fmt.Sprintf("Unknown command %q", methodName))
 		return
 	}
 

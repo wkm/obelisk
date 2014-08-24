@@ -2,10 +2,9 @@ package storetag
 
 import (
 	"encoding/binary"
-	"math"
-	"math/rand"
 	"path/filepath"
 	"strings"
+	"sync"
 
 	"github.com/jmhodges/levigo"
 	"github.com/wkm/obelisk/lib/ldb"
@@ -24,6 +23,8 @@ var DefaultConfig = Config{
 }
 
 type DB struct {
+	mx sync.RWMutex
+
 	config Config
 	Store  *ldb.Store
 }
@@ -43,6 +44,9 @@ func (db *DB) Shutdown() {
 
 // Id gives the id of a tag, if it exists
 func (db *DB) Id(name ...string) (id uint64, err error) {
+	db.mx.RLock()
+	defer db.mx.RUnlock()
+
 	statId.Incr()
 	path := createPath(name...)
 
@@ -54,30 +58,35 @@ func (db *DB) Id(name ...string) (id uint64, err error) {
 	return
 }
 
-// get the id of a tag, creating it and the hierarchy to it if it doesn't exist
-func (db *DB) NewTag(name ...string) (id uint64, err error) {
+// Get the id of a tag, creating it and the hierarchy to it if it doesn't exist
+func (db *DB) Tag(id uint64, name ...string) (newId uint64, err error) {
 	statNew.Incr()
-	path := createPath(name...)
+	path := []byte(createPath(name...))
 
-	id = nextId()
-	bb := make([]byte, 8)
+	db.mx.Lock()
+	defer db.mx.Unlock()
+
+	// Test if the tag exists
+	bb, err := db.Store.CacheGet(path)
+	if bb != nil {
+		// Give the existing tag
+		return binary.LittleEndian.Uint64(bb), nil
+	}
+
+	// Create the tag
+	bb = make([]byte, 8)
 	binary.LittleEndian.PutUint64(bb, id)
-	err = db.Store.PutAsync([]byte(path), bb)
+	err = db.Store.PutAsync(path, bb)
+	newId = id
 
 	return
 }
 
-func nextId() uint64 {
-	i := rand.Int63()
-	if i < 0 {
-		return uint64(math.MaxInt64) + uint64(i*-1)
-	} else {
-		return uint64(i)
-	}
-}
-
 // Get the entirety of the tree under a tag
 func (db *DB) Children(name ...string) (children []string, err error) {
+	db.mx.RLock()
+	defer db.mx.RUnlock()
+
 	statChildren.Incr()
 	path := createPath(name...)
 
@@ -101,6 +110,9 @@ func (db *DB) Children(name ...string) (children []string, err error) {
 
 // Delete removes a node and all of its children
 func (db *DB) Delete(name ...string) (children []string, err error) {
+	db.mx.Lock()
+	defer db.mx.Unlock()
+
 	statDelete.Incr()
 
 	children, err = db.Children(name...)

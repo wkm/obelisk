@@ -31,7 +31,7 @@ func (kv *keyval) Put(key, value string) {
 }
 
 func (kv *keyval) Err() error {
-	return errors.New("Testing error")
+	return errors.New("Test!")
 }
 
 func TestStringDispatch(t *testing.T) {
@@ -45,7 +45,7 @@ func TestStringDispatch(t *testing.T) {
 		{"get hi", "$0\r\n\r\n"},
 		{"put hi there", "+OK\r\n"},
 		{"get hi", "$5\r\nthere\r\n"},
-		{"err", "-Testing error\r\n"},
+		{"err", "-Error: Test!\r\n"},
 		{"MGET hi dog", "*2\r\n$5\r\nthere\r\n$0\r\n\r\n"},
 	}
 

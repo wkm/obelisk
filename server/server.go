@@ -1,10 +1,10 @@
 package server
 
 import (
+	"os"
 	"path/filepath"
 	"time"
 
-	"github.com/wkm/obelisk/lib/errors"
 	"github.com/wkm/obelisk/lib/rinst"
 	"github.com/wkm/obelisk/lib/storekv"
 	"github.com/wkm/obelisk/lib/storetag"
@@ -12,23 +12,34 @@ import (
 )
 
 type ServerApp struct {
+	StoreDir string
+
 	timedb *storetime.DB // time series database
 	tagdb  *storetag.DB  // hierarchy database
 	kvdb   *storekv.DB   // key-value database
 }
 
-const ObeliskDirectory = "/var/run/obelisk"
+func (app *ServerApp) Start() {
+	log.Printf("Starting")
 
-func (app *ServerApp) Main() {
-	log.Printf("starting obelisk-server")
-	app.startTimeStore()
-	app.startTagStore()
-	app.startKVStore()
+	if err := app.startTimeStore(); err != nil {
+		log.Printf("Couldn't start time store %s", err.Error())
+		os.Exit(-1)
+	}
 
-	// FIXME all this probably should use the flush utilities
-	buffer := make(rinst.SchemaBuffer, 1000)
-	Stats.Schema("", &buffer)
+	if err := app.startTagStore(); err != nil {
+		log.Printf("Couldn't start tag store %s", err.Error())
+		os.Exit(-1)
+	}
 
+	if err := app.startKVStore(); err != nil {
+		log.Printf("Couldn't start key-value store %s", err.Error())
+		os.Exit(-1)
+	}
+
+	// Server self reports
+	buffer := make(rinst.SchemaBuffer, 0)
+	Stats.Schema("obelisk/", &buffer)
 	go app.periodic()
 }
 
@@ -39,56 +50,27 @@ func (app *ServerApp) periodic() {
 
 		// FIXME expose magic number as config
 		buffer := make(rinst.MeasurementBuffer, 1000)
-		Stats.Measure("", &buffer)
+		Stats.Measure("obelisk/", &buffer)
 	}
 }
 
-func (app *ServerApp) startTimeStore() {
-	var err error
+func (app *ServerApp) startTimeStore() (err error) {
 	c := storetime.Config{}
-	c.DiskStore = filepath.Join(ObeliskDirectory, "store", "time")
+	c.DiskStore = filepath.Join(app.StoreDir, "store", "time")
 	app.timedb, err = storetime.NewDB(c)
-	if err != nil {
-		log.Printf("error starting time store %s", err.Error())
-	}
+	return
 }
 
-func (app *ServerApp) startTagStore() {
-	var err error
+func (app *ServerApp) startTagStore() (err error) {
 	c := storetag.Config{}
-	c.DiskStore = filepath.Join(ObeliskDirectory, "store", "tag")
+	c.DiskStore = filepath.Join(app.StoreDir, "store", "tag")
 	app.tagdb, err = storetag.NewDB(c)
-	if err != nil {
-		log.Printf("error starting tag store %s", err.Error())
-	}
+	return
 }
 
-func (app *ServerApp) startKVStore() {
-	var err error
+func (app *ServerApp) startKVStore() (err error) {
 	c := storekv.Config{}
-	c.DiskStore = filepath.Join(ObeliskDirectory, "store", "kv")
+	c.DiskStore = filepath.Join(app.StoreDir, "store", "kv")
 	app.kvdb, err = storekv.NewDB(c)
-	if err != nil {
-		log.Printf("error starting keyvalue store%s", err.Error())
-	}
-}
-
-func (app *ServerApp) ChildrenTags(node string) ([]string, error) {
-	return app.tagdb.Children(node)
-}
-
-// query a time series between start and stop
-func (app *ServerApp) QueryTime(node string, start, stop uint64) ([]storetime.Point, error) {
-	id, err := app.tagdb.Id(node)
-	if err != nil {
-		return nil, errors.W(err)
-	}
-
-	return app.timedb.Query(id, start, stop)
-}
-
-func (app *ServerApp) GetMetricInfo(node string) (rinst.InstrumentSchema, error) {
-	var schema rinst.InstrumentSchema
-	err := app.kvdb.GetGob(node, &schema)
-	return schema, errors.W(err)
+	return
 }

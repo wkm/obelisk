@@ -5,10 +5,21 @@ The `server` package implements the obelisk time-series server. This is the pers
 ## API
 The data server exposes two APIs to the data: a TCP based protocol similar to that of Redis and an HTTP interface that outputs structured JSON.
 
-### TCP 
+### TCP
 
-### HTTP
-*...*
+* `declare id path1 path2 ...`: 
+* `schema id metric type unit description`: Declare the schema for a metric
+* `record id metric time value`: Record a measurement
+
+Example interaction:
+
+    declare a712371 host/h1/service/s1 service/s1/host/h1
+    
+    schema a712371 get counter op 'number of get commands'
+    schema a712371 set counter op 'number of set commands'
+
+    record a712371 get 2014-05-12 19
+    record a712371 set 2014-05-12 19
 
 ## Data Stores
 The server is comprised of three types of stores, each backed with their own LevelDB instance. 

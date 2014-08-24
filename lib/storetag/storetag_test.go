@@ -19,22 +19,22 @@ func TestDB(t *testing.T) {
 	}
 
 	// insert some data
-	db.NewTag("a")
-	db.NewTag("b")
-	db.NewTag("c")
-	db.NewTag("d")
-	db.NewTag("e")
-	db.NewTag("g")
-	db.NewTag("h")
+	db.Tag(0, "a")
+	db.Tag(1, "b")
+	db.Tag(2, "c")
+	db.Tag(3, "d")
+	db.Tag(4, "e")
+	db.Tag(5, "g")
+	db.Tag(6, "h")
 
-	db.NewTag("a/i")
-	db.NewTag("a", "j")
-	db.NewTag("a/k")
+	db.Tag(7, "a/i")
+	db.Tag(8, "a", "j")
+	db.Tag(9, "a/k")
 
-	id1, _ := db.NewTag("a/j/l")
-	id2, _ := db.NewTag("a/j/m")
-	id3, _ := db.NewTag("a/j/n")
-	id4, _ := db.NewTag("a/j/o")
+	id1, _ := db.Tag(10, "a/j/l")
+	id2, _ := db.Tag(11, "a/j/m")
+	id3, _ := db.Tag(12, "a/j/n")
+	id4, _ := db.Tag(13, "a/j/o")
 
 	// Close and open the database to test persistence
 	db.Shutdown()
@@ -43,15 +43,24 @@ func TestDB(t *testing.T) {
 		t.Fatal(err.Error())
 	}
 
+	id, err := db2.Tag(5, "a")
+	if err != nil {
+		t.Errorf("unexpected error %s", err.Error())
+	}
+
+	if id != 0 {
+		t.Errorf("expected ID to be %d as originally set not %d", 0, id)
+	}
+
 	res, err := db2.Children("a/j")
 	if err != nil {
-		t.Fatalf("unexpected error %s", err.Error())
+		t.Errorf("unexpected error %s", err.Error())
 	}
 
 	str := strings.Join(res, ",")
 	exp := "a/j,a/j/l,a/j/m,a/j/n,a/j/o"
 	if str != exp {
-		t.Fatalf("expected %#v got %#v", exp, str)
+		t.Errorf("expected %#v got %#v", exp, str)
 	}
 
 	r, _ := db2.Id("a/j/l")
