@@ -26,7 +26,7 @@ func parse(t reflect.Kind, line string) (remaining string, value reflect.Value, 
 }
 
 func nextToken(line string) (token, rem string, err error) {
-	// consume leading whitespace
+	// Consume leading whitespace
 	start := 0
 	for ; start < len(line); start++ {
 		switch line[start] {
@@ -36,17 +36,52 @@ func nextToken(line string) (token, rem string, err error) {
 		break
 	}
 
-	// consume non-whitespace
+	// Consume as much non-whitespace as possible
 	stop := start
+	quoted := false
+
+	// Test for quoted string
+	if stop < len(line) && (line[stop] == '"' || line[stop] == '`') {
+		quoted = true
+		stop++
+	}
+
+	escaping := false
+	escapedChars := 0
 Whitespace:
 	for ; stop < len(line); stop++ {
+		// Only a single character can be escaped
+		escaped := escaping
+		escaping = false
+
 		switch line[stop] {
+		case '\\':
+			escapedChars++
+			if !escaping {
+				escaping = true
+			}
+
 		case ' ', '\n':
-			break Whitespace
+			if !quoted {
+				break Whitespace
+			}
+
+		case '"', '`':
+			if !escaped {
+				break Whitespace
+			}
 		}
 	}
 
-	return line[start:stop], line[stop:], nil
+	if !quoted {
+		return line[start:stop], line[stop:], nil
+	} else if escapedChars == 0 {
+		// Don't copy the string, but skip the opening and closing quotes
+		return line[start+1 : stop], line[stop+1:], nil
+	} else {
+		newline, err := strconv.Unquote(line[start : stop+1])
+		return string(newline), line[stop+1:], err
+	}
 }
 
 func parseInt(line string) (rem string, val reflect.Value, err error) {

@@ -1,7 +1,6 @@
 package storetag
 
 import (
-	_ "circuit/kit/debug/ctrlc"
 	"os"
 	"path/filepath"
 	"strings"
