@@ -1,5 +1,7 @@
 # Obelisk
 
+[![Build Status](https://travis-ci.org/wkm/obelisk.svg?branch=master)](https://travis-ci.org/wkm/obelisk)
+
 Obelisk is a plug-and-play, end-to-end service for measuring, storing,
 querying, and visualizing general time-series data for Go programs,
 and especially Go programs which run on GoCircuit.

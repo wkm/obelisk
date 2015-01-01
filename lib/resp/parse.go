@@ -1,7 +1,6 @@
 package resp
 
 import (
-	"errors"
 	"fmt"
 	"reflect"
 	"strconv"
@@ -20,7 +19,7 @@ func parse(t reflect.Kind, line string) (remaining string, value reflect.Value, 
 		return parseString(line)
 
 	default:
-		err = fmt.Eprintf("unsupported kind: %v", t)
+		err = fmt.Errorf("unsupported kind: %v", t)
 		return
 	}
 }
