@@ -20,7 +20,7 @@ func parse(t reflect.Kind, line string) (remaining string, value reflect.Value, 
 		return parseString(line)
 
 	default:
-		err = errors.New(fmt.Sprintf("unsupported kind: %v", t))
+		err = fmt.Eprintf("unsupported kind: %v", t)
 		return
 	}
 }

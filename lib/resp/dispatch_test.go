@@ -47,6 +47,8 @@ func TestStringDispatch(t *testing.T) {
 		{"get hi", "$5\r\nthere\r\n"},
 		{"err", "-Error: Test!\r\n"},
 		{"MGET hi dog", "*2\r\n$5\r\nthere\r\n$0\r\n\r\n"},
+		{"put \"key 1\" \"a largish value here\"", "+OK\r\n"},
+		{"MGET \"key 1\"", "*2\r\n$20\r\na largish value here\r\n$0\r\n\r\n"},
 	}
 
 	for _, tc := range testcases {
