@@ -1,4 +1,6 @@
 language: go
-sudo: false
+before_install:
+  - sudo apt-get update -qq
+  - sudo apt-get install -y libleveldb-dev
 go:
   - tip
