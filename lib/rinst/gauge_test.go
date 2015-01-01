@@ -25,7 +25,7 @@ func TestGauge(t *testing.T) {
 
 	recv := mb[0]
 	if recv.Name != "foo.a" || recv.IntValue != 456 {
-		t.Error("layout snapshot bad value %#v", recv)
+		t.Errorf("layout snapshot bad value %#v", recv)
 	}
 
 	sb := make(SchemaBuffer, 0)

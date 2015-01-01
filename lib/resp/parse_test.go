@@ -82,19 +82,19 @@ func TestParseFloat(t *testing.T) {
 	}
 
 	for _, tc := range testcases {
-		t.Logf("test case %q", tc)
+		t.Logf("test case %v", tc)
 		r, v, err := parseFloat(tc.in)
 
 		if err != nil {
-			t.Errorf("unexpected error: %q", err.Error())
+			t.Errorf("unexpected error: %v", err.Error())
 		}
 
 		if !v.IsValid() || math.Abs(v.Float()-tc.val) > 0.001 {
-			t.Errorf("expected %d, got %q", tc.val, v.Float())
+			t.Errorf("expected %v, got %v", tc.val, v.Float())
 		}
 
 		if r != tc.rem {
-			t.Errorf("expected %q remaining; got %q", tc.rem, r)
+			t.Errorf("expected %v remaining; got %v", tc.rem, r)
 		}
 	}
 }

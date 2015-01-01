@@ -8,13 +8,17 @@ import (
 	"github.com/wkm/obelisk/lib/storetime"
 )
 
-var Stats = rinst.NewCollection()
-var CommandStats = rinst.NewCollection()
-
 var (
-	StatDeclare = CommandStats.Counter("declare", "op", "declare requests received")
-	StatSchema  = CommandStats.Counter("schema", "op", "schema requests received")
-	StatRecord  = CommandStats.Counter("record", "op", "record requests received")
+	// Stats contains measurements from the underlying services of obelisk server.
+	Stats = rinst.NewCollection()
+
+	// CommandStats contains measurements of the commands executed.
+	CommandStats = rinst.NewCollection()
+
+	// Stats on command requests
+	statDeclare = CommandStats.Counter("declare", "op", "declare requests received")
+	statSchema  = CommandStats.Counter("schema", "op", "schema requests received")
+	statRecord  = CommandStats.Counter("record", "op", "record requests received")
 )
 
 func init() {
@@ -24,6 +28,4 @@ func init() {
 	Stats.AddInstrument("kv", storekv.Stats)
 	Stats.AddInstrument("tag", storetag.Stats)
 	Stats.AddInstrument("time", storetime.Stats)
-
-	//
 }

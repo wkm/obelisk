@@ -4,6 +4,7 @@ import (
 	"fmt"
 )
 
+// StreamSummaryStructure contains information compactly summarizing a stream of float values.
 type StreamSummaryStructure struct {
 	Err   float64
 	Count int
@@ -13,6 +14,7 @@ type StreamSummaryStructure struct {
 	head      *SummaryStructure
 }
 
+// NewStreamSummaryStructure allocates a new stream summary with the specified amount of error.
 func NewStreamSummaryStructure(err float64) *StreamSummaryStructure {
 	s := StreamSummaryStructure{}
 	s.Err = err
@@ -22,6 +24,7 @@ func NewStreamSummaryStructure(err float64) *StreamSummaryStructure {
 	return &s
 }
 
+// Update inserts a new value into the summary structure.
 func (s *StreamSummaryStructure) Update(v float64) {
 	s.head.Update(v)
 
@@ -34,6 +37,7 @@ func (s *StreamSummaryStructure) Update(v float64) {
 	}
 }
 
+// Histogram freezes the summary structure into a histogram which can be queried for percentiles.
 func (s *StreamSummaryStructure) Histogram() *Histogram {
 	summary := compress(s.head.Histogram().S, s.head.Width, s.head.Err/2)
 	fmt.Printf("merging all sketches")

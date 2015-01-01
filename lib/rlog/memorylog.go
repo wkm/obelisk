@@ -5,17 +5,19 @@ import (
 	"fmt"
 )
 
+// MemoryLog is an in-memory log container.
 type MemoryLog struct {
 	Buffer *bytes.Buffer
 }
 
+// NewMemoryLog allocates a new in-memory log.
 func NewMemoryLog() *MemoryLog {
 	m := MemoryLog{}
 	m.Buffer = new(bytes.Buffer)
 	return &m
 }
 
-// print a message into the log, terminated by a new line
+// Printf a message into the log, terminated by a new line
 func (r MemoryLog) Printf(format string, obj ...interface{}) {
 	statPrint.Incr()
 	bytes, _ := fmt.Fprintf(r.Buffer, format, obj...)
@@ -23,15 +25,17 @@ func (r MemoryLog) Printf(format string, obj ...interface{}) {
 	statByte.Add(uint(bytes) + 1)
 }
 
+// Sync is a NOP with memory logs.
 func (r MemoryLog) Sync() {
 	// memory logs don't synchronize
 }
 
+// Close is a NOP with memory logs.
 func (r MemoryLog) Close() {
 	// memory logs don't close
 }
 
-// gets the current content of the log; truncating the contents
+// FlushLog gets the current content of the log, truncating its contents.
 func (r MemoryLog) FlushLog() []byte {
 	statFlush.Incr()
 	content := r.Buffer.Bytes()

@@ -36,8 +36,9 @@ func TestWriteRequest(t *testing.T) {
 	}
 }
 
+// Start a simple test service to validate RESP validation
 func TestListen(t *testing.T) {
-	k := newKeyval() // use keyval from dispatch_test.go
+	k := newKeyval() // reuse keyval from dispatch_test.go
 
 	ln, err := net.Listen("tcp", ":8888")
 	if err != nil {

@@ -7,10 +7,14 @@ import (
 )
 
 var (
-	ErrInvalidSize   = errors.New("invalid size")
+	// ErrInvalidSize is returned if the given size prefix is not a positive integer.
+	ErrInvalidSize = errors.New("invalid size")
+
+	// ErrInvalidPrefix is returned if the argument prefix is not of a known type.
 	ErrInvalidPrefix = errors.New("invalid prefix")
-	ErrInvalidType   = errors.New("invalid type")
-	ErrInvalidSyntax = errors.New("invalid syntax")
+
+	// ErrInvalidType is returned if an invalid type is specified in the request.
+	ErrInvalidType = errors.New("invalid type")
 )
 
 // Parse a RESP request into its constituent types. Must begin with a '*'
@@ -59,6 +63,7 @@ func readRequest(w io.ByteReader) (values []reflect.Value, err error) {
 	return
 }
 
+// Very fast parsing of non-negative integers. Copied from the Redis RESP implementation.
 func readSize(w io.ByteReader) (sz int, err error) {
 	for {
 		n, err := w.ReadByte()
@@ -84,7 +89,7 @@ func readSize(w io.ByteReader) (sz int, err error) {
 	return
 }
 
-// Consume a string of the given size
+// Consume a string of the given size from the reader into a newly allocated array.
 func readString(w io.ByteReader, sz int) (str string, err error) {
 	bb := make([]byte, sz)
 	for i := 0; i < sz; i++ {
@@ -98,7 +103,7 @@ func readString(w io.ByteReader, sz int) (str string, err error) {
 	return
 }
 
-// Consume the \r\n separator
+// Consume the '\r\n' separator
 func consumeSep(w io.ByteReader) (err error) {
 	n, err := w.ReadByte()
 	if err != nil {

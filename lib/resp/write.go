@@ -6,10 +6,6 @@ import (
 	"reflect"
 )
 
-type Response interface {
-	Write(w io.Writer)
-}
-
 func write(w io.Writer, kind reflect.Kind, val reflect.Value) (nn int, err error) {
 	if !val.IsValid() {
 		return writeNil(w)

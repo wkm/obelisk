@@ -5,7 +5,7 @@
 gofiles=$(git diff --cached --name-only --diff-filter=ACM | grep '.go$' | grep -v '.pb.go$')
 if [ "${GO_SKIP_PRECOMMIT_CHECKS}" != "1" -a -n "${gofiles}" ]; then
   echo "Check for formatting errors."
-  unformatted=$(goimports -l ${gofiles})
+  unformatted=$(goimports ${gofiles})
   if [ -n "${unformatted}" ]; then
     # Some files are not gofmt'd. Print message and fail.
     echo -e >&2 "\nGo files must be formatted with goimports. Please run:"

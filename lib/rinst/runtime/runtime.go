@@ -7,11 +7,11 @@ import (
 	"github.com/wkm/obelisk/lib/rinst"
 )
 
+// Stats provides measurements on the Go runtime.
 var Stats = &statsGauge
 
 var statsGauge = rinst.GaugeValue{
-	// MeasureFn
-	func(n string, r rinst.MeasurementReceiver) {
+	MeasureFn: func(n string, r rinst.MeasurementReceiver) {
 		now := time.Now().Unix()
 		s := runtime.MemStats{}
 		runtime.ReadMemStats(&s)
@@ -48,8 +48,7 @@ var statsGauge = rinst.GaugeValue{
 		// r.WriteInt(n+"gc.debugenabled", now, bools.DebugGC)
 	},
 
-	// SchemaFn
-	func(n string, r rinst.SchemaReceiver) {
+	SchemaFn: func(n string, r rinst.SchemaReceiver) {
 		// general statistics
 		r.WriteSchema(n+"alloc", rinst.TypeIntValue, "byte", "bytes allocated and still in use")
 		r.WriteSchema(n+"totalAlloc", rinst.TypeIntValue, "byte", "bytes allocated (even if freed)")

@@ -11,15 +11,13 @@ import (
 
 var log = rlog.LogConfig.Logger("storekv")
 
+// Config contains configuration settings for the LevelDB backing.
 type Config struct {
 	DiskStore string
 	CacheSize int
 }
 
-var DefaultConfig = Config{
-	CacheSize: 1024 * 1024 * 24,
-}
-
+// DB is a container that provides KV semantics with a LevelDB backing.
 type DB struct {
 	config Config
 	Store  *ldb.Store
@@ -28,6 +26,7 @@ type DB struct {
 	statExists, statGet, statSet *rinst.Counter
 }
 
+// NewDB creates a new KV datastore with the given configuration.
 func NewDB(config Config) (db *DB, err error) {
 	db = new(DB)
 	db.config = config
@@ -40,7 +39,7 @@ func NewDB(config Config) (db *DB, err error) {
 	return
 }
 
-// Safely close the datastore
+// Shutdown safely closes the datastore
 func (db *DB) Shutdown() {
 	db.Store.DB.Close()
 	db.Store = nil
@@ -74,6 +73,7 @@ func (db *DB) Set(key string, value []byte) (err error) {
 	return
 }
 
+// SetGob stores the given object under the given key after Gob encoding.
 // FIXME I think this should reuse an encoder for performance reasons
 func (db *DB) SetGob(key string, obj interface{}) (err error) {
 	var b bytes.Buffer
@@ -87,7 +87,7 @@ func (db *DB) SetGob(key string, obj interface{}) (err error) {
 	return db.Set(key, b.Bytes())
 }
 
-// get the gob value of a key into obj
+// GetGob gets value of a key and stores it into obj if it's appropriate.
 func (db *DB) GetGob(name string, obj interface{}) (err error) {
 	value, err := db.Get(name)
 	if err != nil {

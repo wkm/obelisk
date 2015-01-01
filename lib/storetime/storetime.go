@@ -12,21 +12,25 @@ import (
 
 var log = rlog.LogConfig.Logger("storetime")
 
+// Config contains configuration settings for the timestore.
 type Config struct {
 	DiskStore string
 	CacheSize int
 }
 
+// DB provides the timestore implementation.
 type DB struct {
 	config Config
 	Store  *ldb.Store
 }
 
+// Point stores a timestamp and associated value.
 type Point struct {
 	Time  uint64
 	Value float64
 }
 
+// NewDB creates a new timestore database with the given configuration.
 func NewDB(config Config) (db *DB, err error) {
 	db = new(DB)
 	db.config = config
@@ -34,7 +38,7 @@ func NewDB(config Config) (db *DB, err error) {
 	return
 }
 
-// Safely close the datastore
+// Shutdown safely close the datastore.
 func (db *DB) Shutdown() {
 	db.Store.DB.Close()
 	db.Store = nil
@@ -50,6 +54,7 @@ func getTime(key []byte) uint64 {
 	return time
 }
 
+// Insert stores a datapoint in the timeseries datastore.
 func (db *DB) Insert(key, time uint64, value float64) {
 	statInsert.Incr()
 	b := make([]byte, 8)
@@ -57,7 +62,7 @@ func (db *DB) Insert(key, time uint64, value float64) {
 	db.Store.PutAsync(createKey(key, time), b)
 }
 
-// Query gives all tuples of <time,value> from key with time in [start,stop]
+// Query gives all tuples of <time,value> from key with time in [start,stop].
 func (db *DB) Query(key, start, stop uint64) (points []Point, err error) {
 	statQuery.Incr()
 
@@ -81,7 +86,7 @@ func (db *DB) Query(key, start, stop uint64) (points []Point, err error) {
 	return
 }
 
-// FlatQuery gives all values from key with time in [start, stop]
+// FlatQuery gives all values from key with time in [start, stop].
 func (db *DB) FlatQuery(key, start, stop uint64) (values []float64, err error) {
 	statQuery.Incr()
 

@@ -62,22 +62,22 @@ func TestDB(t *testing.T) {
 		t.Errorf("expected %#v got %#v", exp, str)
 	}
 
-	r, _ := db2.Id("a/j/l")
+	r, _ := db2.ID("a/j/l")
 	if r != id1 {
 		t.Errorf("expected id=%v got %v", id1, r)
 	}
 
-	r, _ = db2.Id("a/j/m")
+	r, _ = db2.ID("a/j/m")
 	if r != id2 {
 		t.Errorf("expected id=%v got %v", id1, r)
 	}
 
-	r, _ = db2.Id("a/j/n")
+	r, _ = db2.ID("a/j/n")
 	if r != id3 {
 		t.Errorf("expected id=%v got %v", id1, r)
 	}
 
-	r, _ = db2.Id("a/j/o")
+	r, _ = db2.ID("a/j/o")
 	if r != id4 {
 		t.Errorf("expected id=%v got %v", id1, r)
 	}

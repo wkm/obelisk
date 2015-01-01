@@ -4,7 +4,7 @@ import (
 	"testing"
 )
 
-// benchmark atomic longs
+// Benchmark atomic longs
 func BenchmarkCounter(b *testing.B) {
 	c := Counter{}
 	for i := 0; i < b.N; i++ {
@@ -12,7 +12,7 @@ func BenchmarkCounter(b *testing.B) {
 	}
 }
 
-// an int value is just two atomic things
+// An int value is just two atomic things
 func BenchmarkIntValue(b *testing.B) {
 	v := IntValue{}
 	for i := 0; i < b.N; i++ {
@@ -20,7 +20,7 @@ func BenchmarkIntValue(b *testing.B) {
 	}
 }
 
-// a floating value is mostly a mutex
+// A floating value is mostly a mutex
 func BenchmarkFloatValue(b *testing.B) {
 	v := FloatValue{}
 	for i := 0; i < b.N; i++ {

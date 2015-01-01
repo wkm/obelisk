@@ -5,14 +5,14 @@ import (
 	"time"
 )
 
-// a container for an integer value which sometimes changes
+// FloatValue stores a float64 as an instrument.
 type FloatValue struct {
 	sync.Mutex
 	value      float64
 	desc, unit string
 }
 
-// atomically set the value
+// Set the value of this instrument atomically.
 func (v *FloatValue) Set(value float64) *FloatValue {
 	v.Lock()
 	defer v.Unlock()
@@ -21,14 +21,14 @@ func (v *FloatValue) Set(value float64) *FloatValue {
 	return v
 }
 
-// atomically get the value of this value
+// Get the value of this instrument atomically.
 func (v *FloatValue) Get() float64 {
 	v.Lock()
 	defer v.Unlock()
 	return v.value
 }
 
-// get a readable value for a counter
+// Measure the value of instrument into the receiver.
 func (v *FloatValue) Measure(n string, r MeasurementReceiver) {
 	v.Lock()
 	defer v.Unlock()
@@ -37,7 +37,7 @@ func (v *FloatValue) Measure(n string, r MeasurementReceiver) {
 	r.WriteFloat(n, now, v.value)
 }
 
-// the schema of this value
+// Schema writes the schema of this value into the receiver.
 func (v *FloatValue) Schema(name string, r SchemaReceiver) {
 	r.WriteSchema(name, TypeFloatValue, v.unit, v.desc)
 }

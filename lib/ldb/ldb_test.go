@@ -32,9 +32,9 @@ func TestStore(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	t.Logf("got %#s", res)
+	t.Logf("got %s", res)
 	if string(res) != "value2" {
-		t.Errorf("expected %#v got %#s", "value2", res)
+		t.Errorf("expected %#v got %s", "value2", res)
 	}
 }
 

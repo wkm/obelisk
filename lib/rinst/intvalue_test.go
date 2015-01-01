@@ -22,6 +22,6 @@ func TestIntValue(t *testing.T) {
 
 	recv := b[0]
 	if recv.Name != "fig" || recv.IntValue != 15 {
-		t.Error("intvalue bad measure value %#v", recv)
+		t.Errorf("intvalue bad measure value %#v", recv)
 	}
 }

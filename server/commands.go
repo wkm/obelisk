@@ -1,14 +1,8 @@
 package server
 
-import (
-	"github.com/wkm/obelisk/lib/rlog"
-)
-
-var log = rlog.LogConfig.Logger("obelisk-server")
-
-// Associate an identifier with the given paths
-func (app *ServerApp) Declare(id string, paths ...string) (err error) {
-	StatDeclare.Incr()
+// Declare associates an identifier with the given paths
+func (app *App) Declare(id string, paths ...string) (err error) {
+	statDeclare.Incr()
 	return
 	// for _, path := range paths {
 	// 	actid, err := app.tagdb.Tag(id, path)
@@ -18,12 +12,14 @@ func (app *ServerApp) Declare(id string, paths ...string) (err error) {
 	// }
 }
 
-func (app *ServerApp) Schema(id, op, kind, unit, desc string) (err error) {
-	StatSchema.Incr()
+// Schema stores metadata on the a metric's structure.
+func (app *App) Schema(id, op, kind, unit, desc string) (err error) {
+	statSchema.Incr()
 	return
 }
 
-func (app *ServerApp) Record(id, metric, time, value string) (err error) {
-	StatRecord.Incr()
+// Record stores a single measurement of a metric.
+func (app *App) Record(id, metric, time, value string) (err error) {
+	statRecord.Incr()
 	return
 }

@@ -4,12 +4,12 @@ import (
 	"time"
 
 	"github.com/cloudfoundry/gosigar"
+
 	"github.com/wkm/obelisk/lib/rinst"
 )
 
-var StatsGauge = rinst.GaugeValue{
-	// measure function
-	func(n string, r rinst.MeasurementReceiver) {
+var statsGauge = rinst.GaugeValue{
+	MeasureFn: func(n string, r rinst.MeasurementReceiver) {
 		uptime := sigar.Uptime{}
 
 		load := sigar.LoadAverage{}
@@ -35,8 +35,7 @@ var StatsGauge = rinst.GaugeValue{
 		uptime.Get()
 		r.WriteFloat(n+"uptime", now, uptime.Length)
 	},
-	// schema function
-	func(n string, r rinst.SchemaReceiver) {
+	SchemaFn: func(n string, r rinst.SchemaReceiver) {
 		r.WriteSchema(n+"load.1", rinst.TypeFloatValue, "proc", "one minute load")
 		r.WriteSchema(n+"load.5", rinst.TypeFloatValue, "proc", "five minute load")
 		r.WriteSchema(n+"load.15", rinst.TypeFloatValue, "proc", "fifteen minute load")

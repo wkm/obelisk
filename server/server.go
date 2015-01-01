@@ -1,6 +1,7 @@
 package server
 
 import (
+	"log"
 	"os"
 	"path/filepath"
 	"time"
@@ -11,15 +12,17 @@ import (
 	"github.com/wkm/obelisk/lib/storetime"
 )
 
-type ServerApp struct {
+// App is a top-level container which manages the server's execution.
+type App struct {
 	StoreDir string
 
-	timedb *storetime.DB // time series database
-	tagdb  *storetag.DB  // hierarchy database
-	kvdb   *storekv.DB   // key-value database
+	timedb *storetime.DB // Time series database
+	tagdb  *storetag.DB  // Hierarchy database
+	kvdb   *storekv.DB   // Key-value database
 }
 
-func (app *ServerApp) Start() {
+// Start begins
+func (app *App) Start() {
 	log.Printf("Starting")
 
 	if err := app.startTimeStore(); err != nil {
@@ -43,7 +46,7 @@ func (app *ServerApp) Start() {
 	go app.periodic()
 }
 
-func (app *ServerApp) periodic() {
+func (app *App) periodic() {
 	ticker := time.Tick(1 * time.Second)
 	for {
 		<-ticker
@@ -54,21 +57,21 @@ func (app *ServerApp) periodic() {
 	}
 }
 
-func (app *ServerApp) startTimeStore() (err error) {
+func (app *App) startTimeStore() (err error) {
 	c := storetime.Config{}
 	c.DiskStore = filepath.Join(app.StoreDir, "store", "time")
 	app.timedb, err = storetime.NewDB(c)
 	return
 }
 
-func (app *ServerApp) startTagStore() (err error) {
+func (app *App) startTagStore() (err error) {
 	c := storetag.Config{}
 	c.DiskStore = filepath.Join(app.StoreDir, "store", "tag")
 	app.tagdb, err = storetag.NewDB(c)
 	return
 }
 
-func (app *ServerApp) startKVStore() (err error) {
+func (app *App) startKVStore() (err error) {
 	c := storekv.Config{}
 	c.DiskStore = filepath.Join(app.StoreDir, "store", "kv")
 	app.kvdb, err = storekv.NewDB(c)
