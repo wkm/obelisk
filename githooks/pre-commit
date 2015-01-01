@@ -4,7 +4,7 @@
 # auto-generated .pb.go files.
 gofiles=$(git diff --cached --name-only --diff-filter=ACM | grep '.go$' | grep -v '.pb.go$')
 if [ "${GO_SKIP_PRECOMMIT_CHECKS}" != "1" -a -n "${gofiles}" ]; then
-  # Check for formatting errors.
+  echo "Check for formatting errors."
   unformatted=$(goimports -l ${gofiles})
   if [ -n "${unformatted}" ]; then
     # Some files are not gofmt'd. Print message and fail.
@@ -15,7 +15,7 @@ if [ "${GO_SKIP_PRECOMMIT_CHECKS}" != "1" -a -n "${gofiles}" ]; then
     exit 1
   fi
 
-  # Check for lint errors.
+  echo "Check for lint errors."
   unlinted=$(golint ${gofiles} | awk -F: '{print $1}' | uniq)
   if [ -n "${unlinted}" ]; then
     echo -e >&2 "\nGo files with lint errors:"
@@ -25,7 +25,7 @@ if [ "${GO_SKIP_PRECOMMIT_CHECKS}" != "1" -a -n "${gofiles}" ]; then
     exit 1
   fi
 
-  # Check for vet errors.
+  echo "Check for vet errors."
   unvetted=$(go tool vet ${gofiles} | awk -F: '{print $1}' | uniq)
   if [ -n "${unvetted}" ]; then
     echo -e >&2 "\nGo files with vet errors:"
