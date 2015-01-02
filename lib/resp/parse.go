@@ -19,8 +19,11 @@ func parse(t reflect.Kind, line string) (remaining string, value reflect.Value, 
 	case reflect.String:
 		return parseString(line)
 
+	case reflect.Slice:
+		return parseSlice(line)
+
 	default:
-		err = errors.New(fmt.Sprintf("unsupported kind: %v", t))
+		err = errors.New(fmt.Sprintf("Unsupported kind: %v", t))
 		return
 	}
 }
@@ -88,4 +91,22 @@ func parseString(line string) (rem string, val reflect.Value, err error) {
 
 	val = reflect.ValueOf(tok)
 	return
+}
+
+func parseSlice(line string) (rem string, val reflect.Value, err error) {
+	strType := reflect.TypeOf("")
+	slice := reflect.MakeSlice(reflect.SliceOf(strType), 0, 0)
+	rem = line
+
+	for {
+		prev := rem
+		rem, val, err = parseString(rem)
+		if rem == prev {
+			break
+		}
+
+		slice = reflect.Append(slice, val)
+	}
+
+	return rem, slice, err
 }
