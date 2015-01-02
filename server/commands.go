@@ -9,19 +9,20 @@ import (
 )
 
 var (
-	DuplicateIdentifier = errors.New("Identifier is not unique on path")
+	// ErrDuplicateIdentifier is returned if the specified identifier was already used.
+	ErrDuplicateIdentifier = errors.New("Identifier is not unique on path")
 )
 
 var log = rlog.LogConfig.Logger("obelisk-server")
 
-// Associate an identifier with the given paths
-func (app *ServerApp) Declare(id string, paths ...string) (err error) {
+// Declare associates an identifier with the given paths.
+func (app *App) Declare(id string, paths ...string) (err error) {
 	statDeclare.Incr()
 	uid := uint64(rand.Int63())
 	for _, path := range paths {
 		actid, err := app.tagdb.Tag(uid, filepath.Join(path, id))
 		if uid != actid {
-			return DuplicateIdentifier
+			return ErrDuplicateIdentifier
 		}
 		if err != nil {
 			return err
