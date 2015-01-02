@@ -17,7 +17,7 @@ var (
 )
 
 func main() {
-	s := new(server.ServerApp)
+	s := new(server.App)
 	s.StoreDir = *storeDir
 	s.Start()
 

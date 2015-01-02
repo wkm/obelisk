@@ -34,7 +34,7 @@ func Listen(reciever interface{}, r io.Reader, w io.Writer) (err error) {
 	}
 }
 
-// Write a request into the writer
+// WriteRequest writes the given command fragments as a single request in RESP syntax.
 func WriteRequest(w io.Writer, cmds ...interface{}) (nn int, err error) {
 	// Send header
 	cnn, err := fmt.Fprintf(w, "*%d\r\n", len(cmds))

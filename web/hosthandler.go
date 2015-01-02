@@ -9,17 +9,20 @@ import (
 	"github.com/wkm/obelisk/lib/rinst"
 )
 
+// HostInfo is a container for metadata on a host.
 type HostInfo struct {
 	Name    string
 	Metrics map[string]*MetricGroup
 	Workers []string
 }
 
+// MetricGroup is a container for metadata on a set of related metrics.
 type MetricGroup struct {
 	Name string
 	Info map[string]*MetricInfo
 }
 
+// MetricInfo is a container for metadata on a metric.
 type MetricInfo struct {
 	Name       string
 	Unit, Desc string

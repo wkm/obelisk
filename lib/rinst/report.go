@@ -5,7 +5,7 @@ import (
 	"io"
 )
 
-// create a textual report of the values
+// TextReport creates a human readable report of the values in plaintext.
 func TextReport(w io.Writer, inst Instrument) {
 	b := make(MeasurementBuffer, 0)
 	inst.Measure("", &b)

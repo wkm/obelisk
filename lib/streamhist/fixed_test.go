@@ -15,10 +15,10 @@ func e(v ...float64) []elem {
 
 func TestSorter(t *testing.T) {
 	e := []elem{
-		elem{3, 1, 2},
-		elem{4, 2, 1},
-		elem{1, 1, 2},
-		elem{5, 1, 2},
+		{3, 1, 2},
+		{4, 2, 1},
+		{1, 1, 2},
+		{5, 1, 2},
 	}
 
 	sortElem(e)
@@ -41,7 +41,8 @@ func rankTest(t *testing.T, e elem, v float64, min, max int) {
 }
 
 func TestMerge(t *testing.T) {
-	return
+	t.Skip("let's not test merging")
+
 	l1 := e(0, 1, 2, 3)
 	r1 := e()
 	ret := merge(l1, r1)
@@ -81,8 +82,8 @@ func TestMerge(t *testing.T) {
 	rankTest(t, ret[8], 11, 9, 9)
 	rankTest(t, ret[9], 15, 10, 10)
 
-	l4 := []elem{elem{0, 1, 5}, elem{2, 6, 10}}
-	r4 := []elem{elem{1, 1, 5}, elem{3, 6, 8}}
+	l4 := []elem{{0, 1, 5}, {2, 6, 10}}
+	r4 := []elem{{1, 1, 5}, {3, 6, 8}}
 	ret = merge(l4, r4)
 	if len(ret) != 4 {
 		t.Errorf("expected len=3; received %#v", ret)
@@ -98,7 +99,7 @@ func TestCompress(t *testing.T) {
 	c := compress(s, 20, 0.001)
 
 	if len(c) != 11 {
-		t.Error("expected len=%d, was %d", 11, len(c))
+		t.Errorf("expected len=%d, was %d", 11, len(c))
 	}
 	rankTest(t, c[0], 1, 1, 1)
 	rankTest(t, c[1], 2, 2, 2)

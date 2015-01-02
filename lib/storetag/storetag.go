@@ -7,21 +7,20 @@ import (
 	"sync"
 
 	"github.com/jmhodges/levigo"
+
 	"github.com/wkm/obelisk/lib/ldb"
 	"github.com/wkm/obelisk/lib/rlog"
 )
 
 var log = rlog.LogConfig.Logger("storetag")
 
+// Config contains configuration settings for the LevelDB backing.
 type Config struct {
 	DiskStore string
 	CacheSize int
 }
 
-var DefaultConfig = Config{
-	CacheSize: 1024 * 1024 * 24,
-}
-
+// DB is a container that provides tag store semantics with a LevelDB backing.
 type DB struct {
 	mx sync.RWMutex
 
@@ -29,6 +28,7 @@ type DB struct {
 	Store  *ldb.Store
 }
 
+// NewDB creates a new tags datastore with the given configuration.
 func NewDB(config Config) (db *DB, err error) {
 	db = new(DB)
 	db.config = config
@@ -36,18 +36,18 @@ func NewDB(config Config) (db *DB, err error) {
 	return
 }
 
-// Safely close the datastore
+// Shutdown safely closes the datastore
 func (db *DB) Shutdown() {
 	db.Store.DB.Close()
 	db.Store = nil
 }
 
-// Id gives the id of a tag, if it exists
-func (db *DB) Id(name ...string) (id uint64, err error) {
+// ID gives the id of a tag, if it exists
+func (db *DB) ID(name ...string) (id uint64, err error) {
 	db.mx.RLock()
 	defer db.mx.RUnlock()
 
-	statId.Incr()
+	statID.Incr()
 	path := createPath(name...)
 
 	bb, err := db.Store.CacheGet([]byte(path))
@@ -58,8 +58,8 @@ func (db *DB) Id(name ...string) (id uint64, err error) {
 	return
 }
 
-// Get the id of a tag, creating it and the hierarchy to it if it doesn't exist
-func (db *DB) Tag(id uint64, name ...string) (newId uint64, err error) {
+// Tag gets the id of a tag, creating it and the hierarchy to it if it doesn't exist
+func (db *DB) Tag(id uint64, name ...string) (newID uint64, err error) {
 	statNew.Incr()
 	path := []byte(createPath(name...))
 
@@ -77,12 +77,12 @@ func (db *DB) Tag(id uint64, name ...string) (newId uint64, err error) {
 	bb = make([]byte, 8)
 	binary.LittleEndian.PutUint64(bb, id)
 	err = db.Store.PutAsync(path, bb)
-	newId = id
+	newID = id
 
 	return
 }
 
-// Get the entirety of the tree under a tag
+// Children gives the entirety of the tree under a tag
 func (db *DB) Children(name ...string) (children []string, err error) {
 	db.mx.RLock()
 	defer db.mx.RUnlock()

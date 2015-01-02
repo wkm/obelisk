@@ -4,25 +4,31 @@ import (
 	"math"
 )
 
+// DataPoint represents a type which has a timestamp and a value.
 type DataPoint interface {
 	Time() uint64
 	Value() float64
 }
 
+// DSPoint is a trivial implementation of a DataPoint.
 type DSPoint struct {
 	T uint64
 	V float64
 }
 
-func (d DSPoint) Time() uint64   { return d.T }
+// Time gives the time associated with a data point.
+func (d DSPoint) Time() uint64 { return d.T }
+
+// Value gives value from a data point.
 func (d DSPoint) Value() float64 { return d.V }
 
+// SampledDataPoint is a datapoint with an error value as well.
 type SampledDataPoint struct {
 	Time     uint64
 	Avg, Err float64
 }
 
-// down sample a sorted time series into a target resolution
+// DownSample a sorted time series into a target resolution, keeping track of error.
 func DownSample(start, stop uint64, resolution uint, data []*DataPoint) []SampledDataPoint {
 	samples := make([]SampledDataPoint, resolution)
 	if len(data) < 1 {

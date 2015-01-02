@@ -1,15 +1,10 @@
 package resp
 
 import (
-	"errors"
 	"fmt"
 	"io"
 	"reflect"
 )
-
-type Response interface {
-	Write(w io.Writer)
-}
 
 func write(w io.Writer, kind reflect.Kind, val reflect.Value) (nn int, err error) {
 	if !val.IsValid() {
@@ -34,7 +29,7 @@ func write(w io.Writer, kind reflect.Kind, val reflect.Value) (nn int, err error
 		return writeArray(w, val)
 	}
 
-	return 0, errors.New(fmt.Sprintf("Unsupported kind %q and type %q", val.Kind(), val.Type()))
+	return 0, fmt.Errorf("Unsupported kind %q and type %q", val.Kind(), val.Type())
 }
 
 func writeInt(w io.Writer, val int64) (nn int, err error) {

@@ -13,6 +13,10 @@ func TestNextToken(t *testing.T) {
 		{" 12", "12", ""},
 		{" 12 ", "12", " "},
 		{" 12 abc", "12", " abc"},
+		{"\"12\"", "12", ""},
+		{"\"hello world\"", "hello world", ""},
+		{"\"hello\nworld\"", "hello\nworld", ""},
+		{"\"test\\\"escaping\\\"things\" rem", "test\"escaping\"things", " rem"},
 	}
 
 	for _, tc := range testcases {
@@ -40,6 +44,7 @@ func TestParseInt(t *testing.T) {
 		rem string
 	}{
 		{"123", 123, ""},
+		{"-123", -123, ""},
 		{" 123", 123, ""},
 		{" 123  ", 123, "  "},
 		{" 123 token", 123, " token"},
@@ -70,8 +75,10 @@ func TestParseFloat(t *testing.T) {
 		rem string
 	}{
 		{"12", 12, ""},
+		{"+12.3", 12.3, ""},
 		{"12.3", 12.3, ""},
 		{"  12", 12, ""},
+		{"12.3 foo", 12.3, " foo"},
 	}
 
 	for _, tc := range testcases {
@@ -83,6 +90,7 @@ func TestParseFloat(t *testing.T) {
 		}
 
 		if !v.IsValid() || math.Abs(v.Float()-tc.val) > 0.001 {
+<<<<<<< HEAD
 			t.Errorf("expected %d, got %v", tc.val, v.Float())
 		}
 
@@ -107,6 +115,40 @@ func TestParseSlice(t *testing.T) {
 		t.Logf(" len=%d", v.Len())
 		for i := 0; i < v.Len(); i++ {
 			t.Logf("  %d=%s\t%#v", i, v.Index(i).String(), v.Index(i))
+=======
+			t.Errorf("expected %v, got %v", tc.val, v.Float())
+		}
+
+		if r != tc.rem {
+			t.Errorf("expected %v remaining; got %v", tc.rem, r)
+		}
+	}
+}
+
+func TestParseString(t *testing.T) {
+	testcases := []struct {
+		in, val, rem string
+	}{
+		{"foo bar", "foo", " bar"},
+		{"\"dodge this\" fool", "dodge this", " fool"},
+		{"`hi\nthere` fewl", "hi\nthere", " fewl"},
+	}
+
+	for _, tc := range testcases {
+		t.Logf("test case %q", tc)
+		r, v, err := parseString(tc.in)
+
+		if err != nil {
+			t.Errorf("unexpected error: %q", err.Error())
+		}
+
+		if !v.IsValid() || v.String() != tc.val {
+			t.Errorf("expected %q, got %q", tc.val, v.String())
+		}
+
+		if r != tc.rem {
+			t.Errorf("expected remainder %q; got %q", tc.rem, r)
+>>>>>>> FETCH_HEAD
 		}
 	}
 }

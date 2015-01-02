@@ -10,7 +10,7 @@ import (
 // - s0 does not need rank information
 // - quantile() is doing a binary search unnecessarily
 
-// A multi-level summary structure of fixed length
+// SummaryStructure contains a multi-level summary structure of fixed length
 type SummaryStructure struct {
 	Width int     // the max width of the structure
 	Count int     // the number of elements in the structure
@@ -74,6 +74,7 @@ func computeLevels(dataSize int, blockSize int) int {
 	return levels
 }
 
+// NewSummaryStructure allocates a new summary structure
 func NewSummaryStructure(width int, err float64) *SummaryStructure {
 	fmt.Printf("Creating sumary of width %d and err %f\n", width, err)
 	blockSize := computeBlockSize(width, err)
@@ -91,7 +92,7 @@ func NewSummaryStructure(width int, err float64) *SummaryStructure {
 	return &SummaryStructure{width, 0, err, summarySplay, blockSize, levelCount}
 }
 
-// insert a new value into the sketch
+// Update inserts a new value into the sketch
 func (s *SummaryStructure) Update(value float64) {
 	s.Count++
 
@@ -100,7 +101,7 @@ func (s *SummaryStructure) Update(value float64) {
 		sortElem(s.S[0])
 
 		// we need to assign ranks now
-		for i, _ := range s.S[0] {
+		for i := range s.S[0] {
 			s.S[0][i].rmin = i + 1
 			s.S[0][i].rmax = i + 1
 		}
@@ -220,7 +221,8 @@ func quantile(data []elem, rank int, err float64) elem {
 		}
 	}
 
-	panic("quantile() panic")
+	// unreachable
+	// panic("quantile() panic")
 }
 
 // a faster quantile() when all elements are of fixed rank width
@@ -245,17 +247,14 @@ func fixedQuantile(data []elem, rank int, err float64) elem {
 	for {
 		if data[cursor].rmin >= rankLo && data[cursor].rmax <= rankHi {
 			return data[cursor]
+		}
+		// need to look at the next slot
+		if data[cursor].rmin < rankLo {
+			cursor++
 		} else {
-			// need to look at the next slot
-			if data[cursor].rmin < rankLo {
-				cursor++
-			} else {
-				cursor--
-			}
+			cursor--
 		}
 	}
-
-	panic(fmt.Sprintf("couldn't find %d quantile within dataset", rank))
 }
 
 // merge two sorted summaries together, adjusting ranks
@@ -311,7 +310,7 @@ func merge(left, right []elem) []elem {
 	return result
 }
 
-// extract a histogram from the current state of the summary structure
+// Histogram extracts from the current state of the summary structure
 func (s *SummaryStructure) Histogram() *Histogram {
 	h := Histogram{}
 	h.Err = s.Err

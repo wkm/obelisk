@@ -7,51 +7,55 @@ import (
 	"text/template"
 )
 
-// a naive representation of an HTML dom node
-type HtmlNode struct {
+// HTMLNode is a naive representation of an HTML dom node
+type HTMLNode struct {
 	Tag        string
 	Class      []string
 	Attributes map[string]string
-	Children   []HtmlWriter
+	Children   []HTMLWriter
 }
 
-type RawHtmlNode string
+// RawHTMLNode represents pre-formatted HTML content.
+type RawHTMLNode string
 
-type HtmlWriter interface {
+// HTMLWriter represents a type which can write formatted HTML.
+type HTMLWriter interface {
 	Write(r io.Writer) (int, error)
 }
 
+// TextNode is a simple textual node.
 type TextNode string
 
-func NewHtmlNode(tag string) *HtmlNode {
-	n := new(HtmlNode)
+// NewHTMLNode creates a new HTML node with the given tag.
+func NewHTMLNode(tag string) *HTMLNode {
+	n := new(HTMLNode)
 	n.Tag = tag
 	n.Class = make([]string, 0)
 	n.Attributes = make(map[string]string, 0)
-	n.Children = make([]HtmlWriter, 0)
+	n.Children = make([]HTMLWriter, 0)
 	return n
 }
 
-// set an attribute
-func (n *HtmlNode) AddAttribute(name, value string) *HtmlNode {
+// AddAttribute adds an attribute to the HTML tag.
+func (n *HTMLNode) AddAttribute(name, value string) *HTMLNode {
 	n.Attributes[name] = value
 	return n
 }
 
-// add CSS classes
-func (n *HtmlNode) AddClass(name ...string) *HtmlNode {
+// AddClass adds classes to the HTML tag.
+func (n *HTMLNode) AddClass(name ...string) *HTMLNode {
 	n.Class = append(n.Class, name...)
 	return n
 }
 
-// add a child node
-func (n *HtmlNode) AddChild(node ...HtmlWriter) *HtmlNode {
+// AddChild adds subnodes into the HTML node.
+func (n *HTMLNode) AddChild(node ...HTMLWriter) *HTMLNode {
 	n.Children = append(n.Children, node...)
 	return n
 }
 
-// write HTML nodes
-func (n *HtmlNode) Write(r io.Writer) (int, error) {
+// Write prints the node as formatted HTML into the given writer.
+func (n *HTMLNode) Write(r io.Writer) (int, error) {
 	// create the basic tag and class attribute
 	count, err := fmt.Fprintf(r, "<%s class='%s'\n", n.Tag, strings.Join(n.Class, " "))
 	if err != nil {
@@ -92,17 +96,18 @@ func (n *HtmlNode) Write(r io.Writer) (int, error) {
 	return count, nil
 }
 
-// a node containing raw html
-func (n *RawHtmlNode) Write(w io.Writer) (int, error) {
+// Write prints the preformatted HTML without further interpretation.
+func (n *RawHTMLNode) Write(w io.Writer) (int, error) {
 	return fmt.Fprint(w, string(*n))
 }
 
-// a node containing escaped html
+// NewTextNode creates a new HTML node which contains raw text.
 func NewTextNode(s string) *TextNode {
 	node := TextNode(s)
 	return &node
 }
 
+// Write prints escaped text into the HTML node.
 func (t *TextNode) Write(w io.Writer) (int, error) {
 	template.HTMLEscape(w, []byte(*t))
 	return 0, nil

@@ -25,15 +25,15 @@ var (
 	}
 )
 
-// print the header bar, optionally with an item highlighted
+// HeaderBar prints the header, optionally with an item highlighted
 func HeaderBar(names map[string]string, active string) string {
-	node := NewHtmlNode("ul").AddClass("left")
-	divider := NewHtmlNode("li").AddClass("divider")
+	node := NewHTMLNode("ul").AddClass("left")
+	divider := NewHTMLNode("li").AddClass("divider")
 	node.AddChild(divider)
 
 	for name, link := range names {
-		section := NewHtmlNode("li").AddClass("name")
-		link := NewHtmlNode("a").AddAttribute("href", link)
+		section := NewHTMLNode("li").AddClass("name")
+		link := NewHTMLNode("a").AddAttribute("href", link)
 		link.AddChild(NewTextNode(name))
 		section.AddChild(link)
 

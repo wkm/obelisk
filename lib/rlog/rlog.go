@@ -1,13 +1,14 @@
-/*
-	logging facility for workers
-*/
+// Package rlog provides logging facilities for workers
 package rlog
 
 import (
+	"fmt"
+	"os"
 	"path/filepath"
 	"sync"
 )
 
+// Log represents a type which
 type Log interface {
 	// write a message to the log
 	Printf(format string, obj ...interface{})
@@ -19,41 +20,47 @@ type Log interface {
 	Close()
 }
 
-// the log proxy encodes a log's configuration along with a
-// delegate which actually preforms the logging
+// LogProxy encodes a log's configuration along with a delegate
+// which actually preforms the logging
 type LogProxy struct {
 	Category string
 	Prefix   string
 	Delegate *Log
 }
 
+// Printf writes a logline into the delegate.
 func (p LogProxy) Printf(format string, obj ...interface{}) {
 	(*p.Delegate).Printf(format, obj...)
 }
+
+// Sync ensures the delegate sync'd.
 func (p LogProxy) Sync() {
 	(*p.Delegate).Sync()
 }
+
+// Close ensures the delegate is closed.
 func (p LogProxy) Close() {
 	(*p.Delegate).Close()
 }
 
+// Config stores configuration for multiple logging categories.
 type Config struct {
 	sync.Mutex
 	BaseDir *string
 	logs    map[string]*LogProxy
 }
 
+// NewConfig allocates a new logging configuration.
 func NewConfig() *Config {
 	c := Config{}
 	c.logs = make(map[string]*LogProxy)
 	return &c
 }
 
+// LogConfig
 var LogConfig = NewConfig()
 
-// var log = config.Logger("rlog")
-
-// configure the global logger
+// ConfigureLogger configures the global, and default logger
 func ConfigureLogger(c *Config) {
 	rlog := c.Logger("rlog")
 	rlog.Printf("configuring %v", c)
@@ -63,7 +70,7 @@ func ConfigureLogger(c *Config) {
 	LogConfig = c
 }
 
-// given a log proxy, will fill it out
+// Create does ... ? what?
 func (c *Config) Create(p *LogProxy) Log {
 	c.Lock()
 	defer c.Unlock()
@@ -81,7 +88,7 @@ func (c *Config) Create(p *LogProxy) Log {
 	}
 
 	if err != nil {
-		println("received error creating %v: %s", p, err.Error())
+		fmt.Fprintf(os.Stderr, "received error creating %v: %s\n", p, err.Error())
 	}
 
 	// FIXME threadsafe? we don't lock the logproxy
@@ -89,7 +96,7 @@ func (c *Config) Create(p *LogProxy) Log {
 	return p
 }
 
-// get a logger for a named category
+// Logger gives a logger for a named category
 func (c *Config) Logger(ctg string) Log {
 	c.Lock()
 	proxy, ok := c.logs[ctg]

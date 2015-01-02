@@ -4,9 +4,9 @@ import (
 	"github.com/wkm/obelisk/lib/rinst"
 )
 
-var Stats = rinst.NewCollection()
-
 var (
+	// Stats has measurements on the timestore requests recieved.
+	Stats       = rinst.NewCollection()
 	statInsert  = Stats.Counter("insert", "points", "datapoints inserted")
 	statQuery   = Stats.Counter("query", "op", "query commands received")
 	statIter    = Stats.Counter("iter", "points", "points iterated over to fulfill point-level operations (query, dump, etc.)")

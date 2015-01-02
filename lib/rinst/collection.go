@@ -1,30 +1,26 @@
-/*
-	implement a selection of instruments for measuring program and
-	worker behavior and performance
-
-	const Stats = make(Collection)
-*/
+// Package rinst implement a selection of instruments for measuring  program and worker behavior and performance.
+//	    const Stats = make(Collection)
 package rinst
 
-// Collection is a set of named instruments
+// Collection is a set of named instruments.
 type Collection struct {
 	instruments map[string]Instrument
 }
 
-// NewCollection creates a new set of named instruments
+// NewCollection creates a new set of named instruments.
 func NewCollection() *Collection {
 	c := new(Collection)
 	c.instruments = make(map[string]Instrument)
 	return c
 }
 
-// add a new instrument to the layout
+// AddInstrument add a new instrument to the layout.
 func (coll Collection) AddInstrument(name string, inst Instrument) Instrument {
 	coll.instruments[name] = inst
 	return coll.instruments[name]
 }
 
-// create a new counter with the given name
+// Counter creates a new counter with the given name.
 func (coll Collection) Counter(name, unit, desc string) *Counter {
 	counter := new(Counter)
 	counter.unit = unit
@@ -34,7 +30,7 @@ func (coll Collection) Counter(name, unit, desc string) *Counter {
 	return counter
 }
 
-// create a new integer value with the given name
+// IntValue creates a new integer value with the given name.
 func (coll Collection) IntValue(name, unit, desc string) *IntValue {
 	value := new(IntValue)
 	value.unit = unit
@@ -44,7 +40,7 @@ func (coll Collection) IntValue(name, unit, desc string) *IntValue {
 	return value
 }
 
-// create a new float value with the given name
+// FloatValue creates a new float value with the given name.
 func (coll Collection) FloatValue(name, unit, desc string) *FloatValue {
 	value := new(FloatValue)
 	value.unit = unit
@@ -54,12 +50,12 @@ func (coll Collection) FloatValue(name, unit, desc string) *FloatValue {
 	return value
 }
 
-// send the current values of all instruments in a layout to a buffer
+// Snapshot sends the current values of all instruments into the receiever.
 func (coll Collection) Snapshot(r MeasurementReceiver) {
 	coll.Measure("", r)
 }
 
-// measure all instruments in this collection
+// Measure all instruments in this collection.
 func (coll Collection) Measure(name string, r MeasurementReceiver) {
 	prefix := ""
 	if name != "" {
@@ -70,6 +66,7 @@ func (coll Collection) Measure(name string, r MeasurementReceiver) {
 	}
 }
 
+// Schema sends the schema of all instruments into the receiever.
 func (coll Collection) Schema(name string, r SchemaReceiver) {
 	prefix := ""
 	if name != "" {

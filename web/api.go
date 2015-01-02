@@ -53,7 +53,7 @@ func timeHandler(rw http.ResponseWriter, req *http.Request) {
 
 	// FIXME extract into a function
 	// FIXME we should be able to the rate thing in-place
-	var last = util.DSPoint{0, math.MaxFloat64}
+	var last = util.DSPoint{T: 0, V: math.MaxFloat64}
 	dps := make([]*util.DataPoint, len(res))
 	for i, v := range res {
 		val := v.Value
@@ -68,7 +68,7 @@ func timeHandler(rw http.ResponseWriter, req *http.Request) {
 			last.V = v.Value
 		}
 
-		dsp := util.DataPoint(util.DSPoint{v.Time, val})
+		dsp := util.DataPoint(util.DSPoint{T: v.Time, V: val})
 		dps[i] = &dsp
 	}
 

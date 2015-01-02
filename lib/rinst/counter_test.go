@@ -23,6 +23,6 @@ func TestCounter(t *testing.T) {
 
 	recv := b[0]
 	if recv.Name != "fig" || recv.IntValue != 2 {
-		t.Error("counter bad measure: %#v", recv)
+		t.Errorf("counter bad measure: %#v", recv)
 	}
 }

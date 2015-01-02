@@ -5,6 +5,7 @@ import (
 )
 
 var (
+	// WebStats contains metrics on the web service
 	WebStats   = rinst.NewCollection()
 	webRequest = WebStats.Counter("reqs", "req", "http requests received")
 	// webRespSize = WebStats.Distribution("resp.sz", "byte", "size of http web responses")

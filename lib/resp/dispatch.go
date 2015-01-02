@@ -2,7 +2,6 @@ package resp
 
 import (
 	"bytes"
-	"errors"
 	"fmt"
 	"reflect"
 	"strings"
@@ -53,7 +52,7 @@ func (d *dispatch) Call(line string) (res string, err error) {
 
 	method, ok := d.commands[normalizeMethodName(methodName)]
 	if !ok {
-		err = errors.New(fmt.Sprintf("Unknown command %q", methodName))
+		err = fmt.Errorf("Unknown command %q", methodName)
 		return
 	}
 

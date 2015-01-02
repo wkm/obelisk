@@ -16,7 +16,7 @@ var log = rlog.LogConfig.Logger("obelisk-server")
 
 // Associate an identifier with the given paths
 func (app *ServerApp) Declare(id string, paths ...string) (err error) {
-	StatDeclare.Incr()
+	statDeclare.Incr()
 	uid := uint64(rand.Int63())
 	for _, path := range paths {
 		actid, err := app.tagdb.Tag(uid, filepath.Join(path, id))
@@ -30,12 +30,14 @@ func (app *ServerApp) Declare(id string, paths ...string) (err error) {
 	return
 }
 
-func (app *ServerApp) Schema(id, op, kind, unit, desc string) (err error) {
-	StatSchema.Incr()
+// Schema stores metadata on the a metric's structure.
+func (app *App) Schema(id, op, kind, unit, desc string) (err error) {
+	statSchema.Incr()
 	return
 }
 
-func (app *ServerApp) Record(id, metric, time, value string) (err error) {
-	StatRecord.Incr()
+// Record stores a single measurement of a metric.
+func (app *App) Record(id, metric, time, value string) (err error) {
+	statRecord.Incr()
 	return
 }

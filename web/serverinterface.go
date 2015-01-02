@@ -5,6 +5,7 @@ import (
 	"github.com/wkm/obelisk/lib/storetime"
 )
 
+// ChildrenTags gives all children tags under the specified node.
 func ChildrenTags(node ...string) (tags []string, err error) {
 	return
 	// retrn := xServer.Call("ChildrenTags", filepath.Join(node...))
@@ -20,6 +21,7 @@ func ChildrenTags(node ...string) (tags []string, err error) {
 	// return children, err
 }
 
+// QueryTime gives a list of datapoints from start to stop for the given node.
 func QueryTime(node string, start, stop uint64) (points []storetime.Point, err error) {
 	return
 	// retrn := xServer.Call("QueryTime", node, start, stop)
@@ -34,6 +36,7 @@ func QueryTime(node string, start, stop uint64) (points []storetime.Point, err e
 	// return values, err
 }
 
+// GetMetricInfo gives schema information for the specified metric.
 func GetMetricInfo(node string) (schema rinst.InstrumentSchema, err error) {
 	return
 	// retrn := xServer.Call("GetMetricInfo", node)
