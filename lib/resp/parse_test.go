@@ -90,7 +90,6 @@ func TestParseFloat(t *testing.T) {
 		}
 
 		if !v.IsValid() || math.Abs(v.Float()-tc.val) > 0.001 {
-<<<<<<< HEAD
 			t.Errorf("expected %d, got %v", tc.val, v.Float())
 		}
 
@@ -115,7 +114,6 @@ func TestParseSlice(t *testing.T) {
 		t.Logf(" len=%d", v.Len())
 		for i := 0; i < v.Len(); i++ {
 			t.Logf("  %d=%s\t%#v", i, v.Index(i).String(), v.Index(i))
-=======
 			t.Errorf("expected %v, got %v", tc.val, v.Float())
 		}
 
@@ -148,7 +146,6 @@ func TestParseString(t *testing.T) {
 
 		if r != tc.rem {
 			t.Errorf("expected remainder %q; got %q", tc.rem, r)
->>>>>>> FETCH_HEAD
 		}
 	}
 }
