@@ -13,7 +13,7 @@ type Config struct {
 	Reverse   bool
 }
 
-// Store is a wrapper around the
+// Store is a wrapper containing instrumentation and handles onto a LevelDB store.
 type Store struct {
 	cache *levigo.Cache
 	DB    *levigo.DB

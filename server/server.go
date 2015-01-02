@@ -22,7 +22,7 @@ type App struct {
 	kvdb   *storekv.DB   // Key-value database
 }
 
-// Start begins
+// Start the application and its component services.
 func (app *App) Start() {
 	log.Printf("Starting")
 	if err := app.startTimeStore(); err != nil {
