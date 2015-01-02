@@ -13,7 +13,9 @@ import (
 
 // App is a top-level container which manages the server's execution.
 type App struct {
-	StoreDir string
+	Config struct {
+		StoreDir string
+	}
 
 	timedb *storetime.DB // Time series database
 	tagdb  *storetag.DB  // Hierarchy database
@@ -23,7 +25,6 @@ type App struct {
 // Start begins
 func (app *App) Start() {
 	log.Printf("Starting")
-
 	if err := app.startTimeStore(); err != nil {
 		log.Printf("Couldn't start time store %s", err.Error())
 		os.Exit(-1)
@@ -58,21 +59,28 @@ func (app *App) periodic() {
 
 func (app *App) startTimeStore() (err error) {
 	c := storetime.Config{}
-	c.DiskStore = filepath.Join(app.StoreDir, "store", "time")
+	c.DiskStore = filepath.Join(app.Config.StoreDir, "store", "time")
+	createPath(c.DiskStore)
 	app.timedb, err = storetime.NewDB(c)
 	return
 }
 
 func (app *App) startTagStore() (err error) {
 	c := storetag.Config{}
-	c.DiskStore = filepath.Join(app.StoreDir, "store", "tag")
+	c.DiskStore = filepath.Join(app.Config.StoreDir, "store", "tag")
+	createPath(c.DiskStore)
 	app.tagdb, err = storetag.NewDB(c)
 	return
 }
 
 func (app *App) startKVStore() (err error) {
 	c := storekv.Config{}
-	c.DiskStore = filepath.Join(app.StoreDir, "store", "kv")
+	c.DiskStore = filepath.Join(app.Config.StoreDir, "store", "kv")
+	createPath(c.DiskStore)
 	app.kvdb, err = storekv.NewDB(c)
 	return
+}
+
+func createPath(path string) (err error) {
+	return os.MkdirAll(path, 0777)
 }

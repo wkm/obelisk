@@ -18,7 +18,7 @@ var (
 
 func main() {
 	s := new(server.App)
-	s.StoreDir = *storeDir
+	s.Config.StoreDir = *storeDir
 	s.Start()
 
 	// Start listening
