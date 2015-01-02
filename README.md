@@ -53,3 +53,5 @@ The aggregator service acts as a front end for receiving and aggregating metrics
     * `rconfig`: [experimental] remote configuration stuffs
     * `rinstreporter`: [stupid] just... stupid
 
+## Development
+Run `prepare.sh` to setup your local environment for development.
