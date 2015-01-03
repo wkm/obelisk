@@ -32,7 +32,7 @@ func (app *App) Declare(id string, paths ...string) (err error) {
 }
 
 // Schema stores metadata on the a metric's structure.
-func (app *App) Schema(id, op, kind, unit, desc string) (err error) {
+func (app *App) Schema(id, kind, unit, desc string) (err error) {
 	statSchema.Incr()
 	return
 }

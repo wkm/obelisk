@@ -13,13 +13,14 @@ The data server exposes two APIs to the data: a TCP based protocol similar to th
 
 Example interaction:
 
-    declare a712371 host/h1/service/s1 service/s1/host/h1
+    declare a712371 host/h1/service/s1•get service/s1/host/h1•get
+    declare a712372 host/h1/service/s1•set service/s1/host/h1•set
     
-    schema a712371 get counter op 'number of get commands'
-    schema a712371 set counter op 'number of set commands'
+    schema a712371 counter op 'number of get commands'
+    schema a712372 counter op 'number of set commands'
 
-    record a712371 get 2014-05-12 19
-    record a712371 set 2014-05-12 19
+    record a712371 2014-05-12 19
+    record a712372 2014-05-13 19
 
 ## Data Stores
 The server is comprised of three types of stores, each backed with their own LevelDB instance. 
