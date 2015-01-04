@@ -12,8 +12,9 @@ import (
 var log = rlog.LogConfig.Logger("obelisk-server")
 
 var (
-	storeDir = flag.String("data", "/tmp/obelisk", "directory to place data stores")
-	address  = flag.String("address", ":6666", "address to listen on for connections")
+	storeDir    = flag.String("data", "/tmp/obelisk", "directory to place data stores")
+	address     = flag.String("address", ":6666", "address to listen on for connections")
+	httpAddress = flag.String("httpAddress", ":8080", "address to listen on for HTTP connections")
 )
 
 func main() {
@@ -21,7 +22,13 @@ func main() {
 	s.Config.StoreDir = *storeDir
 	s.Start()
 
-	// Start listening
+	go respResponder(s)
+	go s.StartHttpResponder(*httpAddress)
+	<-(chan struct{})(nil)
+}
+
+func respResponder(s *server.App) {
+	// Start listening for command protocol
 	ln, err := net.Listen("tcp", *address)
 	defer ln.Close()
 	if err != nil {
