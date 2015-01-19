@@ -14,6 +14,8 @@ func e(v ...float64) []elem {
 }
 
 func TestSorter(t *testing.T) {
+	t.Parallel()
+
 	e := []elem{
 		{3, 1, 2},
 		{4, 2, 1},
@@ -41,6 +43,7 @@ func rankTest(t *testing.T, e elem, v float64, min, max int) {
 }
 
 func TestMerge(t *testing.T) {
+	t.Parallel()
 	t.Skip("let's not test merging")
 
 	l1 := e(0, 1, 2, 3)
@@ -95,6 +98,8 @@ func TestMerge(t *testing.T) {
 }
 
 func TestCompress(t *testing.T) {
+	t.Parallel()
+
 	s := e(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20)
 	c := compress(s, 20, 0.001)
 
@@ -116,6 +121,8 @@ func TestCompress(t *testing.T) {
 
 // test a summary where we end up storing every element
 func TestPreciseSummaryStructure(t *testing.T) {
+	t.Parallel()
+
 	testSz := 100
 	testErr := 0.001
 
@@ -139,6 +146,8 @@ func TestPreciseSummaryStructure(t *testing.T) {
 }
 
 func TestSummaryStructure(t *testing.T) {
+	t.Parallel()
+
 	// test nicely round numbers
 	// testIncreasingSummary(t, 1000, 0.01)
 	// testIncreasingSummary(t, 750, 0.01)

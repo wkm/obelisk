@@ -5,6 +5,8 @@ import (
 )
 
 func TestMemoryLog(t *testing.T) {
+	t.Parallel()
+
 	log := NewMemoryLog()
 	log.Printf("%s", "hello")
 	log.Printf("%d", 12)

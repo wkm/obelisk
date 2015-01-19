@@ -35,6 +35,8 @@ func (kv *keyval) Err() error {
 }
 
 func TestStringDispatch(t *testing.T) {
+	t.Parallel()
+
 	k := newKeyval()
 	d, err := newDispatch(k)
 	if err != nil {

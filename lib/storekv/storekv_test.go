@@ -7,6 +7,8 @@ import (
 )
 
 func TestDB(t *testing.T) {
+	t.Parallel()
+
 	c := Config{}
 	c.DiskStore = filepath.Join(os.TempDir(), "obelisk-storekv")
 	defer os.RemoveAll(c.DiskStore)

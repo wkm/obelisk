@@ -9,6 +9,8 @@ import (
 )
 
 func TestWriteRequest(t *testing.T) {
+	t.Parallel()
+
 	testcases := []struct {
 		q   []interface{}
 		out string
@@ -38,6 +40,8 @@ func TestWriteRequest(t *testing.T) {
 
 // Start a simple test service to validate RESP validation
 func TestListen(t *testing.T) {
+	t.Parallel()
+
 	k := newKeyval() // reuse keyval from dispatch_test.go
 
 	ln, err := net.Listen("tcp", ":8888")

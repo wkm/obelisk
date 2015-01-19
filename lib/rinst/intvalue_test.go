@@ -5,6 +5,8 @@ import (
 )
 
 func TestIntValue(t *testing.T) {
+	t.Parallel()
+
 	i := &IntValue{}
 	i.Set(12)
 	i.Set(13)

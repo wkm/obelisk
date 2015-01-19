@@ -6,6 +6,8 @@ import (
 
 // test that counters increment correctly
 func TestCounter(t *testing.T) {
+	t.Parallel()
+
 	c := &Counter{}
 	c.Incr()
 	c.Incr()

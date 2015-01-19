@@ -5,6 +5,8 @@ import (
 )
 
 func TestGauge(t *testing.T) {
+	t.Parallel()
+
 	c := NewCollection()
 	c.AddInstrument("foo", &GaugeValue{
 		func(n string, r MeasurementReceiver) {

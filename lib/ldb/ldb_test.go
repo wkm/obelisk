@@ -11,6 +11,8 @@ const (
 )
 
 func TestStore(t *testing.T) {
+	t.Parallel()
+
 	dir, err := ioutil.TempDir(os.TempDir(), "levelkv")
 	defer os.RemoveAll(dir)
 

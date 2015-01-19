@@ -11,6 +11,8 @@ func eq(a, b float64) bool {
 }
 
 func TestStdDevStream(t *testing.T) {
+	t.Parallel()
+
 	s := StdDevStream{}
 
 	if s.Mean() != 0 {

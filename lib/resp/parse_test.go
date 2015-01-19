@@ -6,6 +6,8 @@ import (
 )
 
 func TestNextToken(t *testing.T) {
+	t.Parallel()
+
 	testcases := []struct {
 		in, token, rem string
 	}{
@@ -38,6 +40,8 @@ func TestNextToken(t *testing.T) {
 }
 
 func TestParseInt(t *testing.T) {
+	t.Parallel()
+
 	testcases := []struct {
 		in  string
 		val int
@@ -69,6 +73,8 @@ func TestParseInt(t *testing.T) {
 }
 
 func TestParseFloat(t *testing.T) {
+	t.Parallel()
+
 	testcases := []struct {
 		in  string
 		val float64
@@ -100,6 +106,8 @@ func TestParseFloat(t *testing.T) {
 }
 
 func TestParseSlice(t *testing.T) {
+	t.Parallel()
+
 	testcases := []struct {
 		in, val string
 	}{
@@ -119,6 +127,8 @@ func TestParseSlice(t *testing.T) {
 }
 
 func TestParseString(t *testing.T) {
+	t.Parallel()
+
 	testcases := []struct {
 		in, val, rem string
 	}{

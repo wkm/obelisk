@@ -10,6 +10,8 @@ import (
 
 // Validate the fast size compute function
 func TestReadSize(t *testing.T) {
+	t.Parallel()
+
 	testcases := []struct {
 		str string
 		sz  int
@@ -50,6 +52,8 @@ func assertForm(t *testing.T, exp []interface{}, recv []reflect.Value) {
 }
 
 func TestRead(t *testing.T) {
+	t.Parallel()
+
 	testcases := []struct {
 		input string
 		form  []interface{}

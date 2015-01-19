@@ -5,6 +5,8 @@ import (
 )
 
 func TestLayout(t *testing.T) {
+	t.Parallel()
+
 	coll := NewCollection()
 	c := coll.Counter("foo", "bar", "foos to the bar")
 	c.Incr()

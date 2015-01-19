@@ -5,6 +5,8 @@ import (
 )
 
 func TestLog(t *testing.T) {
+	t.Parallel()
+
 	c := NewConfig()
 	log := c.Logger("foo")
 

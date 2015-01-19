@@ -9,6 +9,8 @@ import (
 )
 
 func TestWrites(t *testing.T) {
+	t.Parallel()
+
 	testcases := []struct {
 		kind reflect.Kind
 		val  interface{}

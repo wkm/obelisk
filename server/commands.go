@@ -42,3 +42,14 @@ func (app *App) Record(id, metric, time, value string) (err error) {
 	statRecord.Incr()
 	return
 }
+
+// KVGet gives the value of key if
+func (app *App) KVGet(key string) (str string, err error) {
+	bb, err := app.kvdb.Get(key)
+	str = string(bb)
+	return
+}
+
+func (app *App) KVSet(key, value string) (err error) {
+	return app.kvdb.Set(key, []byte(value))
+}

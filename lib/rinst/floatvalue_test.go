@@ -5,6 +5,8 @@ import (
 )
 
 func TestFloatValue(t *testing.T) {
+	t.Parallel()
+
 	v := &FloatValue{}
 	v.Set(-12)
 	v.Set(13)

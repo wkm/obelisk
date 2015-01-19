@@ -7,6 +7,8 @@ import (
 )
 
 func TestTextualReport(t *testing.T) {
+	t.Parallel()
+
 	coll := NewCollection()
 	c := coll.Counter("foo", "bar", "foos of bar")
 	c.Incr()

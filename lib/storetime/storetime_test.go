@@ -7,6 +7,8 @@ import (
 )
 
 func TestKey(t *testing.T) {
+	t.Parallel()
+
 	if string(createKey(123, 345)) != "123•345" {
 		t.Errorf("invalid key created")
 	}
@@ -17,6 +19,8 @@ func TestKey(t *testing.T) {
 }
 
 func TestDB(t *testing.T) {
+	t.Parallel()
+
 	c := Config{}
 	c.DiskStore = filepath.Join(os.TempDir(), "obelisk-storetime")
 	defer os.RemoveAll(c.DiskStore)
