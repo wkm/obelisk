@@ -18,7 +18,7 @@ Example interaction:
     
     schema a712371 counter op 'number of get commands'
     schema a712372 counter op 'number of set commands'
-
+    
     record a712371 2014-05-12 19
     record a712372 2014-05-13 19
 

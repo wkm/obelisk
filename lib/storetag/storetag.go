@@ -2,6 +2,7 @@ package storetag
 
 import (
 	"encoding/binary"
+	"fmt"
 	"path/filepath"
 	"strings"
 	"sync"
@@ -51,6 +52,15 @@ func (db *DB) ID(name ...string) (id uint64, err error) {
 	path := createPath(name...)
 
 	bb, err := db.Store.CacheGet([]byte(path))
+	if err != nil {
+		return
+	}
+
+	if len(bb) != 8 {
+		err = fmt.Errorf("Invalid tag.")
+		return
+	}
+
 	if err == nil {
 		id = binary.LittleEndian.Uint64(bb)
 	}

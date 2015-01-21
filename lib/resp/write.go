@@ -12,13 +12,22 @@ func write(w io.Writer, kind reflect.Kind, val reflect.Value) (nn int, err error
 	}
 
 	switch kind {
-	case reflect.Int:
+	case reflect.Uint64, reflect.Uint32, reflect.Uint16, reflect.Uint8, reflect.Uint:
+		return writeUint(w, val.Uint())
+
+	case reflect.Int64, reflect.Int32, reflect.Int16, reflect.Int8, reflect.Int:
 		return writeInt(w, val.Int())
 
 	case reflect.String:
 		return writeBulkString(w, val.String())
 
+	// Interfaces are not generally supported, the exception is for the error interface
+	// which is necessary to support methods which have an error return type.
 	case reflect.Interface:
+		if val.IsNil() {
+			return writeOk(w)
+		}
+
 		errorMeth := val.MethodByName("Error")
 		if errorMeth.Type().NumIn() == 0 && errorMeth.Type().NumOut() == 1 {
 			out := errorMeth.Call([]reflect.Value{})
@@ -33,6 +42,10 @@ func write(w io.Writer, kind reflect.Kind, val reflect.Value) (nn int, err error
 }
 
 func writeInt(w io.Writer, val int64) (nn int, err error) {
+	return fmt.Fprintf(w, ":%d\r\n", val)
+}
+
+func writeUint(w io.Writer, val uint64) (nn int, err error) {
 	return fmt.Fprintf(w, ":%d\r\n", val)
 }
 

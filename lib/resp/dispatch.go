@@ -45,7 +45,7 @@ func validateMethod(method *reflect.Method) (err error) {
 	return
 }
 
-// Call parses and executes the line against
+// Call parses and executes the function call against the receiver.
 func (d *dispatch) Call(line string) (res string, err error) {
 	var methodName string
 	methodName, line, err = nextToken(line)

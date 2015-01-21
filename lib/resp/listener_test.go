@@ -44,7 +44,7 @@ func TestListen(t *testing.T) {
 
 	k := newKeyval() // reuse keyval from dispatch_test.go
 
-	ln, err := net.Listen("tcp", ":8888")
+	ln, err := net.Listen("tcp", "127.0.0.1:8888")
 	if err != nil {
 		t.Fatal(err.Error())
 	}
@@ -60,7 +60,7 @@ func TestListen(t *testing.T) {
 				t.Fatal(err.Error())
 			}
 
-			t.Logf("Accepted a connected: %v", conn)
+			t.Logf("Accepted connection: %v", conn)
 			Listen(k, conn, conn)
 		}
 	}()
@@ -86,13 +86,13 @@ func TestListen(t *testing.T) {
 		{"get unknown", "$0\r\n"},
 	}
 	for _, tc := range testcases {
-		t.Logf("in> %#v", tc.in)
+		t.Logf("in > %#v", tc.in)
 		cw.WriteString(tc.in)
 		cw.WriteString("\n")
 		cw.Flush()
 
 		// Consume lines over the connection
-		t.Logf("out> %#v", tc.out)
+		t.Logf("out= %#v", tc.out)
 		lineCount := strings.Count(tc.out, "\r\n")
 		var bb bytes.Buffer
 		for i := 0; i < lineCount; i++ {
