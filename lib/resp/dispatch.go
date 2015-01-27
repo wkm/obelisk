@@ -39,12 +39,6 @@ func newDispatch(receiver interface{}) (d *dispatch, err error) {
 	return
 }
 
-// Ensure the specified method takes and returns types compatible with RESP
-func validateMethod(method *reflect.Method) (err error) {
-	// ...
-	return
-}
-
 // Call parses and executes the function call against the receiver.
 func (d *dispatch) Call(line string) (res string, err error) {
 	var methodName string
@@ -76,7 +70,7 @@ func (d *dispatch) Call(line string) (res string, err error) {
 	var bb bytes.Buffer
 	outs := fn.Call(ins)
 
-	// Methods which return null
+	// Methods which have no return always give +OK
 	if len(outs) == 0 {
 		_, err = writeOk(&bb)
 		res = bb.String()
